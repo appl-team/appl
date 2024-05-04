@@ -1,0 +1,54 @@
+metadata: {}
+
+settings:
+  logging:
+    format: >- # The format of the log message, change HH:mm:ss.SSS to HH:mm:ss for the default loguru format
+      <green>{time:YYYY-MM-DD HH:mm:ss}</green> |
+      <level>{level: <8}</level> |
+      <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> |
+      <level>{message}</level>
+    log_level: "INFO" # The level of the log messages
+    max_length: 800 # The maximum length of the log message in bash
+    suffix_length: 200 # The length of the suffix (when truncated)
+    log_file:
+      enabled: false # default to not log to a file
+      path_format: './logs/{basename}_{time:YYYY_MM_DD__HH_mm_ss}'
+      # The path to the log file, ext will be added automatically
+      log_level: null # default to use the same level as the log_level
+    display:
+      configs: false # Display the configurations
+      llm_raw_call_args: false # Display the raw args for the llm calls
+      llm_raw_response: false # Display the raw response of the llm calls
+      llm_call_args: true # Display the args for the llm calls
+      llm_response: true # Display the response of the llm calls
+      llm_cache: false # Display the cache info
+      llm_cost: true # Display the cost of the calls
+      tool_calls: true # Display the tool calls
+      tool_results: true # Display the results of the tool calls
+      stream_interval: 1.0 # The interval in second to log the stream info
+  tracing:
+    enabled: false # default to not trace the calls
+    path_format: './dumps/traces/{basename}_{time:YYYY_MM_DD__HH_mm_ss}'
+    # The path to the trace file, ext will be added automatically
+    strict_match: true # when saving and loading cache, whether need to match the generation id
+  messages:
+    colors:
+      system: red
+      user: green
+      assistant: blue
+      tool: magenta
+  misc:
+    suppress_litellm_debug_info: true
+
+# When using APIs through litellm,
+#   see the list of available models at https://docs.litellm.ai/docs/providers
+# When using SRT server,
+#   set model to "srt" and api_base to the address of the server.
+servers:
+  default: gpt35-turbo # should avoid using '.' in the name
+  gpt35-turbo: # the name of the server
+    model: gpt-3.5-turbo # the model name
+  gpt4-turbo:
+    model: gpt-4-turbo
+  _dummy:
+    model: _dummy

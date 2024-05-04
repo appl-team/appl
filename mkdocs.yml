@@ -1,0 +1,190 @@
+# Modified based on https://github.com/mkdocstrings/mkdocstrings/blob/main/mkdocs.yml
+site_name: APPL
+site_description: "A Prompt Programming Language"
+repo_name: appl-team/appl
+repo_url: https://github.com/appl-team/appl
+site_url: https://appl-team.github.io/appl/
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2024 APPL Team
+watch: [mkdocs.yml, README.md, src, docs, examples]
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+
+nav:
+  - Introduction:
+    - Welcome to APPL: index.md
+    - Why use APPL: why.md
+    - Installation Guide: install.md
+    - Setup Guide: setup.md
+    - Contribution Guide: contribute.md
+  - Cookbook:  # how-to-guides
+    - Basic:
+      - examples/basic/index.md
+      - Hello World: examples/basic/hello_world.md
+      - Answer Questions: examples/basic/answer_questions.md
+      - Context Management: examples/basic/context.md
+      - Self Consistency: examples/basic/cot_sc.md
+      - Tool Call: examples/basic/tool_call.md
+      - Prompt Coding Helpers: examples/basic/prompt_coding.md
+    - Usage:
+      - Servers: examples/usage/servers.md
+      - Streaming: examples/usage/streaming.md
+      - Instructor: examples/usage/instructor.md
+    - Advanced:
+      - React: examples/advanced/react.md
+      - Chat with Codes: examples/advanced/chat_with_codes.md
+      - Very Long Prompt: examples/advanced/long_prompt.md
+      - Multi Agent Chat: examples/advanced/multi_agent_chat.md
+  - Language:
+    - APPL: language/index.md
+    - APPL Function: language/appl_function.md
+    - Syntax: language/syntax.md
+    - Format: language/format.md
+    - Prompt: language/prompt.md
+    - Context: language/context.md
+    - Best Practices: language/best_practices.md
+  - API Reference:
+    - appl: reference/
+  - Development:
+    - dev/index.md
+    - Management: dev/manage.md
+    - Documentation: dev/docs.md
+    - Coverage Report: coverage.md
+
+theme:
+  name: "material"
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil 
+    view: material/eye
+  features:
+  - announce.dismiss
+  - content.action.edit
+  - content.action.view
+  - content.code.annotate
+  - content.code.copy
+  - content.code.select
+  - content.tooltips
+  - navigation.expand
+  - navigation.footer
+  - navigation.indexes
+  - navigation.path
+  - navigation.sections
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - navigation.tracking
+  - search.highlight
+  - search.suggest
+  - toc.follow
+  palette:
+  - media: "(prefers-color-scheme)"
+    toggle:
+      icon: material/brightness-auto
+      name: Switch to light mode
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: teal
+    accent: purple
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: black
+    accent: lime
+    toggle:
+      icon: material/weather-night
+      name: Switch to system preference
+
+extra_css:
+- style.css
+
+# https://facelessuser.github.io/pymdown-extensions/
+markdown_extensions:
+- admonition
+- attr_list
+- callouts
+- footnotes
+- md_in_html
+- pymdownx.arithmatex:
+    generic: true
+- pymdownx.details
+- pymdownx.emoji:
+    emoji_index: !!python/name:material.extensions.emoji.twemoji
+    emoji_generator: !!python/name:material.extensions.emoji.to_svg
+- pymdownx.highlight:
+    anchor_linenums: true
+    line_spans: __span
+    pygments_lang_class: true
+- pymdownx.inlinehilite:
+    style_plain_text: python
+# - pymdownx.magiclink:
+#     normalize_issue_symbols: true
+#     repo_url_shorthand: true
+#     user: appl-team
+#     repo: appl
+- pymdownx.mark
+- pymdownx.smartsymbols
+- pymdownx.snippets:
+    base_path: [!relative $config_dir]
+    check_paths: true
+- pymdownx.superfences
+- pymdownx.tabbed:
+    alternate_style: true
+    slugify: !!python/object/apply:pymdownx.slugs.slugify
+      kwds:
+        case: lower
+- pymdownx.tasklist:
+    custom_checkbox: true
+- pymdownx.tilde
+- toc:
+    permalink: true
+
+plugins:
+  - search
+  - autorefs
+  # - autolinks
+  - markdown-exec
+  - mkdocstrings:
+      handlers:
+        python:
+          import:
+          - https://docs.python.org/3/objects.inv
+          - https://installer.readthedocs.io/en/stable/objects.inv  # demonstration purpose in the docs
+          - https://mkdocstrings.github.io/autorefs/objects.inv
+          paths: []
+          options:
+            docstring_options:
+              ignore_init_summary: true
+            docstring_section_style: list
+            docstring_style: google
+            filters: ["!^_"]
+            heading_level: 1
+            inherited_members: true
+            merge_init_into_class: true
+            separate_signature: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            # summary: true
+  - gen-files:
+      scripts:
+      - scripts/gen_ref_nav.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocs-jupyter
+  - coverage
+
+extra:
+  analytics:
+    provider: google
+    property: G-5M9WF9SE4J
+  version:
+    provider: mike
