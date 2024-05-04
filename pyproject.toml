@@ -3,7 +3,7 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [project]
-name = "appl-py"
+name = "applang"
 version = "0.0.1-a3"
 description = "A Prompt Programming Language"
 authors = [

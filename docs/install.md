@@ -3,7 +3,7 @@
 ## Install from PyPI
 APPL is available on PyPI and can be installed with `pip`:
 ```bash
-pip install -U appl
+pip install -U applang
 ```
 
 ## Install from Source
