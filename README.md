@@ -27,7 +27,7 @@
 ### Installation
 You can simply install APPL from PyPI using pip:
 ```bash
-pip install -U appl
+pip install -U applang
 ```
 More installation options can be found in the [installation guide](https://appl-team.github.io/appl/install).
 
