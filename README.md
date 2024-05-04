@@ -10,8 +10,7 @@
 
 **APPL** is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program.
 
-![APPL](./docs/_assets/appl_runtime.png)
-<!-- TODO: change to github href -->
+![APPL](https://raw.githubusercontent.com/appl-team/appl/main/docs/_assets/appl_runtime.png)
 
 ## Key Features
 - **Readability and maintainability via seamless integration with Python.**  APPL seamlessly embeds natural language prompts into Python programs, maintaining prompts' readability while inheriting modularity, reusability, dynamism and the ecosystem from the host programming language.
@@ -130,8 +129,7 @@ We provide a series of examples to demonstrate the usage of APPL. Some examples 
 ### Context Management
 Each *APPL function* has a **context**, which contains the prompts captured in the function. There are four different ways to pass the context when calling another *APPL function* (the callee) in an *APPL function* (the caller): **new**, **copy**, **same**, and **resume**.
 
-![Context Management](./docs/_assets/context.png)
-<!-- TODO: change to github href -->
+![Context Management](https://raw.githubusercontent.com/appl-team/appl/main/docs/_assets/context.png)
 
 1. **new**: The default behavior, create a new empty context.
 2. **copy**: This is similar to *call by value* in programming languages. The callee's context is a copy of the caller's context, therefore the changes in the callee's context won't affect the caller's context.
