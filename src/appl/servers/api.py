@@ -10,6 +10,7 @@ from openai import OpenAI, Stream
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 
 import litellm
+from appl import __version__
 from instructor.patch import Mode
 from litellm import (
     CustomStreamWrapper,
@@ -54,8 +55,6 @@ except ImportError:
 if configs.getattrs("settings.misc.suppress_litellm_debug_info"):
     litellm.suppress_debug_info = True
 
-appl_version = version("appl")
-
 
 # wrap the completion function # TODO: wrap the acompletion function?
 @wraps(litellm.completion)
@@ -75,7 +74,7 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
     @traceable(
         name=f"ChatCompletion_{gen_id}",
         run_type="llm",
-        metadata={"appl": "completion", "appl_version": appl_version},
+        metadata={"appl": "completion", "appl_version": __version__},
     )
     def wrapped(**inner_kwargs: Any) -> Tuple[Any, bool]:
         if cache_ret := find_in_cache(gen_id, inner_kwargs):

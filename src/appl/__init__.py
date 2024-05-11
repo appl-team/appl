@@ -6,14 +6,20 @@ import datetime
 import inspect
 import os
 import sys
+from importlib.metadata import version
 
 import pendulum
+import toml
 import yaml
 from dotenv import load_dotenv
 from loguru import logger
 
 logger.remove()  # Remove default handler
 logger.add(sys.stderr, level="INFO")  # set to INFO
+try:
+    __version__ = version("applang")
+except Exception:
+    __version__ = "unknown"
 
 from .compositor import ApplStr as Str
 from .compositor import iter
@@ -63,11 +69,6 @@ from .servers import server_manager
 from .tracing import TraceEngine
 from .types import *
 from .utils import LoguruFormatter, find_dotenv, find_files, get_folder, get_meta_file
-
-APPL_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_FILE = os.path.join(APPL_DIR, "..", "..", "pyproject.toml")
-PROJECT_INFO = load_file(PROJECT_FILE)
-__version__ = PROJECT_INFO["project"]["version"]
 
 
 def _get_loguru_format():
