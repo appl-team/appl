@@ -10,7 +10,7 @@
 
 **APPL** is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program.
 
-![APPL](https://raw.githubusercontent.com/appl-team/appl/main/docs/_assets/appl_runtime.png)
+https://github.com/appl-team/appl/assets/12556773/5d75d3db-1b1c-48c9-97ec-e9d72a387e49
 
 ## Key Features
 - **Readability and maintainability via seamless integration with Python.**  APPL seamlessly embeds natural language prompts into Python programs, maintaining prompts' readability while inheriting modularity, reusability, dynamism and the ecosystem from the host programming language.
@@ -237,6 +237,8 @@ def cot_consistency(cot_examples: list[str], question: str, num_trials: int):
 ```
 
 ### LLM Tool Calling
+
+![APPL_runtime](https://raw.githubusercontent.com/appl-team/appl/main/docs/_assets/appl_runtime.png)
 
 Integrating tools significantly enhances the capabilities of LLMs. APPL introduces a seamless method to transform Python functions into tools accessible by LLMs (provided the backend LLM supports tool calls). When the `gen` function is provided with Python functions, APPL automatically transforms them into tools by extracting information from the signature and docstring of the functions. Such integration facilitates leveraging existing Python libraries and functions directly within LLMs.
 
