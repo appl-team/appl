@@ -16,7 +16,6 @@ validation:
 nav:
   - Introduction:
     - Welcome to APPL: index.md
-    - Why use APPL: why.md
     - Installation Guide: install.md
     - Setup Guide: setup.md
     - Contribution Guide: contribute.md
