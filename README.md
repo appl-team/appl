@@ -6,7 +6,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://mit-license.org/)
-
+[![arXiv](http://img.shields.io/badge/cs.AI-arXiv%3A2406.13161-B31B1B.svg?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2406.13161)
 
 **APPL** is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program.
 
@@ -305,7 +305,13 @@ For more detailed usage and examples, please refer to the [cookbook](https://app
 ## Citation and Acknowledgment
 If you find APPL helpful, please consider citing our paper:
 ```bibtex
-<to be added>
+@misc{dong2024appl,
+    title={APPL: A Prompt Programming Language for Harmonious Integration of Programs and Large Language Model Prompts}, 
+    author={Honghua Dong and Qidong Su and Yubo Gao and Zhaoyu Li and Yangjun Ruan and Gennady Pekhimenko and Chris J. Maddison and Xujie Si},
+    year={2024},
+    eprint={2406.13161},
+    archivePrefix={arXiv},
+}
 ```
 
 We would like to thank the open-source community for their contributions, where we learned from or used these libraries in our project, including
