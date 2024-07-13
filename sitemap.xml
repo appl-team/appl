@@ -2,347 +2,337 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://appl-team.github.io/appl/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/contribute/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/faq/</loc>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/install/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/setup/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/cookbook/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/cookbook/chat_with_codes/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/cookbook/long_prompt/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/cookbook/multi_agent_chat/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/cookbook/react/</loc>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/dev/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/dev/docs/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/dev/manage/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/advanced/chat_with_codes/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/advanced/long_prompt/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/advanced/multi_agent_chat/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/advanced/react/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/basic/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/basic/answer_questions/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/basic/context/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/basic/cot_sc/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/basic/hello_world/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/basic/prompt_coding/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/basic/tool_call/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/usage/instructor/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/usage/servers/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/examples/usage/streaming/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/language/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/language/appl_function/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/language/best_practices/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/language/context/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/language/format/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/language/prompt/</loc>
-         <lastmod>2024-06-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://appl-team.github.io/appl/language/syntax/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/SUMMARY/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/compositor/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/const/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/func/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/role_changer/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/types/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/utils/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/compile/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/config/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/context/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/function/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/generation/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/globals/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/io/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/message/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/modifiers/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/printer/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/response/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/runtime/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/server/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/tool/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/trace/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/promptable/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/promptable/base/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/promptable/definition/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/promptable/formatter/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/types/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/types/basic/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/types/content/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/types/custom/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/types/futures/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/core/types/role/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/servers/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/servers/api/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/servers/manager/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/tracing/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/tracing/engine/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/reference/tracing/printer/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/1_get_started/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/2_qa_example/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/3_appl_function/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/4_concurrent/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/5_tool_calls/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/6_prompt_coding/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/7_tracing/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/appendix/prompt_capture/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/usage/instructor/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/usage/servers/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/usage/srt/</loc>
+         <lastmod>2024-07-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://appl-team.github.io/appl/tutorials/usage/streaming/</loc>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://appl-team.github.io/appl/coverage/</loc>
-         <lastmod>2024-06-24</lastmod>
+         <lastmod>2024-07-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

@@ -106,9 +106,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="." title="APPL" class="md-header__button md-logo" aria-label="APPL" data-md-component="logo">
       
@@ -232,8 +230,14 @@
     
   </nav>
   
+</header>
     
+    <div class="md-container" data-md-component="container">
       
+      
+        
+          
+            
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
@@ -266,25 +270,16 @@
   
     
     
-      
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
-        <a href="examples/basic/" class="md-tabs__link">
+        <a href="tutorials/" class="md-tabs__link">
           
   
     
   
-  Cookbook
+  Tutorials
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -296,12 +291,12 @@
     
     
       <li class="md-tabs__item">
-        <a href="language/" class="md-tabs__link">
+        <a href="cookbook/" class="md-tabs__link">
           
   
     
   
-  Language
+  Cookbook
 
         </a>
       </li>
@@ -370,13 +365,7 @@
     </ul>
   </div>
 </nav>
-    
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -431,6 +420,8 @@
       
         
           
+        
+      
         
       
         
@@ -534,6 +525,27 @@
   
   
     <li class="md-nav__item">
+      <a href="faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="contribute/" class="md-nav__link">
         
   
@@ -565,57 +577,13 @@
     
       
         
-      
-        
-      
-        
-      
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Cookbook
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            Cookbook
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    
-    
       
         
-          
+      
+        
+      
         
       
         
@@ -644,32 +612,32 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="examples/basic/" class="md-nav__link ">
+            <a href="tutorials/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
-    Basic
+    Tutorials
   </span>
   
 
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Basic
+            Tutorials
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -682,11 +650,11 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/basic/hello_world/" class="md-nav__link">
+      <a href="tutorials/1_get_started/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Hello World
+    Getting Started
   </span>
   
 
@@ -703,11 +671,11 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/basic/answer_questions/" class="md-nav__link">
+      <a href="tutorials/2_qa_example/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Answer Questions
+    Example: QA with LMs
   </span>
   
 
@@ -724,11 +692,11 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/basic/context/" class="md-nav__link">
+      <a href="tutorials/3_appl_function/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Context Management
+    APPL Function
   </span>
   
 
@@ -745,11 +713,11 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/basic/cot_sc/" class="md-nav__link">
+      <a href="tutorials/4_concurrent/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Self Consistency
+    Concurrent LM Calls
   </span>
   
 
@@ -766,11 +734,11 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/basic/tool_call/" class="md-nav__link">
+      <a href="tutorials/5_tool_calls/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Tool Call
+    Tool Calls for LMs
   </span>
   
 
@@ -787,11 +755,11 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/basic/prompt_coding/" class="md-nav__link">
+      <a href="tutorials/6_prompt_coding/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Prompt Coding Helpers
+    Coding Prompts
   </span>
   
 
@@ -801,22 +769,37 @@
 
               
             
-          </ul>
-        </nav>
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/7_tracing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using Tracing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
+        
       
         
       
@@ -838,10 +821,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_9" >
         
           
-          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_9" id="__nav_2_9_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -852,8 +835,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_9">
             <span class="md-nav__icon md-icon"></span>
             Usage
           </label>
@@ -866,7 +849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/usage/servers/" class="md-nav__link">
+      <a href="tutorials/usage/servers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -887,7 +870,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/usage/streaming/" class="md-nav__link">
+      <a href="tutorials/usage/streaming/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -908,11 +891,32 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/usage/instructor/" class="md-nav__link">
+      <a href="tutorials/usage/instructor/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Instructor
+    Using Instructor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorials/usage/srt/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using SRT
   </span>
   
 
@@ -938,12 +942,6 @@
   
     
     
-      
-        
-      
-        
-      
-        
       
         
       
@@ -961,24 +959,24 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_10" >
         
           
-          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_10" id="__nav_2_10_label" tabindex="0">
             
   
   <span class="md-ellipsis">
-    Advanced
+    Appendix
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_10">
             <span class="md-nav__icon md-icon"></span>
-            Advanced
+            Appendix
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -989,74 +987,11 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/advanced/react/" class="md-nav__link">
+      <a href="tutorials/appendix/prompt_capture/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    React
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/advanced/chat_with_codes/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Chat with Codes
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/advanced/long_prompt/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Very Long Prompt
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/advanced/multi_agent_chat/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Multi Agent Chat
+    Prompt Capture
   </span>
   
 
@@ -1092,10 +1027,6 @@
       
         
           
-        
-      
-        
-      
         
       
         
@@ -1125,11 +1056,11 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="language/" class="md-nav__link ">
+            <a href="cookbook/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
-    Language
+    Cookbook
   </span>
   
 
@@ -1145,7 +1076,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Language
+            Cookbook
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1158,11 +1089,11 @@
   
   
     <li class="md-nav__item">
-      <a href="language/appl_function/" class="md-nav__link">
+      <a href="cookbook/react/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    APPL Function
+    ReAct Agent
   </span>
   
 
@@ -1179,11 +1110,11 @@
   
   
     <li class="md-nav__item">
-      <a href="language/syntax/" class="md-nav__link">
+      <a href="cookbook/multi_agent_chat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Syntax
+    Multi Agent Chat
   </span>
   
 
@@ -1200,11 +1131,11 @@
   
   
     <li class="md-nav__item">
-      <a href="language/format/" class="md-nav__link">
+      <a href="cookbook/chat_with_codes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Format
+    Chat with Codes
   </span>
   
 
@@ -1221,53 +1152,11 @@
   
   
     <li class="md-nav__item">
-      <a href="language/prompt/" class="md-nav__link">
+      <a href="cookbook/long_prompt/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Prompt
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="language/context/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Context
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="language/best_practices/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Best Practices
+    Very Long Prompt
   </span>
   
 
@@ -2726,6 +2615,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#news" class="md-nav__link">
+    <span class="md-ellipsis">
+      News
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       Quick Start
@@ -2777,46 +2675,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage-by-examples" class="md-nav__link">
+  <a href="#tutorial-and-cookbook" class="md-nav__link">
     <span class="md-ellipsis">
-      Usage by Examples
+      Tutorial and Cookbook
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage by Examples">
+    <nav class="md-nav" aria-label="Tutorial and Cookbook">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#context-management" class="md-nav__link">
+  <a href="#table-of-contents" class="md-nav__link">
     <span class="md-ellipsis">
-      Context Management
+      Table of Contents
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#concurrent-execution" class="md-nav__link">
+  <a href="#cookbook" class="md-nav__link">
     <span class="md-ellipsis">
-      Concurrent Execution
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#llm-tool-calling" class="md-nav__link">
-    <span class="md-ellipsis">
-      LLM Tool Calling
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#prompt-coding-helpers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prompt Coding Helpers
+      Cookbook
     </span>
   </a>
   
@@ -2824,15 +2704,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cookbook" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cookbook
-    </span>
-  </a>
   
 </li>
       
@@ -2886,12 +2757,14 @@
 
 
 <h1 id="appl-a-prompt-programming-language">🍎APPL: A Prompt Programming Language<a class="headerlink" href="#appl-a-prompt-programming-language" title="Permanent link">&para;</a></h1>
-<p><a href="https://www.python.org"><img alt="python" src="https://img.shields.io/badge/Python-3.9%2B-blue.svg?style=flat&amp;logo=python&amp;logoColor=white" /></a>
+<p><a href="https://pypi.python.org/pypi/applang"><img alt="version" src="https://img.shields.io/pypi/v/applang.svg" /></a>
+<a href="https://www.python.org"><img alt="python" src="https://img.shields.io/badge/Python-3.9%2B-blue.svg?style=flat&amp;logo=python&amp;logoColor=white" /></a>
 <a href="https://pre-commit.com/"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white" /></a>
 <a href="https://github.com/astral-sh/ruff"><img alt="Ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" /></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
 <a href="http://mypy-lang.org/"><img alt="Checked with mypy" src="http://www.mypy-lang.org/static/mypy_badge.svg" /></a>
 <a href="https://mit-license.org/"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" /></a>
+<a href="https://discord.gg/q3x4Qwgj29"><img alt="Discord" src="https://img.shields.io/badge/discord-orange" /></a>
 <a href="https://arxiv.org/abs/2406.13161"><img alt="arXiv" src="http://img.shields.io/badge/cs.AI-arXiv%3A2406.13161-B31B1B.svg?logo=arxiv&amp;logoColor=red" /></a></p>
 <p><strong>APPL</strong> is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program.</p>
 <video style="width: 100%" src="https://github.com/appl-team/appl/assets/12556773/5d75d3db-1b1c-48c9-97ec-e9d72a387e49" type="video/mp4" controls></video>
@@ -2905,6 +2778,12 @@
 <li><strong>Tracing and Failure Recovery.</strong> APPL traces the execution of LLM calls and supports recovery from failures, which is essential for debugging and error handling in the LLM programming paradigm.</li>
 <li><strong>More Features.</strong> APPL also provides a unified interface for multiple LLM backends using <a href="https://docs.litellm.ai/docs/"><code class="language-python highlight"><span class="n">litellm</span></code></a>, structured generations using <a href="https://python.useinstructor.com/"><code class="language-python highlight"><span class="n">instructor</span></code></a>, and many other features.</li>
 </ul>
+<h2 id="news">News<a class="headerlink" href="#news" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>[2024-07-12]</strong>: We have improved our <a href="https://appl-team.github.io/appl/tutorials/">tutorial</a>. Please check them out for more detailed usage and examples.</li>
+</ul>
+<!-- and [cookbook](https://appl-team.github.io/appl/tutorials/) -->
+
 <!-- TODO: RoadMap -->
 
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
@@ -3025,172 +2904,31 @@ or export it as an environment variable:
 </tr>
 </tbody>
 </table>
-<p>In <em>APPL functions</em>, <a href="https://docs.python.org/3/reference/simple_stmts.html#expression-statements">expression statements</a> are captured as prompts based on the type of its value. <!-- TODO: link to the language explanation doc-->
-Notably, the f-string is processed part by part, so the <code class="language-python highlight"><span class="n">gen</span></code> function inside the f-string intuitively uses the contents before that. In this example, <code class="language-python highlight"><span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">author</span> <span class="ow">is</span></code> serves as a prefix to guide the completion of the author's name.</p>
+<p>In <em>APPL functions</em>, <a href="https://docs.python.org/3/reference/simple_stmts.html#expression-statements">expression statements</a> are captured as prompts <a href="https://appl-team.github.io/appl/tutorials/appendix/prompt_capture/">based on the type of its value</a>. Notably, the f-string is processed part by part, so the <code class="language-python highlight"><span class="n">gen</span></code> function inside the f-string intuitively uses the contents before that. In this example, <code class="language-python highlight"><span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">author</span> <span class="ow">is</span></code> serves as a prefix to guide the completion of the author's name.</p>
 <p>After the author's name is extracted, the <code class="language-python highlight"><span class="n">get_answer</span></code> function is called multiple times in parallel to answer the questions, with the context being copied (detailed in <a href="#context-management">context-management</a>), demonstrating the automatic parallelization feature of APPL.</p>
-<h2 id="usage-by-examples">Usage by Examples<a class="headerlink" href="#usage-by-examples" title="Permanent link">&para;</a></h2>
-<p>We provide a series of examples to demonstrate the usage of APPL. Some examples in this section are simplified for demonstration purposes. See runnable examples in the <a href="examples/basic">examples</a> directory.</p>
-<h3 id="context-management">Context Management<a class="headerlink" href="#context-management" title="Permanent link">&para;</a></h3>
-<p>Each <em>APPL function</em> has a <strong>context</strong>, which contains the prompts captured in the function. There are four different ways to pass the context when calling another <em>APPL function</em> (the callee) in an <em>APPL function</em> (the caller): <strong>new</strong>, <strong>copy</strong>, <strong>same</strong>, and <strong>resume</strong>.</p>
-<p><img alt="Context Management" src="https://raw.githubusercontent.com/appl-team/appl/main/docs/_assets/context.png" /></p>
-<ol>
-<li><strong>new</strong>: The default behavior, create a new empty context.</li>
-<li><strong>copy</strong>: This is similar to <em>call by value</em> in programming languages. The callee's context is a copy of the caller's context, therefore the changes in the callee's context won't affect the caller's context.</li>
-<li><strong>same</strong>: This is similar to <em>call by reference</em> in programming languages. The callee's context is the same as the caller's context, therefore the changes in the callee's context will affect the caller's context.</li>
-<li><strong>resume</strong>: This resumes the context of the function each time it is called, i.e., the context is preserved across calls, making the function stateful. It copies the caller's context for the first call as the initial context. It is useful when you want to continue the conversation from the last call.</li>
-</ol>
-<p>In the following example, we illustrate the usage of the first three context management methods and ways to decompose long prompts into smaller pieces using <em>APPL functions</em>. </p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span> <span class="nn">appl</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">convo</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span><span class="p">,</span> <span class="n">records</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">appl</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nd">@ppl</span>  <span class="c1"># use empty context</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">def</span> <span class="nf">intro</span><span class="p">():</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="sa">f</span><span class="s2">&quot;Today is 2024/02/29.&quot;</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="k">return</span> <span class="n">records</span><span class="p">()</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>  <span class="c1"># same as the caller&#39;s context</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">def</span> <span class="nf">addon</span><span class="p">():</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="sa">f</span><span class="s2">&quot;Dates should be in the format of YYYY/MM/DD.&quot;</span>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="c1"># The newly captured prompt will influence the caller&#39;s context</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">)</span>  <span class="c1"># copy the caller&#39;s context</span>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="c1"># the prompts here will not influence the caller&#39;s context</span>
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="sa">f</span><span class="s2">&quot;Q: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    <span class="sa">f</span><span class="s2">&quot;A: &quot;</span>
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    <span class="c1"># print(convo())  # display the conversation used for the generation</span>
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">()</span>
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="nd">@ppl</span>
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="k">def</span> <span class="nf">ask_questions</span><span class="p">(</span><span class="n">questions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    <span class="c1"># long prompt can be decomposed into several smaller `appl functions`</span>
-</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    <span class="c1"># method 1 (recommended): build the sub-prompts in an empty context</span>
-</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    <span class="n">intro</span><span class="p">()</span>  <span class="c1"># returns prompt records, will be captured in this context</span>
-</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>    <span class="c1"># method 2: use the same context and modify it in the function</span>
-</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>    <span class="n">addon</span><span class="p">()</span>  <span class="c1"># returns None, not captured, but the context is modified inside</span>
-</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">questions</span><span class="p">]</span>
-</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>
-</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>    <span class="s2">&quot;What&#39;s the date tomorrow?&quot;</span><span class="p">,</span>
-</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>    <span class="s2">&quot;What&#39;s the date yesterday?&quot;</span><span class="p">,</span>
-</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>    <span class="s2">&quot;How many dates passed since 2024/02/02?&quot;</span><span class="p">,</span>
-</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="p">]</span>
-</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">ask_questions</span><span class="p">(</span><span class="n">questions</span><span class="p">):</span>
-</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-</span></code></pre></div>
-<p>Three queries are independent and run in parallel, where the prompts and possible responses of the generations are shown below:</p>
-<table>
-  <tr>
-    <th>First query</th>
-    <th>Second query</th>
-    <th>Third query</th>
-  </tr>
-  <tr>
-    <td colspan="3">
-    Today is 2024/02/29.<br>
-    Dates should be in the format of YYYY/MM/DD.
-    </td>
-  </tr>
-  <tr>
-    <td>Q: What's the date tomorrow?</td>
-    <td>Q: What's the date yesterday?</td>
-    <td>Q: How many dates passed since 2024/02/02?</td>
-  </tr>
-  <tr>
-    <td>A: <strong>2024/03/01</strong></td>
-    <td>A: <strong>2024/02/28</strong></td>
-    <td>A: <strong>27 dates have passed since 2024/02/02.</strong></td>
-  </tr>
-</table>
-
-<p>Note the <code class="language-python highlight"><span class="n">records</span><span class="p">()</span></code> function retrieves the prompt records captured in the current function, and the <code class="language-python highlight"><span class="n">convo</span><span class="p">()</span></code> function retrieves the full conversation in the context. They are analogous to the <code class="language-python highlight"><span class="nb">locals</span><span class="p">()</span></code> and <code class="language-python highlight"><span class="nb">globals</span><span class="p">()</span></code> functions in Python.</p>
-<h3 id="concurrent-execution">Concurrent Execution<a class="headerlink" href="#concurrent-execution" title="Permanent link">&para;</a></h3>
-<p>The parallelization of multiple queries in the last example is achieved using <a href="https://docs.python.org/3/library/concurrent.futures.html">asynchronous computation</a>. In APPL, the <code class="language-python highlight"><span class="n">gen</span></code> function automatically starts a new thread (or process) and does not block the main thread. The generation result is not synchronized (waited) until its value is needed, making the execution of multiple independent LLM calls easily concurrent.</p>
-<p>Many prompt engineering techniques like <a href="https://arxiv.org/abs/2203.11171">Self-Consistency (CoT-SC)</a> and <a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts (ToT)</a> involve non-sequential LLM calls such as branching and gathering. The following example demonstrates how to use APPL to naturally exploit the independence among the reasoning paths in CoT-SC to parallelize the execution.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span> <span class="nf">get_mode</span><span class="p">(</span><span class="n">answers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the mode of the answers&quot;&quot;&quot;</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">answers</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">answers</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">def</span> <span class="nf">marginalize</span><span class="p">(</span><span class="n">results</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the answer from the results and get the mode of the answers&quot;&quot;&quot;</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="c1"># explicitly syncronize the results using str()</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">answers</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_answer</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">))</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="c1"># detailed implementation of `parse_answer` are omitted here</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="k">return</span> <span class="n">get_mode</span><span class="p">(</span><span class="n">answers</span><span class="p">)</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nd">@ppl</span>
-</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="k">def</span> <span class="nf">cot_consistency</span><span class="p">(</span><span class="n">cot_examples</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_trials</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="n">cot_examples</span> <span class="c1"># the list of examples are captured into prompt one-by-one</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    <span class="n">question</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">gen</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_trials</span><span class="p">)]</span> <span class="c1"># concurrent generation</span>
-</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    <span class="k">return</span> <span class="n">marginalize</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="c1"># marginalize the reasoning paths to get the answer</span>
-</span></code></pre></div>
-<h3 id="llm-tool-calling">LLM Tool Calling<a class="headerlink" href="#llm-tool-calling" title="Permanent link">&para;</a></h3>
-<p><img alt="APPL_runtime" src="https://raw.githubusercontent.com/appl-team/appl/main/docs/_assets/appl_runtime.png" /></p>
-<p>Integrating tools significantly enhances the capabilities of LLMs. APPL introduces a seamless method to transform Python functions into tools accessible by LLMs (provided the backend LLM supports tool calls). When the <code class="language-python highlight"><span class="n">gen</span></code> function is provided with Python functions, APPL automatically transforms them into tools by extracting information from the signature and docstring of the functions. Such integration facilitates leveraging existing Python libraries and functions directly within LLMs.</p>
-<p>Consider the example below, where we transform a Python function, <code class="language-python highlight"><span class="n">is_lucky</span></code>, into a callable tool. During execution, <code class="language-python highlight"><span class="n">gpt</span><span class="o">-</span><span class="mf">3.5</span><span class="o">-</span><span class="n">turbo</span></code> smartly invokes the <code class="language-python highlight"><span class="n">is_lucky</span></code> tool with the appropriate arguments. Subsequently, the function executes with these arguments and the result is returned.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span> <span class="nn">sympy</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kn">import</span> <span class="nn">appl</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">Generation</span><span class="p">,</span> <span class="n">as_tool</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span><span class="p">,</span> <span class="n">records</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">appl</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">def</span> <span class="nf">is_lucky</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine whether the input number is a lucky number.</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="sd">    Args:</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="sd">        x (int): The input number to be checked.</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="sd">    Returns:</span>
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="sd">        bool: True if the number is a lucky number, False otherwise.</span>
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="k">return</span> <span class="n">sympy</span><span class="o">.</span><span class="n">isprime</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
-</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="nd">@ppl</span>
-</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    <span class="sa">f</span><span class="s2">&quot;Is </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2"> a lucky number?&quot;</span>
-</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
-</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    <span class="c1"># Initiate the generation with tool `unique_number``,</span>
-</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    <span class="c1"># which is built into a tool by automatically extracting</span>
-</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>    <span class="c1"># information from the function signature and docstring.</span>
-</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>    <span class="c1"># And then store the tool call messages into the prompt</span>
-</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>    <span class="p">(</span><span class="n">actions</span> <span class="o">:=</span> <span class="n">gen</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">is_lucky</span><span class="p">]))</span>
-</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
-</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>    <span class="c1"># Execute the tool calls and retrieve the results.</span>
-</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">run_tool_calls</span><span class="p">()</span>  <span class="c1"># results is a list of ToolMessage</span>
-</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>
-</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>    <span class="c1"># Return the first result from the tool execution.</span>
-</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>    <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_content</span><span class="p">()</span>
-</span></code></pre></div>
-<h3 id="prompt-coding-helpers">Prompt Coding Helpers<a class="headerlink" href="#prompt-coding-helpers" title="Permanent link">&para;</a></h3>
-<p>We provide two types of helpers, <code class="language-python highlight"><span class="n">Compositor</span></code> and <code class="language-python highlight"><span class="n">Definition</span></code>, to facilitate coding prompts in a modularized and maintainable way. These helpers were originally designed in <a href="https://github.com/dhh1995/PromptCoder">PromptCoder</a> and have been used to develop prompts in the <a href="https://github.com/ryoungj/ToolEmu">ToolEmu</a> project with more than 20k tokens in total. By leveraging Python's idiomatic features, we have enhanced the usability and flexibility of these helpers.</p>
-<p>The <code class="language-python highlight"><span class="n">Compositor</span></code> organizes the prompts within its context into a structured prompt. For example, the <code class="language-python highlight"><span class="n">NumberedList</span></code> would compose a list of text into a numbered list:
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">with</span> <span class="n">NumberedList</span><span class="p">():</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="sa">f</span><span class="s2">&quot;First item&quot;</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="sa">f</span><span class="s2">&quot;Second item&quot;</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">composed</span> <span class="n">into</span> <span class="o">&gt;&gt;&gt;</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="mf">1.</span> <span class="n">First</span> <span class="n">item</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="mf">2.</span> <span class="n">Second</span> <span class="n">item</span>
-</span></code></pre></div>
-You can also nest the compositors to create more complex structures.</p>
-<p>The <code class="language-python highlight"><span class="n">Definition</span></code> class provides a standardized way to define concepts and refer to them in the prompts. Once a concept is defined by subclassing <code class="language-python highlight"><span class="n">Definition</span></code>, you can refer to it in the prompts by using the class name. Meanwhile, you need to include the concept's description somewhere in the prompt by instantiating the class with the description as an argument. This design ensures the consistency of the concept's definition and usage in the prompts.</p>
-<p>Please see the <a href="examples/basic">example</a> for more details.</p>
-<h2 id="cookbook">Cookbook<a class="headerlink" href="#cookbook" title="Permanent link">&para;</a></h2>
+<h2 id="tutorial-and-cookbook">Tutorial and Cookbook<a class="headerlink" href="#tutorial-and-cookbook" title="Permanent link">&para;</a></h2>
+<p>For a more comprehensive tutorial, please refer to the <a href="https://appl-team.github.io/appl/tutorials">tutorial</a>.</p>
+<h3 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://appl-team.github.io/appl/tutorials/intro">Introduction</a></li>
+<li><a href="https://appl-team.github.io/appl/tutorials/1_get_started">Getting Started</a></li>
+<li><a href="https://appl-team.github.io/appl/tutorials/2_qa_example">Example: QA with LMs</a></li>
+<li><a href="https://appl-team.github.io/appl/tutorials/3_appl_function">APPL Function</a></li>
+<li><a href="https://appl-team.github.io/appl/tutorials/4_concurrent">Concurrent LM Calls</a></li>
+<li><a href="https://appl-team.github.io/appl/tutorials/5_tool_calls">Tool Calls for LMs</a></li>
+<li><a href="https://appl-team.github.io/appl/tutorials/6_prompt_coding">Prompt Coding Helpers</a></li>
+<li><a href="https://appl-team.github.io/appl/tutorials/7_tracing">Using Tracing</a></li>
+</ul>
+<h3 id="cookbook">Cookbook<a class="headerlink" href="#cookbook" title="Permanent link">&para;</a></h3>
 <p>For more detailed usage and examples, please refer to the <a href="https://appl-team.github.io/appl/cookbook">cookbook</a>.</p>
 <h2 id="citation-and-acknowledgment">Citation and Acknowledgment<a class="headerlink" href="#citation-and-acknowledgment" title="Permanent link">&para;</a></h2>
 <p>If you find APPL helpful, please consider citing our paper:
-<div class="language-bibtex highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nc">@misc</span><span class="p">{</span><span class="nl">dong2024appl</span><span class="p">,</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="na">title</span><span class="p">=</span><span class="s">{APPL: A Prompt Programming Language for Harmonious Integration of Programs and Large Language Model Prompts}</span><span class="p">,</span><span class="w"> </span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="na">author</span><span class="p">=</span><span class="s">{Honghua Dong and Qidong Su and Yubo Gao and Zhaoyu Li and Yangjun Ruan and Gennady Pekhimenko and Chris J. Maddison and Xujie Si}</span><span class="p">,</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="na">year</span><span class="p">=</span><span class="s">{2024}</span><span class="p">,</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="na">eprint</span><span class="p">=</span><span class="s">{2406.13161}</span><span class="p">,</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="na">archivePrefix</span><span class="p">=</span><span class="s">{arXiv}</span><span class="p">,</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="p">}</span>
+<div class="language-bibtex highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">dong2024appl</span><span class="p">,</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{APPL: A Prompt Programming Language for Harmonious Integration of Programs and Large Language Model Prompts}</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Dong, Honghua and Su, Qidong and Gao, Yubo and Li, Zhaoyu and Ruan, Yangjun and Pekhimenko, Gennady and Maddison, Chris J and Si, Xujie}</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="na">journal</span><span class="p">=</span><span class="s">{arXiv preprint arXiv:2406.13161}</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2024}</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
 </span></code></pre></div></p>
 <p>We would like to thank the open-source community for their contributions, where we learned from or used these libraries in our project, including
 <a href="https://github.com/jxnl/instructor">instructor</a>,
@@ -3273,6 +3011,43 @@ You can also nest the compositors to create more complex structures.</p>
   
 </div>
       
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/appl-team/appl" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://discord.gg/q3x4Qwgj29" target="_blank" rel="noopener" title="discord.gg" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/honghua_dong/status/1805310304751894891" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+</div>
+      
     </div>
   </div>
 </footer>
@@ -3283,7 +3058,7 @@ You can also nest the compositors to create more complex structures.</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.tooltips", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.tooltips", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="assets/javascripts/bundle.c8d2eff1.min.js"></script>
