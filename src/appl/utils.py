@@ -1,5 +1,7 @@
+import functools
 import os
 import sys
+import time
 
 import loguru
 import tiktoken
@@ -86,6 +88,20 @@ def get_meta_file(trace_file: str) -> str:
     """Get the meta file storing metadata of the trace file."""
     # meta file derived from trace_file: *.pkl -> *_meta.json
     return os.path.splitext(trace_file)[0] + "_meta.json"
+
+
+def timeit(func: Callable) -> Callable:
+    """Decorator to time the execution of a function."""
+
+    @functools.wraps(func)
+    def timer(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        logger.info(f"{func.__name__} executed in {end - start:.2f} seconds.")
+        return result
+
+    return timer
 
 
 class LoguruFormatter:

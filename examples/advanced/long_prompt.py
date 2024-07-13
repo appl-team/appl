@@ -1,6 +1,6 @@
 import appl
 from appl import BracketedDefinition as Def
-from appl import gen, ppl, records
+from appl import empty_line, gen, ppl, records
 from appl.compositor import *
 from appl.utils import get_num_tokens
 
@@ -193,42 +193,57 @@ def agent_task_desc(toolkit_descriptions):
         f"Your task is to utilize the provided tools to answer {User}'s questions or help {User} accomplish tasks based on given instructions. You are provided with the following information:"
         ""
         agent_provided_info(compositor=DashList())
+        empty_line()
         with LineSeparated(indexing="###"):
             # remove exceptions because they are not needed for the agent
             tool_specification(toolkit_descriptions, include_exception=False)
+            empty_line()
             agent_scratchpad()
+    return records()
+
+
+@ppl
+def agent_format_requirements():
+    "Format Requirements"
+    with LineSeparated():
+        f"Here are some requirements that you should strictly follow to format the {Action} and {ActionInput}:"
+        with NumberedList():
+            f"**Use only available tools**: Do not use tools that are not provided above. In particular, do not use None or N/A as the {Action}. If you cannot (or do not need to) use any existing tools to improve your response, conclude by stating {FinalAnswer} directly."
+            f"**Single JSON object**: Ensure the {ActionInput} is a single JSON object that strictly follows the specification of the tool's {ToolArgument}. Do not include any unnecessary fields or additional comments after the JSON object. Do not include any backsticks to wrap the JSON object."
+            with DashList(indent=INDENT):
+                f"""Incorrect (with comments): {{"query": "the president of US"}} # query the president of US"""
+                f"""Correct (without comments) {{"query": "the president of US"}}"""
+            "**Avoid using placeholders**: Do not use vague input values with placeholders. Instead, first obtain the actual values for the placeholders (using other tools if necessary) and then use them in the input."
+            with DashList(indent=INDENT):
+                f"""Incorrect (with placeholders): {{"id": <id>, "account_number": <account_number>}}"""
+                f"""Incorrect (with placeholders and comments): {{"id": <id>, "account_number": <account_number>}}  Note: The user needs to fill in the <id> and <account_number>"""
+                f"""Correct (with actual sourced values): {{"id": "a4bjb5nw1m","account_number": "9012-0678-236"}}"""
+    return records()
+
+
+@ppl
+def agent_format_example():
+    "Format Examples"
+    with LineSeparated():
+        "Here is an example for how to format your response. In this example, a <Gmail> toolkit for managing Gmails (APIs contained: GmailSendEmail/GmailReadEmail/etc) is provided. Detailed tool specification is omitted here."
+        empty_line()
+        f"User input: Send an email to John Lee (johnlee@gmail.com) about our travel plan to Vancouver, tell him that I am unable to join due to an unexpected exam on May 1st."
+        f"Thought: The user wants to inform John Lee about their travel plan to Vancouver but is unable to join due to an exam on May 1st. They want to send an email to John Lee for this purpose."
+        f"Action: GmailSendEmail"
+        f"""Action Input: {{"subject": "Unable to join for Vancouver trip", "body": "Hi John,\n\nI hope this email finds you well. I wanted to inform you that unfortunately, I won't be able to join for the Vancouver trip due to an unexpected exam on May 1st. I apologize for any inconvenience this may cause.\n\nBest regards", "to": "johnlee@gmail.com"}}"""
+        f"""Observation: {{"status": "Success"}}"""
+        f"Thought: The email was successfully sent to John Lee. No further action is needed."
+        f"Final Answer: Your email to John Lee has been sent successfully!"
     return records()
 
 
 @ppl
 def agent_format_instruction():
     "Format Instructions"
-    with DoubleLineSeparated(indexing="###"):
-        "Format Requirements"
-        with LineSeparated():
-            f"Here are some requirements that you should strictly follow to format the {Action} and {ActionInput}:"
-            with NumberedList():
-                f"**Use only available tools**: Do not use tools that are not provided above. In particular, do not use None or N/A as the {Action}. If you cannot (or do not need to) use any existing tools to improve your response, conclude by stating {FinalAnswer} directly."
-                f"**Single JSON object**: Ensure the {ActionInput} is a single JSON object that strictly follows the specification of the tool's {ToolArgument}. Do not include any unnecessary fields or additional comments after the JSON object. Do not include any backsticks to wrap the JSON object."
-                with DashList(indent=INDENT):
-                    f"""Incorrect (with comments): {{"query": "the president of US"}} # query the president of US"""
-                    f"""Correct (without comments) {{"query": "the president of US"}}"""
-                "**Avoid using placeholders**: Do not use vague input values with placeholders. Instead, first obtain the actual values for the placeholders (using other tools if necessary) and then use them in the input."
-                with DashList(indent=INDENT):
-                    f"""Incorrect (with placeholders): {{"id": <id>, "account_number": <account_number>}}"""
-                    f"""Incorrect (with placeholders and comments): {{"id": <id>, "account_number": <account_number>}}  Note: The user needs to fill in the <id> and <account_number>"""
-                    f"""Correct (with actual sourced values): {{"id": "a4bjb5nw1m","account_number": "9012-0678-236"}}"""
-        "Format Examples"
-        with DoubleLineSeparated():
-            "Here is an example for how to format your response. In this example, a <Gmail> toolkit for managing Gmails (APIs contained: GmailSendEmail/GmailReadEmail/etc) is provided. Detailed tool specification is omitted here."
-            with LineSeparated():
-                f"User input: Send an email to John Lee (johnlee@gmail.com) about our travel plan to Vancouver, tell him that I am unable to join due to an unexpected exam on May 1st."
-                f"Thought: The user wants to inform John Lee about their travel plan to Vancouver but is unable to join due to an exam on May 1st. They want to send an email to John Lee for this purpose."
-                f"Action: GmailSendEmail"
-                f"""Action Input: {{"subject": "Unable to join for Vancouver trip", "body": "Hi John,\n\nI hope this email finds you well. I wanted to inform you that unfortunately, I won't be able to join for the Vancouver trip due to an unexpected exam on May 1st. I apologize for any inconvenience this may cause.\n\nBest regards", "to": "johnlee@gmail.com"}}"""
-                f"""Observation: {{"status": "Success"}}"""
-                f"Thought: The email was successfully sent to John Lee. No further action is needed."
-                f"Final Answer: Your email to John Lee has been sent successfully!"
+    with LineSeparated(indexing="###"):
+        agent_format_requirements()
+        empty_line()
+        agent_format_example()
     return records()
 
 
@@ -261,8 +276,11 @@ def agent_naive_prompt(
     toolkit_descriptions, tool_names, inputs, agent_scratchpad, is_claude=False
 ):
     env_setup()
+    empty_line()
     agent_task_desc(toolkit_descriptions)
+    empty_line()
     agent_format_instruction()
+    empty_line()
     if is_claude:
         task_begin = agent_task_begin_for_claude
     else:

@@ -14,6 +14,8 @@ from .core import (
     Conversation,
     GenArgs,
     Generation,
+    PrinterPop,
+    PrinterPush,
     PromptContext,
     PromptFunc,
     PromptRecords,
@@ -236,7 +238,7 @@ def as_func(
     return partial(func, _globals=_globals, _locals=_locals)
 
 
-def as_str(obj: Any) -> StringFuture:
+def str_future(obj: Any) -> StringFuture:
     """Convert an object to a StringFuture object."""
     return StringFuture(obj)
 
@@ -340,6 +342,16 @@ def convo(_ctx: Optional[PromptContext] = None) -> Conversation:
             "this function should be called within @ppl function."
         )
     return _ctx.messages
+
+
+def empty_line(num_lines: int = 1) -> PromptRecords:
+    """Create empty lines regardless of other compositor."""
+    records = PromptRecords()
+    records.record(PrinterPush(separator="\n", indexing=Indexing(), new_indent=""))
+    for _ in range(num_lines):
+        records.record("")
+    records.record(PrinterPop())
+    return records
 
 
 def build_tools(tools: OneOrMany[Union[BaseTool, Callable]]) -> Sequence[BaseTool]:

@@ -14,7 +14,7 @@ class Definition(Promptable, Formattable):
     """
 
     fstr: str = "{}"
-    name: String = "Definition"
+    name: Optional[String] = None
     desc: String = ""
     _forks: List["Definition"] = []
 
@@ -38,15 +38,17 @@ class Definition(Promptable, Formattable):
             fstr: The format string for the definition.
             var_name: The name of the variable that the definition is stored in.
         """
-        if name is not None:
-            self.name = name
+        self.name = name or self.name or self.__doc__
+        if self.name is None:
+            raise ValueError("Name must be provided for Definition.")
+
         if desc is not None:
             self.desc = desc
         self.sep = sep
         self.details = details
         if fstr is not None:
             self.fstr = fstr
-        self.var_name = var_name or name
+        self.var_name = var_name or self.name
 
         self._forks.append(self)
 

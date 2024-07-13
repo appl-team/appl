@@ -1,4 +1,4 @@
-# MultiAgent Chat
+# Multi-Agent Chat
 We demonstrate four different ways of implementing a multi-agent chat system using APPL. The four implementations are:
 
 1. [**Resume**](#resume) **(Recommended)**: Uses the resume feature of the APPL function to store the state of the conversation. The context is stored in the instance of the class with a private variable.
@@ -8,23 +8,23 @@ We demonstrate four different ways of implementing a multi-agent chat system usi
 
 ## Implementations
 
-### Resume
+### 1. Resume
 ```python linenums="1" 
 --8<-- "examples/advanced/multi_agent_chat/option1_resume.py"
 ```
 
 
-### History
+### 2. History
 ```python linenums="1"
 --8<-- "examples/advanced/multi_agent_chat/option2_history.py"
 ```
 
-### Generator
+### 3. Generator
 ```python linenums="1"
 --8<-- "examples/advanced/multi_agent_chat/option3_generator.py"
 ```
 
-### Same Context
+### 4. Same Context
 ```python linenums="1"
 --8<-- "examples/advanced/multi_agent_chat/option4_samectx.py"
 ```

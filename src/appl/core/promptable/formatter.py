@@ -1,4 +1,5 @@
 from abc import ABCMeta
+from typing import Any
 
 from ..types import *
 
@@ -15,6 +16,8 @@ class FormatterMeta(ABCMeta):
     def _get_format_name(cls):
         if name := getattr(cls, "name", None):
             return name
+        if docstr := getattr(cls, "__doc__", None):
+            return docstr
         return getattr(cls, "__format_name__", cls.__name__)
 
     def __format__(cls, format_spec: str) -> str:
@@ -40,4 +43,4 @@ class Formattable(metaclass=FormatterMeta):
     """
 
     fstr: str
-    name: String
+    name: Optional[String]

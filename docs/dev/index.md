@@ -1,4 +1,4 @@
-# Management
+# Development
 We use [pdm](https://pdm-project.org/latest/) to manage the dependencies and [MkDocs](https://www.mkdocs.org/getting-started/) to build the documentation.
 
 ## Pre Commit

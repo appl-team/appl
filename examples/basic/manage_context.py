@@ -26,7 +26,7 @@ def query(question: str):
 
 
 @ppl
-def ask_questions(questions: list[str]):
+def answer_questions(questions: list[str]):
     # long prompt can be decomposed into several smaller `appl functions`
     # method 1 (recommended): build the sub-prompts in an empty context
     intro()  # returns prompt records, will be captured in this context
@@ -40,5 +40,5 @@ questions = [
     "What's the date yesterday?",
     "How many dates passed since 2024/02/02?",
 ]
-for res in ask_questions(questions):
+for res in answer_questions(questions):
     print(res)

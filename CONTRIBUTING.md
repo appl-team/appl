@@ -6,7 +6,7 @@ We welcome contributions of all kinds and we are grateful for your efforts! Here
 
 ## Code of Conduct
 
-By contributing, you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it thoroughly to understand our expectations for behavior.
+By contributing, you agree to uphold our [Code of Conduct](https://github.com/appl-team/appl/blob/main/code_of_conduct.md). Please read it thoroughly to understand our expectations for behavior.
 
 ## How to Contribute
 
@@ -16,7 +16,7 @@ If you encounter any bugs, unexpected behaviors, or have suggestions for new fea
 
 ### Improving Documentation
 
-You can help improve our documentation by fixing typos, adding new examples, or enhancing existing documentation. Check out our [documentation files](docs/) to get started, and feel free to submit a pull request with your changes.
+You can help improve our documentation by fixing typos, adding new examples, or enhancing existing documentation. Check out our [documentation files](https://github.com/appl-team/appl/tree/main/docs) to get started, and feel free to submit a pull request with your changes.
 
 ### Submitting Code Changes
 

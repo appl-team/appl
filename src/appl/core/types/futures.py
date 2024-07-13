@@ -151,6 +151,18 @@ class StringFuture(FutureValue, BaseModel):
         """Serialize the StringFuture."""
         return str(self)
 
+    def join(self, iterable: Iterable["StringFuture"]) -> "StringFuture":
+        """Concatenate any number of strings.
+
+        The StringFuture whose method is called is inserted in between each
+        given StringFuture. The result is returned as a new StringFuture."""
+        result = []
+        for i, x in enumerate(iterable):
+            if i != 0:
+                result.append(self)
+            result.append(x)
+        return StringFuture.from_list(result)
+
     def _get_val(self):
         return str(self)
 
@@ -178,7 +190,7 @@ class StringFuture(FutureValue, BaseModel):
         else:
             raise RuntimeError("Cannot add StringFuture to non-string.")
 
-    def __radd__(self, other: "String") -> "StringFuture":
+    def __radd__(self, other: str) -> "StringFuture":
         if isinstance(other, str):
             return StringFuture.from_list([other] + self.s)
         else:
@@ -189,6 +201,8 @@ class StringFuture(FutureValue, BaseModel):
             return StringFuture.from_list(self.s + [other])
         elif isinstance(other, StringFuture):
             return StringFuture.from_list(self.s + other.s)
+        elif hasattr(other, "str_future"):  # For custom type
+            return StringFuture.from_list(self.s + [other.str_future])
         else:
             raise RuntimeError("Cannot add StringFuture to non-string.")
 

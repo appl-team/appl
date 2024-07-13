@@ -1,3 +1,5 @@
+import copy
+
 from litellm import model_list, provider_list
 
 from ..core.config import configs
@@ -10,16 +12,20 @@ def _init_server(
     provider: Optional[str] = None,
     base_url: Optional[str] = None,
     api_key: Optional[str] = None,
-    is_custom_llm: bool = False,
     **kwargs: Any,
 ) -> BaseServer:
     """Initialize a server based on the model, provider and other arguments."""
     if provider is None:
         provider = model.split("/")[0]
 
+    is_custom_llm = provider.split("/")[0] == "custom"
+    custom_llm_provider = (
+        provider[len("custom/") :] or "openai" if is_custom_llm else None
+    )  # "openai" is the default provider for custom models
+
     if model == "_dummy":
         server: BaseServer = DummyServer()  # for testing purposes
-    elif provider == "api" or model in model_list or provider in provider_list:
+    elif is_custom_llm or model in model_list or provider in provider_list:
         from .api import APIServer
 
         msg = f"Initializing APIserver for model {model}"
@@ -30,13 +36,32 @@ def _init_server(
             model,
             base_url=base_url,
             api_key=api_key,
-            is_custom_llm=is_custom_llm,
+            custom_llm_provider=custom_llm_provider,
             **kwargs,
         )
     else:
         raise ValueError(f"Unknown model {model}")
 
     return server
+
+
+def _get_server_configs(name: str) -> dict:
+    if name not in configs.get("servers", {}):
+        raise ValueError(f"Server {name} not found")
+    server_configs: dict = configs.servers[name]
+    for _ in range(100):  # prevent infinite loop (max 100 templates)
+        if "template" not in server_configs:
+            break
+        server_configs = copy.deepcopy(server_configs)
+        template_name = server_configs.pop("template")
+        if template_name not in configs.servers:
+            raise ValueError(f"Server config template {template_name} not found")
+        template_config = configs.servers[template_name]
+        # override template config
+        server_configs = {**template_config, **server_configs}
+    if "template" in server_configs:
+        raise ValueError(f"Template loop detected in server config {name}")
+    return server_configs
 
 
 class ServerManager:
@@ -62,12 +87,9 @@ class ServerManager:
             name = configs.getattrs("servers.default")
 
         if name not in self._servers:
-            if name in configs.get("servers", {}):
-                server_config: dict = configs.servers[name]
-                server = _init_server(**server_config)
-                self.register_server(name, server)
-            else:
-                raise ValueError(f"Server {name} not found")
+            server_configs = _get_server_configs(name)
+            server = _init_server(**server_configs)
+            self.register_server(name, server)
         return self._servers[name]
 
     @property

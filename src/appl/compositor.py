@@ -54,18 +54,21 @@ class DoubleLineSeparated(Compositor):
     _sep = "\n\n"
 
 
-class FreshLine(LineSeparated):
-    """Create a fresh line with no indent.
+class NoIndent(LineSeparated):
+    """The list compositor with no indentation.
 
     Attributes:
         _inc_indent: The class default indentation is "".
 
     Example:
         ```py
-        >>> with FreshLine():
-        ...     EMPTY
+        >>> with IndentedList():
+        ...     with NoIndent():
+        ...         "item1"
+        ...     "item2"
         <<< The prompt will be:
-        [indicates an empty line]
+        item1
+            item2
         ```
     """
 
@@ -259,6 +262,7 @@ class Logged(LineSeparated):
         item1
         item2
         END
+        ```
     """
 
     _indent_inside: Optional[str] = ""

@@ -52,23 +52,31 @@ from .core.message import (
 from .core.promptable import define, define_bracketed, promptify
 from .func import (
     as_func,
-    as_str,
     as_tool,
     as_tool_choice,
     call,
     convo,
+    empty_line,
     gen,
     need_ctx,
     openai_tool_schema,
     partial,
     ppl,
     records,
+    str_future,
 )
 from .role_changer import AIRole, SystemRole, ToolRole, UserRole
 from .servers import server_manager
 from .tracing import TraceEngine
 from .types import *
-from .utils import LoguruFormatter, find_dotenv, find_files, get_folder, get_meta_file
+from .utils import (
+    LoguruFormatter,
+    find_dotenv,
+    find_files,
+    get_folder,
+    get_meta_file,
+    timeit,
+)
 
 
 def _get_loguru_format():

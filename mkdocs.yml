@@ -18,33 +18,30 @@ nav:
     - Welcome to APPL: index.md
     - Installation Guide: install.md
     - Setup Guide: setup.md
+    - FAQs: faq.md
     - Contribution Guide: contribute.md
-  - Cookbook:  # how-to-guides
-    - Basic:
-      - examples/basic/index.md
-      - Hello World: examples/basic/hello_world.md
-      - Answer Questions: examples/basic/answer_questions.md
-      - Context Management: examples/basic/context.md
-      - Self Consistency: examples/basic/cot_sc.md
-      - Tool Call: examples/basic/tool_call.md
-      - Prompt Coding Helpers: examples/basic/prompt_coding.md
+  - Tutorials:
+    - tutorials/index.md
+    - Getting Started: tutorials/1_get_started.md
+    - "Example: QA with LMs": tutorials/2_qa_example.md
+    - APPL Function: tutorials/3_appl_function.md
+    - Concurrent LM Calls: tutorials/4_concurrent.md
+    - Tool Calls for LMs: tutorials/5_tool_calls.md
+    - Coding Prompts: tutorials/6_prompt_coding.md
+    - Using Tracing: tutorials/7_tracing.md
     - Usage:
-      - Servers: examples/usage/servers.md
-      - Streaming: examples/usage/streaming.md
-      - Instructor: examples/usage/instructor.md
-    - Advanced:
-      - React: examples/advanced/react.md
-      - Chat with Codes: examples/advanced/chat_with_codes.md
-      - Very Long Prompt: examples/advanced/long_prompt.md
-      - Multi Agent Chat: examples/advanced/multi_agent_chat.md
-  - Language:
-    - APPL: language/index.md
-    - APPL Function: language/appl_function.md
-    - Syntax: language/syntax.md
-    - Format: language/format.md
-    - Prompt: language/prompt.md
-    - Context: language/context.md
-    - Best Practices: language/best_practices.md
+      - Servers: tutorials/usage/servers.md
+      - Streaming: tutorials/usage/streaming.md
+      - Using Instructor: tutorials/usage/instructor.md
+      - Using SRT: tutorials/usage/srt.md
+    - Appendix:
+      - Prompt Capture: tutorials/appendix/prompt_capture.md
+  - Cookbook:  # how-to-guides
+    - cookbook/index.md
+    - ReAct Agent: cookbook/react.md
+    - Multi Agent Chat: cookbook/multi_agent_chat.md
+    - Chat with Codes: cookbook/chat_with_codes.md
+    - Very Long Prompt: cookbook/long_prompt.md
   - API Reference:
     - appl: reference/
   - Development:
@@ -73,7 +70,7 @@ theme:
   - navigation.path
   - navigation.sections
   - navigation.tabs
-  - navigation.tabs.sticky
+  # - navigation.tabs.sticky
   - navigation.top
   - navigation.tracking
   - search.highlight
@@ -182,6 +179,13 @@ plugins:
   - coverage
 
 extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/appl-team/appl
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/q3x4Qwgj29
+    - icon: fontawesome/brands/twitter
+      link: https://x.com/honghua_dong/status/1805310304751894891
   analytics:
     provider: google
     property: G-5M9WF9SE4J

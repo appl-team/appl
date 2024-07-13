@@ -1,12 +1,5 @@
 import time
 
-from litellm import (
-    CustomStreamWrapper,
-    ModelResponse,
-    completion_cost,
-    stream_chunk_builder,
-)
-from litellm.utils import Delta, Function
 from openai import Stream
 from openai.types.chat import (
     ChatCompletion,
@@ -20,6 +13,14 @@ from openai.types.chat.chat_completion_chunk import (
 )
 from pydantic import model_validator
 from tqdm import tqdm
+
+from litellm import (
+    CustomStreamWrapper,
+    ModelResponse,
+    completion_cost,
+    stream_chunk_builder,
+)
+from litellm.utils import Delta, Function
 
 from ..core.types import *
 from .config import configs
@@ -81,7 +82,7 @@ class CompletionResponse(BaseModel):
         """The complete response from the model. This will block until the response is finished."""
         if self.is_finished:
             return self._complete_response
-        self.streaming(display=False)
+        self.streaming()  # ? when we should set display to False?
         assert self.is_finished, "Response should be finished after streaming"
         return self._complete_response  # type: ignore
 
@@ -141,14 +142,16 @@ class CompletionResponse(BaseModel):
                     pass
             self.response_obj = chunk.model_dump()
         else:
-            print("===== APPL BEGIN STREAMING =====", flush=True)
-            suffix = ""
-            for chunk in iter(self):
-                if not display:
-                    continue
-                suffix = self._print_chunk(chunk, suffix)
-            print(suffix, flush=True)
-            print("===== APPL END STREAMING =====", flush=True)
+            if display:
+                print("===== APPL BEGIN STREAMING =====", flush=True)
+                suffix = ""
+                for chunk in iter(self):
+                    suffix = self._print_chunk(chunk, suffix)
+                print(suffix, flush=True)
+                print("===== APPL END STREAMING =====", flush=True)
+            else:
+                for chunk in iter(self):
+                    pass
         return self
 
     def register_post_finish_callback(self, callback: Callable) -> None:
@@ -235,4 +238,10 @@ class CompletionResponse(BaseModel):
         return self
 
     def __getattr__(self, name: str) -> Any:
+        if not self.is_finished:
+            logger.warning(
+                f"Cannot get {name} attribute before the response is finished. "
+                "Returning None."
+            )
+            return None
         return getattr(self.complete_response, name)

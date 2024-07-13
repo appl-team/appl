@@ -123,6 +123,11 @@ class Generation:
         """The results of the response."""
         return self.response.results
 
+    @property
+    def str_future(self) -> StringFuture:
+        """The StringFuture representation of the response."""
+        return StringFuture(self)
+
     def _call_tool(
         self, name: str, args: str, parallel: bool = False, use_process: bool = False
     ) -> Any:
@@ -205,6 +210,24 @@ class Generation:
             if self.is_tool_call:
                 return AIMessage(tool_calls=self.tool_calls)
         return StringFuture(self._call)
+
+    def __add__(self, other: Union[String, "Generation"]) -> StringFuture:
+        # Assume generation is a string
+        if isinstance(other, Generation):
+            return self.str_future + other.str_future
+        elif isinstance(other, (str, StringFuture)):
+            return self.str_future + other
+        raise TypeError(
+            f"unsupported operand type(s) for +: 'Generation' and '{type(other)}'"
+        )
+
+    def __radd__(self, other: String) -> StringFuture:
+        # Assume generation is a string
+        if isinstance(other, (str, StringFuture)):
+            return other + self.str_future
+        raise TypeError(
+            f"unsupported operand type(s) for +: '{type(other)}' and 'Generation'"
+        )
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self.response, name)

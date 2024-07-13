@@ -3,12 +3,26 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from pydantic import model_validator
-from termcolor import colored
+from termcolor import COLORS, colored
 
 from appl.core.types import Dict
 
+from .config import configs
 from .tool import ToolCall
 from .types import *
+
+
+def get_role_color(role: MessageRole) -> Optional[str]:
+    color_dict = configs.getattrs("settings.messages.colors", {})
+    return color_dict.get(role.type, None)
+
+
+def get_colored_role_text(role: Optional[MessageRole], content: str) -> str:
+    if role:
+        color = get_role_color(role)
+        if color in COLORS:
+            return colored(content, color)  # type: ignore
+    return content
 
 
 class BaseMessage(BaseModel, ABC):
@@ -114,15 +128,23 @@ class BaseMessage(BaseModel, ABC):
             return res
         return None
 
-    def __repr__(self) -> str:
-        if self.role is None:
-            return f"Message({self.content})"
-        return f"{self.role}: {self.content}"
+    def str_with_default_role(self, default_role: Optional[MessageRole] = None) -> str:
+        """Return the string representation of the message with default role."""
+        return self._get_colored_content(self.role or default_role)
+
+    def _get_serialized_content(self, role: Optional[MessageRole] = None) -> str:
+        if role is None:
+            return f"{self.content}"
+        return f"{role}: {self.content}"
+
+    def _get_colored_content(self, role: Optional[MessageRole] = None) -> str:
+        return get_colored_role_text(role, self._get_serialized_content(role))
 
     def __str__(self) -> str:
-        if self.role is None:
-            return str(self.content)
-        return self.__repr__()
+        return self._get_colored_content(self.role)
+
+    def __repr__(self) -> str:
+        return f"Message(role={self.role!r}, content={self.content!r})"
 
 
 Message = TypeVar("Message", bound=BaseMessage)
@@ -193,7 +215,15 @@ class AIMessage(BaseMessage):
         super().__init__(content=content, role=role, tool_calls=tool_calls, **kwargs)
         self.validate_role(ASSISTANT_ROLE)
 
-    def __repr__(self) -> str:
+    def get_dict(self, default_role: Optional[MessageRole] = None) -> Dict[str, Any]:
+        """Return a dict representation of the message."""
+        data = super().get_dict(default_role)
+        if len(self.tool_calls):
+            data["tool_calls"] = [call.get_dict() for call in self.tool_calls]
+        return data
+
+    def _get_serialized_content(self, role: Optional[MessageRole] = None) -> str:
+        assert role == self.role, "Role must be the same as the message role."
         s = f"{self.role}:"
         if self.content is not None:
             s += f" {self.content}"
@@ -201,12 +231,11 @@ class AIMessage(BaseMessage):
             s += f" {self.tool_calls}"
         return s
 
-    def get_dict(self, default_role: Optional[MessageRole] = None) -> Dict[str, Any]:
-        """Return a dict representation of the message."""
-        data = super().get_dict(default_role)
-        if len(self.tool_calls):
-            data["tool_calls"] = [call.get_dict() for call in self.tool_calls]
-        return data
+    def __repr__(self) -> str:
+        return (
+            f"AIMessage(role={self.role!r}, content={self.content!r}, "
+            f"tool_calls={self.tool_calls!r})"
+        )
 
 
 class ToolMessage(BaseMessage):
@@ -291,37 +320,22 @@ class Conversation(BaseModel):
         [], description="The messages in the conversation"
     )
 
-    def collapse(self) -> None:
+    @property
+    def has_message_role(self) -> bool:
+        """Whether the conversation has message roles."""
+        return any(m.role is not None for m in self.system_messages + self.messages)
+
+    def collapse(self) -> "Conversation":
         """Collapse the messages in the conversation."""
         self.system_messages = collapse_messages(self.system_messages)
         if len(self.system_messages) > 1:
             raise ValueError("System messages cannot be fully collapsed.")
         self.messages = collapse_messages(self.messages)
+        return self
 
     def materialize(self) -> None:
         """Materialize the messages in the conversation."""
         str(self)
-
-    def __repr__(self) -> str:
-        return f"Conversation({self.system_messages}, {self.messages})"
-
-    def __str__(self) -> str:
-        self.collapse()
-        res = "\n".join(str(m) for m in self.system_messages)
-        res += "\n".join(str(m) for m in self.messages)
-        return res
-
-    def __iter__(self) -> Iterator[BaseMessage]:  # type: ignore
-        """Iterate over messages, excluding the system message."""
-        return iter(self.messages)
-
-    def __getitem__(self, index: int) -> BaseMessage:
-        """Get message by index, excluding the system message."""
-        return self.messages[index]
-
-    def __len__(self) -> int:
-        """Length of the conversation, excluding the system message."""
-        return len(self.messages)
 
     def set_system_messages(self, messages: List[SystemMessage]) -> None:
         """Set the system messages."""
@@ -366,3 +380,25 @@ class Conversation(BaseModel):
             system_messages=self.system_messages.copy(),
             messages=self.messages.copy(),
         )
+
+    def __repr__(self) -> str:
+        return f"Conversation({self.system_messages!r}, {self.messages!r})"
+
+    def __str__(self) -> str:
+        self.collapse()
+        role = USER_ROLE if self.has_message_role else None
+        contents = [m.str_with_default_role() for m in self.system_messages]
+        contents += [m.str_with_default_role(role) for m in self.messages]
+        return "\n".join(contents)
+
+    def __iter__(self) -> Iterator[BaseMessage]:  # type: ignore
+        """Iterate over messages, excluding the system message."""
+        return iter(self.messages)
+
+    def __getitem__(self, index: int) -> BaseMessage:
+        """Get message by index, excluding the system message."""
+        return self.messages[index]
+
+    def __len__(self) -> int:
+        """Length of the conversation, excluding the system message."""
+        return len(self.messages)

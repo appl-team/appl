@@ -5,13 +5,9 @@ import time
 from functools import wraps
 from importlib.metadata import version
 
-from langsmith import traceable
-from openai import OpenAI, Stream
-from openai.types.chat import ChatCompletion, ChatCompletionChunk
-
 import litellm
-from appl import __version__
 from instructor.patch import Mode
+from langsmith import traceable
 from litellm import (
     CustomStreamWrapper,
     ModelResponse,
@@ -19,6 +15,10 @@ from litellm import (
     stream_chunk_builder,
 )
 from litellm.exceptions import NotFoundError
+from openai import OpenAI, Stream
+from openai.types.chat import ChatCompletion, ChatCompletionChunk
+
+from appl import __version__
 
 from ..core import trace
 from ..core.config import configs
@@ -123,7 +123,7 @@ class APIServer(BaseServer):
         model: str,
         base_url: Optional[str] = None,
         api_key: Optional[str] = None,
-        is_custom_llm: bool = False,
+        custom_llm_provider: Optional[str] = None,
         wrap_mode: Optional[Mode] = Mode.TOOLS,
         cost_currency: str = "USD",
         **kwargs: Any,
@@ -140,7 +140,7 @@ class APIServer(BaseServer):
         self._model = model
         self._base_url = base_url
         self._api_key = api_key
-        self._is_custom_llm = is_custom_llm
+        self._custom_llm_provider = custom_llm_provider
         self._cost_currency = cost_currency
         self._default_args = kwargs
 
@@ -157,8 +157,8 @@ class APIServer(BaseServer):
             create_args["base_url"] = self._base_url
         if self._api_key is not None:
             create_args["api_key"] = self._api_key
-        if self._is_custom_llm:
-            create_args["custom_llm_provider"] = "openai"
+        if self._custom_llm_provider:
+            create_args["custom_llm_provider"] = self._custom_llm_provider
         create_args.update(kwargs)  # update create_args with other kwargs
 
         # add args to create_args

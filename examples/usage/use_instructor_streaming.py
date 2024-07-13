@@ -1,28 +1,28 @@
 # https://jxnl.github.io/instructor/why/?h=iterable#partial-extraction
 from typing import List
 
-from instructor import OpenAISchema, Partial
+from pydantic import BaseModel
 from rich.console import Console
 
 import appl
 from appl import Generation, gen, ppl
+from instructor import Partial
 
 appl.init()
 
 
-class User(OpenAISchema):
+class User(BaseModel):
     name: str
     age: int
-    email: str
 
 
-class Info(OpenAISchema):
+class Info(BaseModel):
     users: List[User]
 
 
 @ppl
 def extract_info() -> Generation:
-    f"randomly generate 5 users."
+    f"randomly generate 3 users."
     return gen(response_model=Partial[Info], stream=True).response_obj
 
 

@@ -1,6 +1,6 @@
 import appl
 from appl import BracketedDefinition as Def
-from appl import define, ppl, records
+from appl import define, empty_line, ppl, records
 from appl.compositor import *
 
 
@@ -44,8 +44,7 @@ def instruction(language: str):
 def get_prompt(opr: str, language: str):
     with LineSeparated(indexing="##"):
         requirements(opr)  # the returned prompt will be formatted using the compositor
-        with FreshLine():
-            f""  # create an empty line regardless of other compositor
+        empty_line()  # create an empty line regardless of other compositor
         instruction(language)
     return records()
 

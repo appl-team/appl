@@ -109,7 +109,7 @@ class TraceHTMLPrinter(TracePrinterBase):
                 with Tagged("li", attrs=li_attrs):
                     f"<div><b>{name}:</b> {node.ret}</div>"
                     if completion and (runtime := completion.runtime) > 0:
-                        f"<span class='{self._time_style}'>{runtime/1000.0:.2e} s</span>"
+                        f"<span class='{self._time_style}'>{runtime:.2e} s</span>"
                     if completion and (cost := completion.info.get("cost")):
                         f"<span class='{self._cost_style}'>$ {cost:.2e}</span>"
                 with Tagged(
@@ -137,8 +137,8 @@ class TraceHTMLPrinter(TracePrinterBase):
                 # display details for the function
                 # ? display time, args and kwargs
                 # with Tagged("table", attrs={"class": "table small"}):
-                #     start = (node.start_time - min_timestamp) / 1000.0
-                #     end = (node.end_time - min_timestamp) / 1000.0
+                #     start = node.start_time - min_timestamp
+                #     end = node.end_time - min_timestamp
                 #     runtime = end - start
                 #     self._make_line(
                 #         "Time", f"{runtime:.2e} s (from {start:.2e} to {end:.2e})"

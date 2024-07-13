@@ -137,9 +137,17 @@ class BaseServer(ABC):
         if log_llm_response:
             logger.info(f"Generation [{gen_id}] results: {results}")
         if results.cost:
-            _update_cost(
-                self.model_name, results.cost, getattr(self, "_cost_currency", "USD")
-            )
+            if "mock_response" in create_args:
+                if configs.getattrs("settings.logging.display.llm_cost"):
+                    logger.info(
+                        f"Mock response, estimated cost for real request: {results.cost:.4f}"
+                    )
+            else:
+                _update_cost(
+                    self.model_name,
+                    results.cost,
+                    getattr(self, "_cost_currency", "USD"),
+                )
 
         dump_args = create_args.copy()
         if "response_model" in dump_args:

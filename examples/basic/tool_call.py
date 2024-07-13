@@ -1,7 +1,7 @@
 import sympy
 
 import appl
-from appl import AIMessage, Generation, gen, ppl, records
+from appl import AIMessage, Generation, convo, gen, ppl, records
 
 appl.init()
 
@@ -22,7 +22,7 @@ def is_lucky(x: int) -> bool:
 def func(x):
     f"Is {x} a lucky number?"
 
-    # Initiate the generation with tool `unique_number``,
+    # Initiate the generation with tool `is_lucky``,
     # which is built into a tool by automatically extracting
     # information from the function signature and docstring.
     # And then store the tool call messages into the prompt

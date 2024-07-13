@@ -1,7 +1,7 @@
 import wikipediaapi
 
 import appl
-from appl import as_str, call, gen, ppl, records
+from appl import call, gen, ppl, records
 from appl.const import NEWLINE
 
 appl.init()

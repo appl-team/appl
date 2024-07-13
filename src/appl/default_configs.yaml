@@ -14,7 +14,7 @@ settings:
       enabled: false # default to not log to a file
       path_format: './logs/{basename}_{time:YYYY_MM_DD__HH_mm_ss}'
       # The path to the log file, ext will be added automatically
-      log_level: null # default to use the same level as the log_level
+      log_level: null # default to use the same log level as stdout
     display:
       configs: false # Display the configurations
       llm_raw_call_args: false # Display the raw args for the llm calls
@@ -35,7 +35,7 @@ settings:
     colors:
       system: red
       user: green
-      assistant: blue
+      assistant: cyan
       tool: magenta
   misc:
     suppress_litellm_debug_info: true
@@ -45,10 +45,12 @@ settings:
 # When using SRT server,
 #   set model to "srt" and api_base to the address of the server.
 servers:
-  default: gpt35-turbo # should avoid using '.' in the name
-  gpt35-turbo: # the name of the server
+  default: gpt35-turbo
+  gpt35-turbo: # the name of the server, should avoid using '.' in the name
     model: gpt-3.5-turbo # the model name
   gpt4-turbo:
     model: gpt-4-turbo
+  gpt4o:
+    model: gpt-4o
   _dummy:
     model: _dummy

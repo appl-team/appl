@@ -1,6 +1,5 @@
 import appl
-from appl import ppl
-from appl.func import gen
+from appl import gen, ppl
 
 appl.init()
 
@@ -15,7 +14,7 @@ def add1(a, b):
 @ppl
 def add2(a, b):
     f"what's {a} plus {b}?"
-    return gen("gpt4-turbo")
+    return gen("claude-35-sonnet")
 
 
 @ppl
