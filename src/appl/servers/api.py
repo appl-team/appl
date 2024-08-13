@@ -67,6 +67,7 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
 
     log_llm_call_args = configs.getattrs("settings.logging.display.llm_raw_call_args")
     log_llm_response = configs.getattrs("settings.logging.display.llm_raw_response")
+    log_llm_usage = configs.getattrs("settings.logging.display.llm_raw_usage")
     log_llm_cache = configs.getattrs("settings.logging.display.llm_cache")
     if log_llm_call_args:
         logger.info(f"Call completion [{gen_id}] with args: {kwargs}")
@@ -94,12 +95,7 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
 
     def post_completion(response: CompletionResponse) -> None:
         raw_response = response.complete_response
-        cost = 0.0
-        if not use_cache:
-            try:
-                cost = completion_cost(raw_response)
-            except litellm.exceptions.NotFoundError:
-                pass
+        cost = 0.0 if use_cache else response.cost
         response.cost = cost  # update the cost
         add_to_trace(
             CompletionResponseEvent(
@@ -108,6 +104,8 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         )
         if log_llm_response:
             logger.info(f"Completion [{gen_id}] response: {response}")
+        if log_llm_usage and response.usage is not None:
+            logger.info(f"Completion [{gen_id}] usage: {response.usage}")
 
     return CompletionResponse(
         raw_response=raw_response, post_finish_callbacks=[post_completion]
@@ -186,6 +184,9 @@ class APIServer(BaseServer):
             # fill in the response_model and response_obj
             response.response_model = response_model
             response.response_obj = results
+            # TODO?: update the cost for multiple retries
+            # instructor has updated the total usage for retries
+            # ?? response.cost = completion_cost({"usage": response.usage})
         else:
             response = chat_completion(**kwargs)
         return response

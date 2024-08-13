@@ -1,28 +1,11 @@
 import time
 
+from litellm import CustomStreamWrapper, completion_cost, stream_chunk_builder
+from litellm.exceptions import NotFoundError
 from openai import Stream
-from openai.types.chat import (
-    ChatCompletion,
-    ChatCompletionChunk,
-    ChatCompletionMessageToolCall,
-)
-from openai.types.chat.chat_completion import Choice
-from openai.types.chat.chat_completion_chunk import (
-    ChoiceDelta,
-    ChoiceDeltaToolCallFunction,
-)
 from pydantic import model_validator
 from tqdm import tqdm
 
-from litellm import (
-    CustomStreamWrapper,
-    ModelResponse,
-    completion_cost,
-    stream_chunk_builder,
-)
-from litellm.utils import Delta, Function
-
-from ..core.types import *
 from .config import configs
 from .tool import ToolCall
 from .types import *
@@ -39,6 +22,10 @@ class CompletionResponse(BaseModel):
     """The raw response from the model."""
     cost: Optional[float] = Field(None, description="The cost of the completion")
     """The cost of the completion."""
+    usage: Optional[CompletionUsage] = Field(
+        None, description="The usage of the completion"
+    )
+    """The usage of the completion."""
     chunks: List[Union[ModelResponse, ChatCompletionChunk]] = Field(
         [], description="The chunks of the response when streaming"
     )
@@ -81,7 +68,7 @@ class CompletionResponse(BaseModel):
     def complete_response(self) -> Union[ModelResponse, ChatCompletion]:
         """The complete response from the model. This will block until the response is finished."""
         if self.is_finished:
-            return self._complete_response
+            return self._complete_response  # type: ignore
         self.streaming()  # ? when we should set display to False?
         assert self.is_finished, "Response should be finished after streaming"
         return self._complete_response  # type: ignore
@@ -194,11 +181,16 @@ class CompletionResponse(BaseModel):
             return
         self.is_finished = True
         self._complete_response = response
+        self.usage = getattr(response, "usage", None)
+        try:
+            self.cost = completion_cost(response)
+        except NotFoundError:
+            pass
         # parse the message and tool calls
         if isinstance(response, (ModelResponse, ChatCompletion)):
             message = response.choices[0].message
-            if getattr(message, "tool_calls", None):
-                for call in message.tool_calls:
+            if tool_calls := getattr(message, "tool_calls", None):
+                for call in tool_calls:
                     self.tool_calls.append(ToolCall.from_openai_tool_call(call))
             elif message.content is not None:
                 self.message = message.content

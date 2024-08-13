@@ -129,7 +129,8 @@ def init(
             override_configs = load_config(config_file)
             logger.info("Loaded configs from {}".format(config_file))
             configs.update(override_configs)
-            logger.info(f"update configs:\n{yaml.dump(override_configs.to_dict())}")
+            if configs.getattrs("settings.logging.display.configs_update"):
+                logger.info(f"update configs:\n{yaml.dump(override_configs.to_dict())}")
     else:
         caller_basename, dotenvs, appl_config_files = "appl", [], []
         logger.error(

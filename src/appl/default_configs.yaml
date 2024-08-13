@@ -17,8 +17,10 @@ settings:
       log_level: null # default to use the same log level as stdout
     display:
       configs: false # Display the configurations
+      configs_update: false # Display the updates of the configurations
       llm_raw_call_args: false # Display the raw args for the llm calls
       llm_raw_response: false # Display the raw response of the llm calls
+      llm_raw_usage: false # Display the raw usage of the llm calls
       llm_call_args: true # Display the args for the llm calls
       llm_response: true # Display the response of the llm calls
       llm_cache: false # Display the cache info

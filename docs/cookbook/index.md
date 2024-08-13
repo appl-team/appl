@@ -16,4 +16,4 @@ Welcome to the APPL Cookbook! This cookbook provides a collection of recipes to 
 1. [Chat with Codes](./chat_with_codes.md)
 
 ## Coding Prompts
-1. [Writing Long Prompts in Modules](./long_prompts.md)
+1. [Writing Long Prompts in Modules](./long_prompt.md)
