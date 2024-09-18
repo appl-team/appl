@@ -1,4 +1,7 @@
+# Usage: python examples/advanced/chat_with_codes.py
+
 import glob
+import os
 
 import seedir as sd
 
@@ -18,10 +21,10 @@ def chat(intro: str, source: str, ext: str = ".py"):
     sd.seedir(source, style="spaces", printout=False, exclude_folders=["__pycache__"])
     f"===== source ====="
     f"The contents of the source code are as follows:"
-    for f in glob.glob(source + f"/*{ext}"):
-        f"===== {f} ====="
-        with open(f, "r") as file:
-            file.read()  # put in the prompt
+    for name in glob.glob(os.path.join(source, "**", f"*{ext}"), recursive=True):
+        f"===== {name} ====="
+        with open(name, "r", encoding="utf-8") as f:
+            f.read()  # load the file contents and put in the prompt
     f"===== chat ====="
     f"Now begin the chat about the project:"
     f""
@@ -36,5 +39,5 @@ def chat(intro: str, source: str, ext: str = ".py"):
 
 
 if __name__ == "__main__":
-    readme = load_file("README.md")
-    chat(readme, "./appl", ".py")
+    readme = load_file("README.md", open_kwargs=dict(encoding="utf-8"))
+    chat(readme, "./src/appl", ".py")

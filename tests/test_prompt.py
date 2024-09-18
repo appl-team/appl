@@ -103,10 +103,20 @@ def test_inner_func():
     assert str(func()) == "Hello\nWorld"
 
 
-def test_exclude_first_str():
-    @ppl(exclude_first_str=True)
+def test_include_docstring():
+    @ppl(include_docstring=True)
     def func():
-        "This is a docstring"
+        """This is a docstring"""
+        "Hello"
+        return records()
+
+    assert str(func()) == "This is a docstring\nHello"
+
+
+def test_default_no_docstring():
+    @ppl()
+    def func():
+        """This is a docstring"""
         "Hello"
         return records()
 

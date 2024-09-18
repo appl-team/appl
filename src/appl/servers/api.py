@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 import time
 from functools import wraps
@@ -76,7 +74,7 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         name=f"ChatCompletion_{gen_id}",
         run_type="llm",
         metadata={"appl": "completion", "appl_version": __version__},
-    )
+    )  # type: ignore
     def wrapped(**inner_kwargs: Any) -> Tuple[Any, bool]:
         if cache_ret := find_in_cache(gen_id, inner_kwargs):
             if log_llm_cache:
@@ -122,7 +120,7 @@ class APIServer(BaseServer):
         base_url: Optional[str] = None,
         api_key: Optional[str] = None,
         custom_llm_provider: Optional[str] = None,
-        wrap_mode: Optional[Mode] = Mode.TOOLS,
+        wrap_mode: Optional[Mode] = Mode.JSON,
         cost_currency: str = "USD",
         **kwargs: Any,
     ) -> None:
@@ -139,6 +137,8 @@ class APIServer(BaseServer):
         self._base_url = base_url
         self._api_key = api_key
         self._custom_llm_provider = custom_llm_provider
+        if custom_llm_provider is not None and api_key is None:
+            self._api_key = "NotRequired"  # bypass the api_key check of litellm
         self._cost_currency = cost_currency
         self._default_args = kwargs
 

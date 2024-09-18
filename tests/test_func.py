@@ -21,7 +21,12 @@ def test_signature():
     def add(x: int, y: int) -> int:
         return x + y
 
-    assert signature(add) == signature(add.__wrapped__)
+    def add2(x: int, y: int, *, config=None) -> int:
+        # config (langsmith_extra) is added by langsmith @traceable
+        return x + y
+
+    new_sig = signature(add)
+    assert new_sig == signature(add.__wrapped__) or new_sig == signature(add2)
 
 
 def test_functionality():
@@ -63,6 +68,21 @@ def test_classmethod():
             return records()
 
     assert str(A.func()) == "start\naddon"
+
+
+def test_super_in_class():
+    class A:
+        def func(self):
+            return 1
+
+    class B(A):
+        @ppl
+        def func(self):
+            return super(B, self).func()
+
+    # NOTE: super() is not supported in ppl decorator
+    # TODO: fix by filling the class name and self in the function during compiling.
+    assert B().func() == 1
 
 
 def test_nested_ppl_error():

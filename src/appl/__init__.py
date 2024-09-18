@@ -63,6 +63,7 @@ from .func import (
     partial,
     ppl,
     records,
+    reset_context,
     str_future,
 )
 from .role_changer import AIRole, SystemRole, ToolRole, UserRole
@@ -114,6 +115,7 @@ def init(
     frame = inspect.currentframe()
     if frame and frame.f_back:
         caller_path = frame.f_back.f_code.co_filename  # Get file_path of the caller
+        caller_funcname = frame.f_back.f_code.co_name  # Get function name of the caller
         caller_basename = os.path.basename(caller_path).split(".")[0]
         caller_folder = os.path.dirname(caller_path)  # Get folder of the caller
         caller_folder = get_folder(caller_folder)
@@ -132,7 +134,8 @@ def init(
             if configs.getattrs("settings.logging.display.configs_update"):
                 logger.info(f"update configs:\n{yaml.dump(override_configs.to_dict())}")
     else:
-        caller_basename, dotenvs, appl_config_files = "appl", [], []
+        caller_basename, caller_funcname = "appl", "<module>"
+        dotenvs, appl_config_files = [], []
         logger.error(
             "Cannot find the caller of appl.init(), fail to load .env and appl configs"
         )
@@ -148,7 +151,10 @@ def init(
     if log_file.get("enabled", False):
         if (log_file_format := log_file.get("path_format", None)) is not None:
             log_file_path = (
-                f"{log_file_format.format(basename=caller_basename, time=now)}.log"
+                log_file_format.format(
+                    basename=caller_basename, funcname=caller_funcname, time=now
+                )
+                + ".log"
             )
             log_file.path = log_file_path
             file_log_level = log_file.get("log_level", None) or log_level
@@ -170,7 +176,9 @@ def init(
     strict_match = tracing.get("strict_match", True)
     if tracing.get("enabled", False):
         if (trace_file_format := tracing.get("path_format", None)) is not None:
-            prefix = trace_file_format.format(basename=caller_basename, time=now)
+            prefix = trace_file_format.format(
+                basename=caller_basename, funcname=caller_funcname, time=now
+            )
             trace_file_path = f"{prefix}.pkl"
             meta_file = f"{prefix}_meta.json"
             tracing.trace_file = trace_file_path

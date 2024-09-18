@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from threading import Event, Thread
 from types import CodeType, FunctionType, TracebackType
 from typing import (
+    IO,
     Any,
     Awaitable,
     Callable,

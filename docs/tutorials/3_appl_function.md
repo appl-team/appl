@@ -19,20 +19,22 @@ As you have seen in the [QA examples](./2_qa_example.md), you can define prompts
     Function calls are also expression statements, which means their return values (when not `None`) may be captured as prompts based on the type. To avoid capturing the return value, you may write it as a assignment statement, for example when calling the `pop` function : `_ = {"example": "Hello World"}.pop("example")`.
 
 ??? question "How about docstrings in *APPL functions*?"
-    Docstring is a special expression statement in Python, so it will be captured as a prompt by default. Ideally, we hope the docstring can also be used as a part of the prompt. Otherwise, you may exclude the docstring by specifying `exclude_first_str`, like
-    ```python
-    @ppl(exclude_first_str=True)
-    def my_function():
-        """This is a docstring."""
-        "First prompt."
-    ```
-    Or if you do not want the first prompt to be the docstring of the function, you can change it as a f-string, like 
-    ```python
-    @ppl
-    def my_function():
-        f"First prompt."
-        "Second prompt."
-    ```
+    Docstring is a special expression statement in Python. There are two cases for docstrings in *APPL functions*:
+    
+    1. If the docstring is triple-quoted, it will **NOT** be captured as a prompt by default. To also include the docstring as a part of the prompt, you may specify `include_docstring=True` in the `@ppl` decorator, like
+        ```python
+        @ppl(include_docstring=True)
+        def my_function():
+            """Docstring as a part of the prompt."""
+            "Another prompt."
+        ```
+    2. Otherwise, it will be captured as a prompt. But if the content is not meant to be the docstring of the function, it is recommended to use f-string instead.
+        ```python
+        @ppl
+        def my_function():
+            f"First prompt."
+            "Second prompt."
+        ```
 
 ## Prompt Retrieval
 Similar to the local and global variables in Python (retrieved with `locals()` and `globals()` functions, respectively), you can retrieve the prompts captured in the current function (with `records()`) or the full conversation in the context (with `convo()`). This [example](#example) demonstrates how to retrieve the prompts captured in the current function and the full conversation in the context.

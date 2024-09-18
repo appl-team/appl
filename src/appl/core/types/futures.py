@@ -201,7 +201,7 @@ class StringFuture(FutureValue, BaseModel):
             return StringFuture.from_list(self.s + [other])
         elif isinstance(other, StringFuture):
             return StringFuture.from_list(self.s + other.s)
-        elif hasattr(other, "str_future"):  # For custom type
+        elif hasattr(other, "str_future"):  # type: ignore  # For custom type
             return StringFuture.from_list(self.s + [other.str_future])
         else:
             raise RuntimeError("Cannot add StringFuture to non-string.")

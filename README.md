@@ -26,8 +26,6 @@
 * **[2024-07-12]**: We have improved our [tutorial](https://appl-team.github.io/appl/tutorials/). Please check them out for more detailed usage and examples.
 <!-- and [cookbook](https://appl-team.github.io/appl/tutorials/) -->
 
-<!-- TODO: RoadMap -->
-
 ## Quick Start
 
 ### Installation
@@ -45,7 +43,9 @@ You can set your OpenAI API key in the `.env` file in the root directory of your
 ```
 OPENAI_API_KEY=<your openai api key>
 ```
+
 or export it as an environment variable:
+
 ```bash
 export OPENAI_API_KEY=<your openai api key>
 ```
@@ -127,6 +127,13 @@ The resulting conversation for the first question would look like (generated res
 In *APPL functions*, [expression statements](https://docs.python.org/3/reference/simple_stmts.html#expression-statements) are captured as prompts [based on the type of its value](https://appl-team.github.io/appl/tutorials/appendix/prompt_capture/). Notably, the f-string is processed part by part, so the `gen` function inside the f-string intuitively uses the contents before that. In this example, `The name of the author is ` serves as a prefix to guide the completion of the author's name.
 
 After the author's name is extracted, the `get_answer` function is called multiple times in parallel to answer the questions, with the context being copied (detailed in [context-management](#context-management)), demonstrating the automatic parallelization feature of APPL.
+
+## RoadMap
+- [x] Default to exclude """docstring""" from the prompt formation.
+- [ ] Use FastAPI to build a server for inspecting the traces.
+- [ ] Add more ... (contributions are welcome!)
+  - [ ] Examples and tutorials to demonstrate the usage
+  - [ ] Test cases to increase the coverage
 
 ## Tutorial and Cookbook
 For a more comprehensive tutorial, please refer to the [tutorial](https://appl-team.github.io/appl/tutorials).

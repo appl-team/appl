@@ -26,7 +26,7 @@ class PromptFunc:
         ctx_method: str = "new",
         comp: Optional[Compositor] = None,
         default_return: Optional[Literal["prompt"]] = None,
-        exclude_first_str: bool = False,
+        include_docstring: bool = False,
         new_ctx_func: Callable = PromptContext,
         # default_sep: Optional[str] = None,
         # ? set the default printer behavior for the prompt function?
@@ -54,9 +54,9 @@ class PromptFunc:
             default_return (str, optional):
                 The default return value, "prompt" means return the prompt within
                 the function. Defaults to None.
-            exclude_first_str (bool, optional):
-                set to True to exclude the first string (liekly the docstring)
-                from the prompt. Defaults to False.
+            include_docstring (bool, optional):
+                set to True to include the triple-quoted docstring in the prompt.
+                Defaults to False.
             new_ctx_func (Callable, optional):
                 the function to create a new context. Defaults to PromptContext.
         """
@@ -69,9 +69,10 @@ class PromptFunc:
         if default_return is not None and default_return != "prompt":
             raise NotImplementedError("Only support default_return='prompt' now.")
         self._default_return = default_return
-        self._exclude_first_str = exclude_first_str
+        self._include_docstring = include_docstring
         self._new_ctx_func = new_ctx_func
         self._persist_ctx: Optional[PromptContext] = None
+        self._reset_context_func: Optional[Callable[[], None]] = None
         self._run_cnt = 0
         # self._default_sep = default_sep
 
@@ -135,6 +136,10 @@ class PromptFunc:
             if is_class_method:
                 self_or_cls = args[0]  # is it guaranteed? need double check
                 var_name = f"{self._name}_appl_ctx_"
+
+                def reset_context():
+                    setattr(self_or_cls, var_name, None)
+
                 # try to retrieve the context from the class
                 if (ctx := getattr(self_or_cls, var_name, None)) is None:
                     # copy the parent context if not exist
@@ -144,13 +149,23 @@ class PromptFunc:
                     # resume from the last run, but with clean locals
                     child_ctx = ctx.inherit()
             else:
+
+                def reset_context():
+                    self._persist_ctx = None
+
                 if self._persist_ctx is None:
                     self._persist_ctx = parent_ctx
+
                 child_ctx = self._persist_ctx.inherit()
+
+            self._reset_context_func = reset_context
         else:
             raise ValueError(f"Unknown ctx_method: {ctx_method}")
         child_ctx.is_outmost = False
-        child_ctx._exclude_first_str = self._exclude_first_str  # set in the context
+        child_ctx._func_name = self._name
+        child_ctx._func_docstring = self._doc
+        child_ctx._docstring_quote_count = self._func._docstring_quote_count
+        child_ctx._include_docstring = self._include_docstring  # set in the context
 
         compositor: Optional[Compositor] = kwargs.pop(
             "compositor", self._default_compositor

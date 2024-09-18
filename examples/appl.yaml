@@ -25,13 +25,19 @@ servers:
     model: claude-3-opus-20240229
   moonshot-8k:
     model: moonshot-v1-8k
-    provider: custom # https://docs.litellm.ai/docs/providers/custom_openai_proxy
+    provider: custom # https://docs.litellm.ai/docs/providers/custom
     api_key: os.environ/MOONSHOT_API_KEY # setup your API key in the environment variable
     base_url: "https://api.moonshot.cn/v1"
     # add cost, see also https://docs.litellm.ai/docs/proxy/custom_pricing
     input_cost_per_token: 1.2e-5
     output_cost_per_token: 1.2e-5
     cost_currency: "CNY"
+  # litellm has supported deepseek now, you can simply set up the deepseek server like this:
+  # deepseek-chat:
+  #   model: deepseek/deepseek-chat
+  # deepseek-coder:
+  #   model: deepseek/deepseek-coder
+  # Below use deepseek apis to illustrate how to set up a group of apis that not (yet) supported by litellm
   deepseek-chat:
     model: deepseek-chat
     provider: custom
@@ -44,6 +50,5 @@ servers:
     template: deepseek-chat
     model: deepseek-coder
   srt-llama2: # llama2 served using SRT
-    model: default
-    provider: custom
+    model: custom/default # the default is just a irrelevant name, could be changed to your preference
     base_url: "http://127.0.0.1:30000/v1" # the example address of the SRT server

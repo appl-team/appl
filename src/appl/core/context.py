@@ -32,8 +32,11 @@ class PromptContext:
         # local vars start with "_"
         self.locals = Namespace()
         self._records = PromptRecords()
-        self._exclude_first_str = False
-        self._is_first_str = True
+        self._func_name: Optional[str] = None
+        self._func_docstring: Optional[str] = None
+        self._include_docstring: bool = False
+        self._docstring_quote_count: Optional[int] = None
+        self._is_first_str: bool = True
 
     @property
     def records(self) -> PromptRecords:

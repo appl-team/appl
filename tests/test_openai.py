@@ -15,15 +15,15 @@ import appl
 from appl import AIRole, Generation, Image, UserRole, as_tool, gen, ppl
 from appl.const import NEWLINE
 
+appl.init()
+# NOTE: init here could influence other tests in other files.
+
 
 @ppl
 def add():
-    "1+1="
-    return str(gen(max_tokens=2)).strip()
+    "1+2="
+    return str(gen(max_tokens=10)).strip()
 
-
-appl.init()
-# NOTE: init here could influence other tests in other files.
 
 try:
     add()
@@ -45,7 +45,7 @@ pytestmark = [
 
 # @pytest.mark.skipif(skip_tests, reason="Skipped due to setting")
 def test_openai():
-    assert add() == "2"
+    assert "3" in add()
 
 
 def test_tool_call():

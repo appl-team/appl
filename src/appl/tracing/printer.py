@@ -42,7 +42,7 @@ class TraceHTMLPrinter(TracePrinterBase):
             "system": "text-bg-success",
         }
 
-    @ppl(exclude_first_str=True)
+    @ppl
     def print(self, trace: TraceEngineBase, meta_data: Optional[Configs] = None) -> str:
         """Print the trace in the format of HTML."""
         with Tagged("html"):

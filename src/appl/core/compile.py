@@ -25,6 +25,8 @@ from ast import (
     stmt,
 )
 
+import libcst as cst
+
 from .context import PromptContext
 from .types import *
 
@@ -241,6 +243,24 @@ class AddExecuteWrapper(ApplNodeTransformer):
         )
 
 
+def _get_docstring_quote_count(code: str) -> Optional[int]:
+    cst_tree = cst.parse_module(code)
+    for node in cst_tree.body:
+        if isinstance(node, cst.FunctionDef):
+            # Only detect the first func
+            statement = node.body.body[0]
+            if isinstance(statement, cst.SimpleStatementLine):
+                if isinstance(statement.body[0], cst.Expr):
+                    s = statement.body[0].value
+                    if isinstance(s, cst.SimpleString):
+                        if s.value.startswith('"""') or s.value.startswith("'''"):
+                            return 3
+                        else:
+                            return 1
+            return None
+    assert False, "no function detected"  # should not reach here
+
+
 class APPLCompiled:
     """A compiled APPL function that can be called with context."""
 
@@ -260,6 +280,7 @@ class APPLCompiled:
         self._name = original_func.__name__
         self._original_func = original_func
         self._compile_info = compile_info
+        self._docstring_quote_count = _get_docstring_quote_count(compile_info["source"])
 
     @property
     def freevars(self) -> Tuple[str, ...]:
@@ -283,6 +304,13 @@ class APPLCompiled:
             if name in _locals:
                 # set the closure variables to local_vars
                 local_vars[name] = _locals[name]
+            elif name == "__class__":
+                # attempt for super() workaround
+                # def super_(t: Any = None, obj: Any = None):
+                #     t = t or self_.__class__
+                #     obj = obj or self_
+                #     return super(t, obj)
+                local_vars["__class__"] = args[0].__class__
             else:
                 raise ValueError(
                     f"Freevar '{name}' not found. If you are using closure variables, "
@@ -292,7 +320,7 @@ class APPLCompiled:
                     "function within the current scope (automatically feeding the locals)."
                 )
 
-        exec(self._code, _globals, local_vars)
+        exec(self._code, _globals, local_vars)  # TODO: use closure argument
         func = local_vars[self._name]
         return func(*args, **kwargs)
 
@@ -331,6 +359,7 @@ def appl_compile(func: Callable) -> APPLCompiled:
         "lineno": lineno,
         "func_name": func.__name__,
         "freevars": func.__code__.co_freevars,
+        "docstring": func.__doc__,
     }
     for transformer in transformers:
         parsed_ast = transformer(compile_info).visit(parsed_ast)

@@ -7,7 +7,7 @@ To serve the documentation locally, run the following commands:
 
 ```bash
 pdm install -G docs
-mkdocs serve
+mkdocs serve [-a "localhost:8000"]
 ```
 
 Open http://localhost:8000/ in your browser to view the documentation.

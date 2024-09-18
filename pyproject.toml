@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "applang"
-version = "0.0.2"
+version = "0.1.0"
 description = "A Prompt Programming Language"
 authors = [
     { name = "Honghua Dong", email = "dhh19951@gmail.com" },
@@ -29,6 +29,7 @@ dependencies = [
     "langsmith>=0.1.25",
     "addict>=2.4.0",
     "pendulum>=3.0.0",
+    "libcst>=1.4.0",
 ]
 requires-python = ">=3.9"
 readme = "README.md"

@@ -1,5 +1,6 @@
 """helper functions for runtime execution within the compiled function."""
 
+from .config import configs
 from .context import PromptContext
 from .generation import Generation
 from .message import BaseMessage
@@ -42,9 +43,25 @@ def appl_execute(
     if s is None:
         return
     if isinstance(s, str):
-        if _ctx._exclude_first_str and _ctx._is_first_str:
-            logger.debug(f'The first string """{s}""" is excluded from prompt.')
-        else:
+        add_str = True
+        if _ctx._is_first_str:
+            if _ctx._include_docstring:
+                if _ctx._func_docstring is None:
+                    logger.warning(
+                        f"No docstring found for {_ctx._func_name}, cannot include it."
+                    )
+                else:
+                    assert s == _ctx._func_docstring, f"Docstring mismatch: {s}"
+            elif s == _ctx._func_docstring and _ctx._docstring_quote_count != 1:
+                add_str = False
+                if configs.getattrs(
+                    "settings.logging.display.docstring_warning", False
+                ):
+                    logger.warning(
+                        f'The docstring """{s}""" for "{_ctx._func_name}" is excluded from prompt. '
+                        "To include the docstring, set include_docstring=True in the @ppl function."
+                    )
+        if add_str:
             _ctx.add_string(StringFuture(s))
         _ctx._is_first_str = False
     elif isinstance(s, StringFuture):

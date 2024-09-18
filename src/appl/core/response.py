@@ -154,7 +154,7 @@ class CompletionResponse(BaseModel):
     def _print_chunk(
         self, chunk: Union[ModelResponse, ChatCompletionChunk], suffix: str = ""
     ) -> str:
-        delta: Union[Delta, ChoiceDelta] = chunk.choices[0].delta
+        delta: Union[Delta, ChoiceDelta] = chunk.choices[0].delta  # type: ignore
 
         def flush(content: str) -> None:
             print(content, end="", flush=True)
@@ -183,12 +183,12 @@ class CompletionResponse(BaseModel):
         self._complete_response = response
         self.usage = getattr(response, "usage", None)
         try:
-            self.cost = completion_cost(response)
+            self.cost = completion_cost(response) if response else 0.0
         except NotFoundError:
             pass
         # parse the message and tool calls
         if isinstance(response, (ModelResponse, ChatCompletion)):
-            message = response.choices[0].message
+            message = response.choices[0].message  # type: ignore
             if tool_calls := getattr(message, "tool_calls", None):
                 for call in tool_calls:
                     self.tool_calls.append(ToolCall.from_openai_tool_call(call))

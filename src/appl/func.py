@@ -53,7 +53,7 @@ def wraps(func: F) -> Callable[[F], F]:
     """Replace the functools.wraps to take care of the type hint."""
 
     def decorator(wrapper: F) -> F:
-        return functools.wraps(func)(wrapper)
+        return functools.wraps(func)(wrapper)  # type: ignore
 
     return decorator
 
@@ -79,7 +79,7 @@ def ppl(
     comp: Optional[Compositor] = None,
     *,
     default_return: Optional[Literal["prompt"]] = None,
-    exclude_first_str: bool = False,
+    include_docstring: bool = False,
     auto_prime: bool = False,
     num_extra_wrappers: int = 0,
     new_ctx_func: Callable = PromptContext,
@@ -91,7 +91,7 @@ def ppl(
     comp: Optional[Compositor] = None,
     *,
     default_return: Optional[Literal["prompt"]] = None,
-    exclude_first_str: bool = False,
+    include_docstring: bool = False,
     auto_prime: bool = False,
     num_extra_wrappers: int = 0,
     new_ctx_func: Callable = PromptContext,
@@ -122,9 +122,9 @@ def ppl(
         default_return (str, optional):
             The default return value, "prompt" means return the prompt within
             the function. Defaults to None.
-        exclude_first_str (bool, optional):
-            set to True to exclude the first string (liekly the docstring)
-            from the prompt. Defaults to False.
+        include_docstring (bool, optional):
+            set to True to include the triple-quoted docstring in the prompt.
+            Defaults to False.
         auto_prime (bool, optional):
             set to True to automatically prime the generator. Defaults to False.
         num_extra_wrappers (int, optional):
@@ -149,7 +149,7 @@ def ppl(
         # if not _is_class_method and "<locals>" in qualname and ctx_method == "resume":
         #     raise ValueError("Cannot use 'resume' with local functions.")
         prompt_func = PromptFunc(
-            func, ctx_method, comp, default_return, exclude_first_str, new_ctx_func
+            func, ctx_method, comp, default_return, include_docstring, new_ctx_func
         )
 
         @need_ctx
@@ -221,6 +221,18 @@ def ppl(
     else:
         # used as a single decorator (i.e., @ppl)
         return decorator(func=ctx)  # returns a wrapper
+
+
+def reset_context(func: Callable) -> None:
+    """Reset the context for APPL functions with the 'resume' context method."""
+    if prompt_func := getattr(func, "_prompt_func", None):
+        if reset_func := getattr(prompt_func, "_reset_context_func", None):
+            reset_func()
+            logger.info(f"Context reset for function {func.__name__}")
+        else:
+            logger.warning(f"Nothing to reset for function {func.__name__}")
+    else:
+        logger.warning(f"Not an APPL function: {func.__name__}, cannot reset context.")
 
 
 def as_func(

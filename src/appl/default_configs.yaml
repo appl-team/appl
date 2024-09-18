@@ -18,6 +18,7 @@ settings:
     display:
       configs: false # Display the configurations
       configs_update: false # Display the updates of the configurations
+      docstring_warning: True # Display the warning message when docstring are excluded
       llm_raw_call_args: false # Display the raw args for the llm calls
       llm_raw_response: false # Display the raw response of the llm calls
       llm_raw_usage: false # Display the raw usage of the llm calls
@@ -47,12 +48,14 @@ settings:
 # When using SRT server,
 #   set model to "srt" and api_base to the address of the server.
 servers:
-  default: gpt35-turbo
+  default: gpt4o-mini
   gpt35-turbo: # the name of the server, should avoid using '.' in the name
     model: gpt-3.5-turbo # the model name
   gpt4-turbo:
     model: gpt-4-turbo
   gpt4o:
     model: gpt-4o
+  gpt4o-mini:
+    model: gpt-4o-mini
   _dummy:
     model: _dummy

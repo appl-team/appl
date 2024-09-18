@@ -30,6 +30,9 @@ export OPENAI_API_KEY=<your openai api key>
 --8<-- "src/appl/default_configs.yaml"
 ```
 
+??? note "You should setup your own default server."
+    The default server (currently `gpt-4o-mini`) set in APPL could be outdated and changed in the future. We recommend you to specify your own default model in the `appl.yaml` file.
+
 ### Override Configs
 You can override these configurations by creating a `appl.yaml` file in the root directory of your project (or other directories, see [Priority of Configurations](#priority-of-configurations) for more details). A typical usage is to override the `servers` configuration to specify the LLM servers you want to use, as shown in the following example `appl.yaml` file.
 

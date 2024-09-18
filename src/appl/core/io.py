@@ -58,6 +58,7 @@ def load_file(
     file: str,
     mode: str = "r",
     file_type: Optional[str] = None,
+    open_kwargs: Optional[Dict[str, Any]] = None,
     *args: Any,
     **kwargs: Any,
 ) -> Any:
@@ -74,10 +75,11 @@ def load_file(
     #     load_func = import_module
     elif file_type in PLAIN_TEXT_FILES:
 
-        def load_func(f, *args, **kwargs):
+        def load_func(f: IO[Any], *args: Any, **kwargs: Any) -> Any:
             return f.read()
 
     else:
         raise ValueError(f"Unsupported file type {file_type}")
-    with open(file, mode) as f:
+    open_kwargs = open_kwargs or {}
+    with open(file, mode, **open_kwargs) as f:
         return load_func(f, *args, **kwargs)

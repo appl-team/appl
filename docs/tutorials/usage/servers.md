@@ -24,7 +24,7 @@ servers:
     model: gpt-4o
 ```
 
-You may specify another server of `gpt-3.5-turbo` with default temperature to be `0.0` in the [`appl.yaml` file](http://localhost:8000/appl/setup/#override-configs):
+You may specify another server of `gpt-3.5-turbo` with default temperature to be `0.0` in the [`appl.yaml` file](../../setup.md#override-configs):
 ```yaml
 servers:
   # default: gpt35-turbo-temp0  # (1)
@@ -37,11 +37,11 @@ servers:
 2. Then when you call `gen("gpt35-turbo-temp0")`, the default temperature will be `0.0`.
 3. You could still override the temperature by specifying it in the `gen` function.
 
-We provide examples of configurations for different servers in [our setup guide](http://localhost:8000/appl/setup/#override-configs). See also the list of [available models in `litellm`](https://docs.litellm.ai/docs/providers).
+We provide examples of configurations for different servers in [our setup guide](../../setup.md#override-configs). See also the list of [available models in `litellm`](https://docs.litellm.ai/docs/providers).
 
 
 ## Multiple Servers Example
-In the following, we provide a complete example for using multiple servers in different `gen` calls. The used servers are configured in [this example](http://localhost:8000/appl/setup/#override-configs).
+In the following, we provide a complete example for using multiple servers in different `gen` calls. The used servers are configured in [this example](../../setup.md#override-configs).
 
 ```python linenums="1"
 --8<-- "examples/usage/multiple_servers.py"
