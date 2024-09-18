@@ -2852,18 +2852,21 @@
 </details>
 <details class="question">
 <summary>How about docstrings in <em>APPL functions</em>?</summary>
-<p>Docstring is a special expression statement in Python, so it will be captured as a prompt by default. Ideally, we hope the docstring can also be used as a part of the prompt. Otherwise, you may exclude the docstring by specifying <code class="language-python highlight"><span class="n">exclude_first_str</span></code>, like
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">exclude_first_str</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<p>Docstring is a special expression statement in Python. There are two cases for docstrings in <em>APPL functions</em>:</p>
+<ol>
+<li>If the docstring is triple-quoted, it will <strong>NOT</strong> be captured as a prompt by default. To also include the docstring as a part of the prompt, you may specify <code class="language-python highlight"><span class="n">include_docstring</span><span class="o">=</span><span class="kc">True</span></code> in the <code class="language-python highlight"><span class="nd">@ppl</span></code> decorator, like
+    <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">include_docstring</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a docstring.&quot;&quot;&quot;</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s2">&quot;First prompt.&quot;</span>
-</span></code></pre></div>
-Or if you do not want the first prompt to be the docstring of the function, you can change it as a f-string, like 
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@ppl</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Docstring as a part of the prompt.&quot;&quot;&quot;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s2">&quot;Another prompt.&quot;</span>
+</span></code></pre></div></li>
+<li>Otherwise, it will be captured as a prompt. But if the content is not meant to be the docstring of the function, it is recommended to use f-string instead.
+    <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@ppl</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="sa">f</span><span class="s2">&quot;First prompt.&quot;</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;Second prompt.&quot;</span>
-</span></code></pre></div></p>
+</span></code></pre></div></li>
+</ol>
 </details>
 <h2 id="prompt-retrieval">Prompt Retrieval<a class="headerlink" href="#prompt-retrieval" title="Permanent link">&para;</a></h2>
 <p>Similar to the local and global variables in Python (retrieved with <code class="language-python highlight"><span class="nb">locals</span><span class="p">()</span></code> and <code class="language-python highlight"><span class="nb">globals</span><span class="p">()</span></code> functions, respectively), you can retrieve the prompts captured in the current function (with <code class="language-python highlight"><span class="n">records</span><span class="p">()</span></code>) or the full conversation in the context (with <code class="language-python highlight"><span class="n">convo</span><span class="p">()</span></code>). This <a href="#example">example</a> demonstrates how to retrieve the prompts captured in the current function and the full conversation in the context.</p>

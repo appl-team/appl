@@ -2698,6 +2698,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      RoadMap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tutorial-and-cookbook" class="md-nav__link">
     <span class="md-ellipsis">
       Tutorial and Cookbook
@@ -2807,8 +2816,6 @@
 </ul>
 <!-- and [cookbook](https://appl-team.github.io/appl/tutorials/) -->
 
-<!-- TODO: RoadMap -->
-
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
 <p>You can simply install APPL from PyPI using pip:
@@ -2820,10 +2827,10 @@ More installation options can be found in the <a href="https://appl-team.github.
 <p>In this guide, we use OpenAI API as the default backend.
 You can set your OpenAI API key in the <code class="language-python highlight"><span class="o">.</span><span class="n">env</span></code> file in the root directory of your project:
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>OPENAI_API_KEY=&lt;your openai api key&gt;
-</span></code></pre></div>
-or export it as an environment variable:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>openai<span class="w"> </span>api<span class="w"> </span>key&gt;
 </span></code></pre></div></p>
+<p>or export it as an environment variable:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>openai<span class="w"> </span>api<span class="w"> </span>key&gt;
+</span></code></pre></div>
 <p>For setting up other backends, enabling tracing and recovering from traces, please refer to the <a href="https://appl-team.github.io/appl/setup">setup guide</a>.</p>
 <h3 id="hello-world">Hello World<a class="headerlink" href="#hello-world" title="Permanent link">&para;</a></h3>
 <p>To begin, let's create a simple function that uses LLM to respond to a greeting.</p>
@@ -2929,6 +2936,14 @@ or export it as an environment variable:
 </table>
 <p>In <em>APPL functions</em>, <a href="https://docs.python.org/3/reference/simple_stmts.html#expression-statements">expression statements</a> are captured as prompts <a href="https://appl-team.github.io/appl/tutorials/appendix/prompt_capture/">based on the type of its value</a>. Notably, the f-string is processed part by part, so the <code class="language-python highlight"><span class="n">gen</span></code> function inside the f-string intuitively uses the contents before that. In this example, <code class="language-python highlight"><span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">author</span> <span class="ow">is</span></code> serves as a prefix to guide the completion of the author's name.</p>
 <p>After the author's name is extracted, the <code class="language-python highlight"><span class="n">get_answer</span></code> function is called multiple times in parallel to answer the questions, with the context being copied (detailed in <a href="#context-management">context-management</a>), demonstrating the automatic parallelization feature of APPL.</p>
+<h2 id="roadmap">RoadMap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Default to exclude """docstring""" from the prompt formation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Use FastAPI to build a server for inspecting the traces.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Add more ... (contributions are welcome!)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Examples and tutorials to demonstrate the usage</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test cases to increase the coverage</li>
+</ul>
 <h2 id="tutorial-and-cookbook">Tutorial and Cookbook<a class="headerlink" href="#tutorial-and-cookbook" title="Permanent link">&para;</a></h2>
 <p>For a more comprehensive tutorial, please refer to the <a href="https://appl-team.github.io/appl/tutorials">tutorial</a>.</p>
 <h3 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h3>
@@ -2944,10 +2959,8 @@ or export it as an environment variable:
 </ul>
 <h3 id="cookbook">Cookbook<a class="headerlink" href="#cookbook" title="Permanent link">&para;</a></h3>
 <p>For more detailed usage and examples, please refer to the <a href="https://appl-team.github.io/appl/cookbook">cookbook</a>.</p>
-<p>APPL can be used to reproduce some popular LM-based applications easily, such as:</p>
-<ul>
-<li><a href="https://twitter.wordware.ai/">Wordware's TwitterPersonality</a>[<a href="https://github.com/appl-team/TwitterPersonality">APPL implementation</a>]: analyzes your tweets to determine your Twitter personality.</li>
-</ul>
+<p>APPL can be used to reproduce some popular LM-based applications easily, such as:
+* <a href="https://twitter.wordware.ai/">Wordware's TwitterPersonality</a>[<a href="https://github.com/appl-team/TwitterPersonality">APPL implementation</a>]: analyzes your tweets to determine your Twitter personality.</p>
 <h2 id="citation-and-acknowledgment">Citation and Acknowledgment<a class="headerlink" href="#citation-and-acknowledgment" title="Permanent link">&para;</a></h2>
 <p>If you find APPL helpful, please consider citing our paper:
 <div class="language-bibtex highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">dong2024appl</span><span class="p">,</span>
