@@ -154,6 +154,10 @@ class Compositor(PrinterModifier):
             self._is_inline,
         )
 
+    def __enter__(self) -> "Compositor":
+        super().__enter__()
+        return self
+
 
 # Essential for compile
 class ApplStr(Compositor):

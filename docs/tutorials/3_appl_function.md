@@ -25,16 +25,49 @@ As you have seen in the [QA examples](./2_qa_example.md), you can define prompts
         ```python
         @ppl(include_docstring=True)
         def my_function():
-            """Docstring as a part of the prompt."""
+            """Docstring as a part of the prompt.
+            
+            Details."""
             "Another prompt."
+            return records()
+        
+        print(my_function())
         ```
-    2. Otherwise, it will be captured as a prompt. But if the content is not meant to be the docstring of the function, it is recommended to use f-string instead.
+        Outputs:
+        ```
+        Docstring as a part of the prompt.
+
+        Details.
+        Another prompt.
+        ```
+    1. Otherwise, it will be captured as a prompt. But if the content is not meant to be the docstring of the function, it is recommended to use f-string instead.
         ```python
         @ppl
         def my_function():
             f"First prompt."
             "Second prompt."
         ```
+
+??? question "How about multiline strings in *APPL functions*?"
+    The multiline strings will be cleaned using `inspect.cleandoc` before being captured as prompts.
+    It is recommend that you follows the indentation of the function.
+    ```python
+    @ppl
+    def my_function():
+        """Docstring""" # not in the prompt
+        """First line.
+        Second line.
+            indented line."""
+        return records()
+    
+    print(my_function())
+    ```
+    Outputs:
+    ```
+    First line.
+    Second line.
+        indented line.
+    ```
 
 ## Prompt Retrieval
 Similar to the local and global variables in Python (retrieved with `locals()` and `globals()` functions, respectively), you can retrieve the prompts captured in the current function (with `records()`) or the full conversation in the context (with `convo()`). This [example](#example) demonstrates how to retrieve the prompts captured in the current function and the full conversation in the context.

@@ -1,5 +1,7 @@
 """helper functions for runtime execution within the compiled function."""
 
+import inspect
+
 from .config import configs
 from .context import PromptContext
 from .generation import Generation
@@ -45,20 +47,21 @@ def appl_execute(
     if isinstance(s, str):
         add_str = True
         if _ctx._is_first_str:
+            docstring = inspect.cleandoc(_ctx._func_docstring or "")
             if _ctx._include_docstring:
-                if _ctx._func_docstring is None:
+                if docstring is None:
                     logger.warning(
                         f"No docstring found for {_ctx._func_name}, cannot include it."
                     )
                 else:
-                    assert s == _ctx._func_docstring, f"Docstring mismatch: {s}"
-            elif s == _ctx._func_docstring and _ctx._docstring_quote_count != 1:
+                    assert s == docstring, f"Docstring mismatch: {s}"
+            elif s == docstring and _ctx._docstring_quote_count != 1:
                 add_str = False
                 if configs.getattrs(
                     "settings.logging.display.docstring_warning", False
                 ):
                     logger.warning(
-                        f'The docstring """{s}""" for "{_ctx._func_name}" is excluded from prompt. '
+                        f'The docstring """{s}""" for `{_ctx._func_name}` is excluded from the prompt. '
                         "To include the docstring, set include_docstring=True in the @ppl function."
                     )
         if add_str:

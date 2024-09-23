@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import inspect
 import linecache
+import re
 import sys
 import textwrap
 import traceback
@@ -24,6 +25,7 @@ from ast import (
     With,
     stmt,
 )
+from os import linesep as LINESEP
 
 import libcst as cst
 
@@ -243,6 +245,40 @@ class AddExecuteWrapper(ApplNodeTransformer):
         )
 
 
+class DedentTripleQuotedString(cst.CSTTransformer):
+    def leave_SimpleString(
+        self, original_node: cst.SimpleString, updated_node: cst.SimpleString
+    ):
+        delim = original_node.value[:3]
+        # Check if the string is wrapped by triple quotes (""" or ''')
+        if delim in ['"""', "'''"]:
+            assert original_node.value[-3:] == delim
+            # Remove the quotes to process the inner string content
+            inner_string = original_node.value[3:-3]
+
+            # Use the standard of cleandoc to dedent the inner string
+            modified_inner_string = inspect.cleandoc(inner_string)
+
+            # Add back the triple quotes to the modified string
+            new_value = f"{delim}{modified_inner_string}{delim}"
+
+            # Return the updated SimpleString node with the modified value
+            return updated_node.with_changes(value=new_value)
+
+        return updated_node
+
+
+def dedent_triple_quoted_string(code: str) -> str:
+    """Automatically dedent triple-quoted strings with in the code (with inspect.cleandoc)"""
+    # Parse the source code into a CST
+    cst_module = cst.parse_module(code)
+    # Apply the transformer to dedent triple-quoted strings
+    cst_transformer = DedentTripleQuotedString()
+    modified_cst_module = cst_module.visit(cst_transformer)
+    # return the modified code
+    return modified_cst_module.code
+
+
 def _get_docstring_quote_count(code: str) -> Optional[int]:
     cst_tree = cst.parse_module(code)
     for node in cst_tree.body:
@@ -328,19 +364,40 @@ class APPLCompiled:
         return f"APPLCompiled({self._name})"
 
 
+def appl_dedent(source: str):
+    source = textwrap.dedent(source)
+    try:
+        ast.parse(source)
+    except:  # the dedent failed due to multiline string
+        logger.warning(
+            "The source code contains multiline string that cannot be dedented. "
+            "It is recommended to dedent the multiline string aligning with the function, "
+            "where APPL will automatically dedent the multiline string "
+            "in the same way as cleaning docstring."
+        )
+        # Compute the dedent and remove the leading whitespace
+        leading_whitespace = re.compile("(^[ \t]*)(?:[^ \t\n])", re.MULTILINE)
+        indents = leading_whitespace.findall(source)
+        margin = indents[0]  # use the first line as the standard
+        source = re.sub(r"(?m)^" + margin, "", source)
+        logger.warning(f"The source code after workaround:\n{source}")
+    return source
+
+
 def appl_compile(func: Callable) -> APPLCompiled:
     """Compile an APPL function."""
     sourcefile = inspect.getsourcefile(func)
     lines, lineno = inspect.getsourcelines(func)
-    source = textwrap.dedent(inspect.getsource(func))
+    source = appl_dedent(inspect.getsource(func))
     key = f"<appl-compiled:{sourcefile}:{lineno}>"
     linecache.cache[key] = (
         len(source),
         None,
-        [line + "\n" for line in source.splitlines()],
+        [line + LINESEP for line in source.splitlines()],
         key,
     )
 
+    source = dedent_triple_quoted_string(source)
     parsed_ast = ast.parse(source)
     logger.debug(
         f"\n{'-'*20} code BEFORE appl compile {'-'*20}\n{ast.unparse(parsed_ast)}"

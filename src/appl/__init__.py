@@ -21,18 +21,23 @@ try:
 except Exception:
     __version__ = "unknown"
 
+from typing import Callable, Optional
+
 from .compositor import ApplStr as Str
 from .compositor import iter
 from .core import (
     BracketedDefinition,
+    CallFuture,
     CompletionResponse,
     Definition,
     Generation,
     Image,
     Indexing,
     Promptable,
+    PromptContext,
     PromptPrinter,
     PromptRecords,
+    StringFuture,
     Tool,
 )
 from .core import appl_compile as compile
@@ -69,7 +74,6 @@ from .func import (
 from .role_changer import AIRole, SystemRole, ToolRole, UserRole
 from .servers import server_manager
 from .tracing import TraceEngine
-from .types import *
 from .utils import (
     LoguruFormatter,
     find_dotenv,

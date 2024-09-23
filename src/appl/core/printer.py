@@ -13,11 +13,16 @@ class Indexing:
     """The indexing method for the printer."""
 
     def __init__(
-        self, method: Optional[str] = None, ind: int = 0, suffix: Optional[str] = None
+        self,
+        method: Optional[str] = None,
+        ind: int = 0,
+        prefix: str = "",
+        suffix: Optional[str] = None,
     ):
         """Initialize the indexing method."""
         self._method = method
         self._ind = ind
+        self._prefix = prefix
         self._suffix = suffix
 
     def _get_index(self, ind: int) -> str:
@@ -47,7 +52,7 @@ class Indexing:
             else:
                 base = self._method
 
-        return base + (self._suffix or default_suffix)
+        return self._prefix + base + (self._suffix or default_suffix)
 
     def get_index(self, ind: Optional[int] = None) -> str:
         """Get the index string for the current or given index."""

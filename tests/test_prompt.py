@@ -1,6 +1,5 @@
-import pytest
-
 import appl
+import pytest
 from appl import Generation, convo, define, gen, need_ctx, ppl, records
 from appl.compositor import *
 
@@ -103,6 +102,54 @@ def test_inner_func():
     assert str(func()) == "Hello\nWorld"
 
 
+def test_tripple_quote():
+    @ppl
+    def func1():
+        """This is a docstring"""
+        """
+        begin
+            1. first
+            2. second
+        """
+        return records()
+
+    @ppl
+    def func2():
+        """This is a docstring"""
+        # Note that dedent will remove the leading spaces.
+        """begin
+            1. first
+            2. second
+        """
+        return records()
+
+    @ppl
+    def func3():
+        """This is a docstring"""
+        # Not recommended
+        """
+    begin
+        1. first
+        2. second
+        """  # note the leading spaces here
+        return records()
+
+    @ppl
+    def func4():
+        """This is a docstring"""
+        # Not recommended, but still works.
+        """begin
+1. first
+2. second
+"""
+        return records()
+
+    assert str(func1()) == "begin\n    1. first\n    2. second"
+    assert str(func2()) == "begin\n1. first\n2. second"
+    assert str(func3()) == "begin\n    1. first\n    2. second\n    "
+    assert str(func4()) == "begin\n1. first\n2. second"
+
+
 def test_include_docstring():
     @ppl(include_docstring=True)
     def func():
@@ -113,6 +160,28 @@ def test_include_docstring():
     assert str(func()) == "This is a docstring\nHello"
 
 
+def test_include_multiline_docstring():
+    @ppl(include_docstring=True)
+    def func():
+        """This is a
+        multiline docstring"""
+
+        "Hello"
+        return records()
+
+    assert str(func()) == "This is a\nmultiline docstring\nHello"
+
+    @ppl(include_docstring=True)
+    def func2():
+        """
+        This is a
+            multiline docstring
+        """
+        return records()
+
+    assert str(func2()) == "This is a\n    multiline docstring"
+
+
 def test_default_no_docstring():
     @ppl()
     def func():
@@ -120,7 +189,15 @@ def test_default_no_docstring():
         "Hello"
         return records()
 
+    @ppl()
+    def func2():
+        """Same string"""  # the first is docstring
+        # the second string is not a docstring anymore, should be included
+        """Same string"""
+        return records()
+
     assert str(func()) == "Hello"
+    assert str(func2()) == "Same string"
 
 
 def test_copy_ctx():
