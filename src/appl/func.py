@@ -3,10 +3,9 @@ import functools
 import inspect
 import sys
 import threading
+import time
 from inspect import signature
 from typing import overload
-
-from langsmith import traceable
 
 from .core import (
     BaseTool,
@@ -21,10 +20,11 @@ from .core import (
     PromptRecords,
     Tool,
 )
-from .core.globals import global_vars
+from .core.globals import global_vars, inc_global_var
 from .core.trace import FunctionCallEvent, FunctionReturnEvent, add_to_trace
 from .servers import server_manager
 from .types import *
+from .utils import _langsmith_traceable
 
 # https://docs.python.org/3/library/typing.html#typing.ParamSpec
 # https://docs.python.org/3/library/typing.html#typing.Concatenate
@@ -33,6 +33,7 @@ from .types import *
 P = ParamSpec("P")
 T = TypeVar("T")
 F = TypeVar("F", bound=Callable)
+M = TypeVar("M", bound=BaseModel)
 
 
 def need_ctx(func: Callable[P, T]) -> Callable[P, T]:
@@ -153,7 +154,7 @@ def ppl(
         )
 
         @need_ctx
-        @traceable(name=func.__name__, metadata={"appl": "func"})
+        @_langsmith_traceable(name=func.__name__, metadata={"appl": "func"})  # type: ignore
         @functools.wraps(func)
         def wrapper(
             *args: Any,
@@ -161,15 +162,19 @@ def ppl(
             _locals: Optional[Dict] = None,
             **kwargs: Any,
         ) -> Any:
+            # get the function qualname and count the number of runs
+            func_name = prompt_func._qualname
+            func_run_cnt = inc_global_var(func_name) - 1
+            func_name += f"_{func_run_cnt}"
             # add to trace (function call)
-            func_name = f"{prompt_func._name}_{prompt_func._run_cnt}"
-            prompt_func._run_cnt += 1
-            add_to_trace(
-                FunctionCallEvent(
-                    name=func_name,
-                    args={"args": repr(args), "kwargs": repr(kwargs)},
+            if global_vars.trace_engine:
+                # NOTE: compute repr(args) and repr(kwargs) might be time-consuming
+                add_to_trace(
+                    FunctionCallEvent(
+                        name=func_name,
+                        args={"args": repr(args), "kwargs": repr(kwargs)},
+                    )
                 )
-            )
             # closure variables
             freevars = prompt_func.compiled_func.freevars
             if _locals is None:
@@ -180,7 +185,7 @@ def ppl(
                 for _ in range(num_wrappers):
                     if frame is None:
                         raise RuntimeError("No caller frame found")
-                    # back to @traceable frame, and the caller frame
+                    # back to @_langsmith_traceable frame, and the caller frame
                     frame = frame.f_back
                 if frame is None:
                     raise RuntimeError("No caller frame found")
@@ -204,6 +209,7 @@ def ppl(
                 _is_class_method=_is_class_method,
                 **kwargs,
             )
+
             # add to trace (function return)
             add_to_trace(FunctionReturnEvent(name=func_name))  # ret=results
             return results
@@ -396,10 +402,12 @@ def gen(
     tools: OneOrMany[Union[BaseTool, Callable]] = [],
     tool_format: str = "auto",
     stream: Optional[bool] = None,
+    response_format: Optional[Union[dict, Type[M]]] = None,
+    response_model: Optional[Type[M]] = None,
     mock_response: Optional[Union[CompletionResponse, str]] = None,
     _ctx: Optional[PromptContext] = None,
     **kwargs: Any,
-) -> Generation:
+) -> Generation[M]:
     """Send a generation request to the LLM backend.
 
     Args:
@@ -410,10 +418,17 @@ def gen(
         temperature (float, optional): temperature for sampling. Defaults to None.
         top_p (float, optional): nucleus sampling parameter. Defaults to None.
         n (int, optional): number of choices to generate. Defaults to 1.
-        tools (BaseTool|Callable|Sequence[BaseTool|Callable], optional): tools can be used. Defaults to None.
-        tool_format (str, optional): format for the tools. Defaults to "auto".
+        tools (BaseTool|Callable|Sequence[BaseTool|Callable], optional):
+            tools can be used. Defaults to None.
+        tool_format (str, optional): the format for the tools. Defaults to "auto".
         stream (bool, optional): whether to stream the results. Defaults to False.
-        mock_response (Union[CompletionResponse, str], optional): mock response for testing. Defaults to None.
+        response_format (Union[dict, Type[M]], optional):
+            OpenAI's argument specifies the response format. Defaults to None.
+        response_model (Type[M], optional):
+            instructor's argument specifies the response format as a Pydantic model.
+            Recommended to use `response_format` instead. Defaults to None.
+        mock_response (Union[CompletionResponse, str], optional):
+            mock response for testing. Defaults to None.
         _ctx (PromptContext): prompt context, will be automatically filled.
         kwargs (Any): extra arguments for the generation.
 
@@ -431,6 +446,8 @@ def gen(
     # TODO: double check the correctness
     messages = copy.deepcopy(messages)  # freeze the prompt for the generation
 
+    if response_format is not None and response_model is not None:
+        raise ValueError("response_format and response_model cannot be used together.")
     create_args = GenArgs(
         model=backend_server.model_name,
         messages=messages,
@@ -442,13 +459,15 @@ def gen(
         tools=build_tools(tools),
         tool_format=tool_format,  # type: ignore
         stream=stream,
+        response_format=response_format,
+        response_model=response_model,
     )
 
     generation = Generation(
         backend_server, create_args, mock_response=mock_response, _ctx=_ctx, **kwargs
-    )
+    )  # type: ignore
 
-    @traceable(name=generation.id, metadata={"appl": "gen"})
+    @_langsmith_traceable(name=generation.id, metadata={"appl": "gen"})  # type: ignore
     def langsmith_trace(*args: Any, **kwargs: Any) -> None:
         pass
 

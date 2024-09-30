@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import inspect
 import linecache
+import os
 import re
 import sys
 import textwrap
@@ -25,7 +26,6 @@ from ast import (
     With,
     stmt,
 )
-from os import linesep as LINESEP
 
 import libcst as cst
 
@@ -246,30 +246,109 @@ class AddExecuteWrapper(ApplNodeTransformer):
 
 
 class DedentTripleQuotedString(cst.CSTTransformer):
+    """A CST transformer that dedents triple-quoted strings in the source code."""
+
+    def visit_Module(self, node: cst.Module) -> bool:
+        """Store the module node for later use."""
+        self.module = node
+        return True
+
     def leave_SimpleString(
         self, original_node: cst.SimpleString, updated_node: cst.SimpleString
-    ):
-        delim = original_node.value[:3]
+    ) -> cst.SimpleString:
+        """Dedent triple-quoted strings in the source code."""
+        value = original_node.value
+        delim = value[-3:]
         # Check if the string is wrapped by triple quotes (""" or ''')
         if delim in ['"""', "'''"]:
-            assert original_node.value[-3:] == delim
+            has_prefix_r = False
+            if value.startswith("r" + delim):  # deal with raw string
+                has_prefix_r = True
+                value = value[1:]
+
+            assert value[:3] == delim
             # Remove the quotes to process the inner string content
-            inner_string = original_node.value[3:-3]
+            inner_string = value[3:-3]
 
             # Use the standard of cleandoc to dedent the inner string
             modified_inner_string = inspect.cleandoc(inner_string)
 
             # Add back the triple quotes to the modified string
             new_value = f"{delim}{modified_inner_string}{delim}"
+            if has_prefix_r:
+                new_value = "r" + new_value
+
+            logger.debug(
+                f"multiline string dedented\n"
+                f"before:\n{original_node.value}\n"
+                f"after:\n{new_value}"
+            )
 
             # Return the updated SimpleString node with the modified value
             return updated_node.with_changes(value=new_value)
 
         return updated_node
 
+    # format string
+    def leave_FormattedString(
+        self, original_node: cst.FormattedString, updated_node: cst.FormattedString
+    ) -> cst.FormattedString:
+        """Dedent triple-quoted formatted strings in the source code."""
+        if len(original_node.end) != 3:
+            return updated_node
+
+        def get_num_leading_whitespace(line: str) -> int:
+            """Compute the leading whitespace of this line."""
+            if g := re.match(r"^[ \t]*", line):
+                return len(g.group())
+            return 0
+
+        def dedent_str(text: str) -> str:
+            cleaned = inspect.cleandoc(text)
+            lines = cleaned.splitlines()
+            margin: Optional[int] = None
+            for line in lines:
+                n = get_num_leading_whitespace(line)
+                # try to fix a bug in `libcst.code_for_node``
+                # the leading whitespace of '}' is not resumed correctly
+                # as well as the contents within `{` and `}` (TODO)
+                if len(line) > n and line[n] != "}":
+                    if margin is None:
+                        margin = n
+                    else:
+                        margin = min(margin, n)
+            if margin is not None and margin > 0:
+                new_lines = []
+                for line in lines:
+                    n = get_num_leading_whitespace(line)
+                    new_lines.append(line[min(n, margin) :])
+                cleaned = os.linesep.join(new_lines)
+                cleaned = inspect.cleandoc(cleaned)  # clean again
+                logger.warning(
+                    f"unusual multiline formatted string detected, "
+                    f"this is a bug related to libcst.code_for_node\n"
+                    f"The string after manual fix is:\n{cleaned}"
+                )
+            logger.debug(
+                f"multiline formmated string dedented\n"
+                f"before:\n{text}\n"
+                f"after:\n{cleaned}"
+            )
+            return cleaned
+
+        original_code = self.module.code_for_node(original_node)
+        simple_str = original_code[len(original_node.start) : -len(original_node.end)]
+        format_str = f"{original_node.start}{dedent_str(simple_str)}{original_node.end}"
+        parsed_cst = cst.parse_expression(format_str)
+        if isinstance(parsed_cst, cst.FormattedString):
+            return parsed_cst
+        raise RuntimeError(
+            f"Failed to parse modified formatted string as libcst.FormattedString: {format_str}"
+        )
+
 
 def dedent_triple_quoted_string(code: str) -> str:
-    """Automatically dedent triple-quoted strings with in the code (with inspect.cleandoc)"""
+    """Automatically dedent triple-quoted strings with in the code (with inspect.cleandoc)."""
     # Parse the source code into a CST
     cst_module = cst.parse_module(code)
     # Apply the transformer to dedent triple-quoted strings
@@ -364,11 +443,12 @@ class APPLCompiled:
         return f"APPLCompiled({self._name})"
 
 
-def appl_dedent(source: str):
+def appl_dedent(source: str) -> str:
+    """Dedent the source code."""
     source = textwrap.dedent(source)
     try:
         ast.parse(source)
-    except:  # the dedent failed due to multiline string
+    except Exception:  # the dedent failed due to multiline string
         logger.warning(
             "The source code contains multiline string that cannot be dedented. "
             "It is recommended to dedent the multiline string aligning with the function, "
@@ -393,7 +473,7 @@ def appl_compile(func: Callable) -> APPLCompiled:
     linecache.cache[key] = (
         len(source),
         None,
-        [line + LINESEP for line in source.splitlines()],
+        [line + os.linesep for line in source.splitlines()],
         key,
     )
 

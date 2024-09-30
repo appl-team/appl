@@ -1,3 +1,4 @@
+import json
 import os
 
 import appl
@@ -88,6 +89,8 @@ class TraceHTMLPrinter(TracePrinterBase):
                     with Tagged("td"):
                         if k == "messages":
                             self._print_messages(v)
+                        elif k in ["response_format"]:
+                            f"<pre>{json.dumps(v, indent=2)}</pre>"
                         elif k in ["response_model"]:
                             f"<pre>{v}</pre>"
                         elif k == "stop":

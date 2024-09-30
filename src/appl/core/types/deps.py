@@ -1,4 +1,4 @@
-"""Import types from dependencies"""
+"""Import types from dependencies."""
 
 from litellm.types.utils import Delta, Function, ModelResponse
 from openai.types import CompletionUsage

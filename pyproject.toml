@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "applang"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Prompt Programming Language"
 authors = [
     { name = "Honghua Dong", email = "dhh19951@gmail.com" },
@@ -24,12 +24,11 @@ dependencies = [
     "toml>=0.10.2",
     "termcolor>=2.4.0",
     "litellm>=1.41.0",
-    "rich>=13.7.1",
     "tiktoken>=0.6.0",
-    "langsmith>=0.1.25",
     "addict>=2.4.0",
     "pendulum>=3.0.0",
     "libcst>=1.4.0",
+    "rich>=13.8.1",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -116,7 +115,7 @@ ignore = [
 "examples/*" = ["D", "N"]
 
 [tool.ruff.lint.pep8-naming]
-ignore-names = ["visit_*"]
+ignore-names = ["visit_*", "leave_*"]
 
 [tool.ruff.lint.pydocstyle]
 # not use "google" to include the D401: First line should be in imperative mood 

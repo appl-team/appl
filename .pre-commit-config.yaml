@@ -17,7 +17,7 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: "./scripts/run_mypy.sh"
+        entry: "bash scripts/run_mypy.sh"
         language: system
         # use your preferred Python version
         # trigger for commits changing Python files

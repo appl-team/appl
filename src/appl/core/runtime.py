@@ -47,7 +47,9 @@ def appl_execute(
     if isinstance(s, str):
         add_str = True
         if _ctx._is_first_str:
-            docstring = inspect.cleandoc(_ctx._func_docstring or "")
+            docstring = _ctx._func_docstring
+            if docstring is not None:
+                docstring = inspect.cleandoc(docstring)
             if _ctx._include_docstring:
                 if docstring is None:
                     logger.warning(

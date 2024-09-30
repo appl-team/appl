@@ -69,6 +69,7 @@ class ServerManager:
 
     def __init__(self) -> None:
         """Initialize the server manager."""
+        self._lock = threading.Lock()
         self._servers: Dict[str, BaseServer] = {}
 
     def register_server(self, name: str, server: BaseServer) -> None:
@@ -86,10 +87,11 @@ class ServerManager:
         if name is None:
             name = configs.getattrs("servers.default")
 
-        if name not in self._servers:
-            server_configs = _get_server_configs(name)
-            server = _init_server(**server_configs)
-            self.register_server(name, server)
+        with self._lock:
+            if name not in self._servers:
+                server_configs = _get_server_configs(name)
+                server = _init_server(**server_configs)
+                self.register_server(name, server)
         return self._servers[name]
 
     @property

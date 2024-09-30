@@ -1,3 +1,5 @@
+import threading
+
 from .basic import *
 
 
@@ -42,11 +44,13 @@ class CallFuture(FutureValue):
             lazy_eval: Whether to delay the start of the call until needed.
             **kwargs: The keyword arguments of the function.
         """
-        # TODO: maybe use a global executor from the config
+        # ? maybe use a global executor from the config, or use thread-level executor if running in multi-threading.
         self._executor = (
             ProcessPoolExecutor(max_workers=1)
             if use_process
-            else ThreadPoolExecutor(max_workers=1)
+            else ThreadPoolExecutor(
+                max_workers=1, thread_name_prefix=threading.current_thread().name
+            )
         )
         self._submit_fn = lambda: self._executor.submit(func, *args, **kwargs)
         self._submitted = False
@@ -65,7 +69,7 @@ class CallFuture(FutureValue):
 
     def _submit(self) -> None:
         if not self._submitted:
-            self._future: Future = self._submit_fn()
+            self._future = self._submit_fn()
             self._submitted = True
 
     @property
@@ -75,15 +79,20 @@ class CallFuture(FutureValue):
             self._submit()
         return self._future
 
-    def result(self) -> Any:
+    def result(self, timeout: Optional[float] = None) -> Any:
         """Get the result of the call."""
         # This will block until the result is available
-        return self.future.result()
+        res = self.future.result(timeout)
+        self._executor.shutdown()  # the executor is not needed anymore
+        return res
 
     def cancel(self) -> bool:
         """Cancel the call."""
         # Attempt to cancel the call
-        return self.future.cancel()
+        res = self.future.cancel()
+        if res:
+            self._executor.shutdown()  # the executor is not needed anymore
+        return res
 
     def done(self) -> bool:
         """Check if the call has completed."""
@@ -155,7 +164,8 @@ class StringFuture(FutureValue, BaseModel):
         """Concatenate any number of strings.
 
         The StringFuture whose method is called is inserted in between each
-        given StringFuture. The result is returned as a new StringFuture."""
+        given StringFuture. The result is returned as a new StringFuture.
+        """
         result = []
         for i, x in enumerate(iterable):
             if i != 0:

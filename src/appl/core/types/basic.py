@@ -15,6 +15,7 @@ from typing import (
     Callable,
     ClassVar,
     Dict,
+    Generic,
     Iterable,
     Iterator,
     List,

@@ -1,3 +1,4 @@
+import json
 import os
 import pickle
 from threading import Lock
@@ -62,8 +63,38 @@ class TraceEngine(TraceEngineBase):
         """The dictionary of trace nodes."""
         return self._trace_nodes
 
+    @classmethod
+    def convert_pydantic_class_to_schema(cls, class_: Type) -> Dict:
+        """Convert a class to a schema.
+
+        Args:
+            class_: The class to convert
+        """
+        if issubclass(class_, BaseModel):
+            return class_.model_json_schema()
+        raise ValueError(f"Cannot convert class {class_} to schema")
+
+    @classmethod
+    def args_to_json(cls, args: Dict) -> Dict:
+        """Serialize the values of the arguments to JSON format."""
+        args_json = {}
+        for k, v in args.items():
+            if isinstance(v, type) and issubclass(v, BaseModel):
+                v = cls.convert_pydantic_class_to_schema(v)
+            # TODO: shall we serialize everything?
+            # elif k != "message":
+            #     try:
+            #         v = json.dumps(v)
+            #     except:
+            #         v = str(v)
+            args_json[k] = v
+        return args_json
+
     def append(self, event: TraceEventBase) -> None:
         """Append an event to the trace."""
+        if hasattr(event, "args"):
+            event.args = self.args_to_json(event.args)
+
         if self._mode == "write":
             with self._lock:
                 logger.debug(f"add to trace {event}")
@@ -117,6 +148,7 @@ class TraceEngine(TraceEngineBase):
             name: The name of the generation request.
             args: The arguments of the generation request.
         """
+        args = self.args_to_json(args)
         with self._lock:
             entry_list = self._gen_cache.get(self._cache_key(name, args), None)
             if not entry_list or len(entry_list) == 0:

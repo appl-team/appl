@@ -4,8 +4,8 @@ import inspect
 import sys
 import time
 import traceback
+from threading import Lock
 
-from . import trace
 from .compile import appl_compile
 from .context import PromptContext
 from .modifiers import Compositor
@@ -64,6 +64,7 @@ class PromptFunc:
         self._signature = inspect.signature(func)
         self._doc = func.__doc__
         self._name = func.__name__
+        self._qualname = func.__qualname__
         self._default_ctx_method = self._process_ctx_method(ctx_method)
         self._default_compositor = comp
         if default_return is not None and default_return != "prompt":
@@ -73,7 +74,6 @@ class PromptFunc:
         self._new_ctx_func = new_ctx_func
         self._persist_ctx: Optional[PromptContext] = None
         self._reset_context_func: Optional[Callable[[], None]] = None
-        self._run_cnt = 0
         # self._default_sep = default_sep
 
     @property
@@ -99,24 +99,25 @@ class PromptFunc:
         **kwargs: Any,
     ) -> Any:
         """Run the prompt function with desired context, deal with the exception."""
-        if parent_ctx.is_outmost:
-            exc = None
-            try:
-                results = self._func(_ctx=child_ctx, *args, **kwargs)
-            except Exception:
-                # if parent_ctx.is_outmost:  # only print the trace in outmost appl function
-                traceback.print_exc()
-                print()  # empty line
-                exc = sys.exc_info()
+        # if parent_ctx.is_outmost:
+        #     exc = None
+        #     try:
+        #         results = self._func(_ctx=child_ctx, *args, **kwargs)
+        #     except Exception:
+        #         # if parent_ctx.is_outmost:  # only print the trace in outmost appl function
+        #         traceback.print_exc()
+        #         print()  # empty line
+        #         exc = sys.exc_info()
 
-            if exc is not None:  # the outmost appl function
-                _, e_instance, e_traceback = exc
-                # already printed above, clean up the traceback
-                if e_instance and e_traceback:
-                    e_traceback.tb_next = None
-                    raise e_instance.with_traceback(e_traceback)
-        else:  # run normally, capture the exception at the outmost appl function
-            results = self._func(_ctx=child_ctx, *args, **kwargs)
+        #     if exc is not None:  # the outmost appl function
+        #         _, e_instance, e_traceback = exc
+        #         # already printed above, clean up the traceback
+        #         if e_instance and e_traceback:
+        #             e_traceback.tb_next = None
+        #             raise e_instance.with_traceback(e_traceback)
+        # else:  # run normally, capture the exception at the outmost appl function
+        #     results = self._func(_ctx=child_ctx, *args, **kwargs)
+        results = self._func(_ctx=child_ctx, *args, **kwargs)
         return results
 
     def _call(
@@ -133,6 +134,11 @@ class PromptFunc:
         elif ctx_method == "same":
             child_ctx = parent_ctx.inherit()
         elif ctx_method == "resume":
+            # NOTE: the resume method is not thread-safe
+            # For standalone functions or class methods, they should de defined within the thread
+            #   So that the function or `cls` is thread-local
+            # For object methods, the object need to be created within the thread
+            #   So that `self` is thread-local
             if is_class_method:
                 self_or_cls = args[0]  # is it guaranteed? need double check
                 var_name = f"{self._name}_appl_ctx_"

@@ -6,6 +6,8 @@ import datetime
 import inspect
 import os
 import sys
+import threading
+from contextlib import contextmanager
 from importlib.metadata import version
 
 import pendulum
@@ -21,7 +23,7 @@ try:
 except Exception:
     __version__ = "unknown"
 
-from typing import Callable, Optional
+from typing import Any, Callable, Dict, Optional
 
 from .compositor import ApplStr as Str
 from .compositor import iter
@@ -45,6 +47,7 @@ from .core import appl_execute as execute
 from .core import appl_format as format
 from .core import appl_with_ctx as with_ctx
 from .core.config import Configs, configs, load_config
+from .core.generation import get_gen_name_prefix, set_gen_name_prefix
 from .core.globals import global_vars
 from .core.io import dump_file, load_file
 from .core.message import (
@@ -106,6 +109,15 @@ def init(
     Args:
         resume_cache: Path to the trace file used as resume cache. Defaults to None.
         update_config_hook: A hook to update the configs. Defaults to None.
+
+    Examples:
+        ```python
+        import appl
+
+        # Load environment variables from `.env` and configs from `appl.yaml`.
+        # Initialize logging and tracing systems if enabled.
+        appl.init()
+        ```
     """
     with global_vars.lock:
         # only initialize once
@@ -160,7 +172,7 @@ def init(
                 )
                 + ".log"
             )
-            log_file.path = log_file_path
+            log_file.path = log_file_path  # set the top level log file path
             file_log_level = log_file.get("log_level", None) or log_level
             logger.info(f"Logging to file: {log_file_path} with level {file_log_level}")
             # no need to overwrite the default format when writing to file
@@ -201,3 +213,72 @@ def init(
         global_vars.resume_cache = TraceEngine(
             resume_cache, mode="read", strict=strict_match
         )
+
+
+@contextmanager
+def init_within_thread(
+    log_file_prefix: Optional[str] = None, gen_name_prefix: Optional[str] = None
+) -> Any:
+    """Initialize APPL to work with multi-threading, including logging and tracing.
+
+    Args:
+        log_file_prefix: The prefix for the log file. Defaults to use the path of the main log file.
+        gen_name_prefix: The prefix for the generation name. Defaults to use the thread name.
+
+    Examples:
+        ```python
+        def function_run_in_thread():
+            with appl.init_within_thread():
+                # do something within the thread
+        ```
+    """
+    handler_id = None
+
+    try:
+        thread_name = threading.current_thread().name
+        log_format = configs.getattrs("settings.logging.format")
+        log_file = configs.getattrs("settings.logging.log_file")
+
+        def filter_thread_record(record: Dict) -> bool:
+            assert hasattr(record["thread"], "name")
+            # Use prefix match to filter the log records in different threads
+            name = record["thread"].name
+            return name == thread_name or name.startswith(thread_name + "_")
+
+        if log_file.get("enabled", False):
+            if log_file_prefix is None:
+                if "path" not in log_file:
+                    raise ValueError(
+                        "main log file is not set, did you forget to call appl.init()?"
+                    )
+                thread_log_path = os.path.join(
+                    log_file.path[: -len(".log")] + "_logs", f"{thread_name}.log"
+                )
+            else:
+                thread_log_path = f"{log_file_prefix}_{thread_name}.log"
+
+            log_level = log_file.get("log_level", None)
+            log_level = log_level or configs.getattrs("settings.logging.log_level")
+            # The logger append to the file by default, not overwrite.
+            handler_id = logger.add(
+                thread_log_path,
+                level=log_level,
+                format=log_format,
+                filter=filter_thread_record,  # type: ignore
+            )
+        if gen_name_prefix:
+            set_gen_name_prefix(gen_name_prefix)
+            # ? shall we reset the prefix after exiting the context?
+            logger.info(
+                f"Thread {thread_name}, set generation name prefix as: {gen_name_prefix}"
+            )
+
+        if handler_id is None:
+            logger.warning("logging is not enabled")
+        yield handler_id
+    except Exception as e:
+        logger.error(f"Error in thread: {e}")
+        raise e
+    finally:
+        if handler_id:
+            logger.remove(handler_id)

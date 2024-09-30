@@ -1,9 +1,13 @@
+import json
 import time
 
 from litellm import CustomStreamWrapper, completion_cost, stream_chunk_builder
 from litellm.exceptions import NotFoundError
 from openai import Stream
 from pydantic import model_validator
+from rich.console import Console
+from rich.live import Live
+from rich.panel import Panel
 from tqdm import tqdm
 
 from .config import configs
@@ -40,8 +44,10 @@ class CompletionResponse(BaseModel):
         [], description="The post finish callbacks"
     )
     """The post finish callbacks."""
-    response_model: Any = Field(None, description="The given response model")
-    """The given response model."""
+    response_model: Any = Field(
+        None, description="The BaseModel's subclass specifying the response format."
+    )
+    """The BaseModel's subclass specifying the response format."""
     response_obj: Any = Field(
         None, description="The response object of response model, could be a stream"
     )
@@ -63,6 +69,10 @@ class CompletionResponse(BaseModel):
         else:
             self._finish(self.raw_response)  # type: ignore
         return self
+
+    def set_response_obj(self, response_obj: Any) -> None:
+        """Set the response object."""
+        self.response_obj = response_obj
 
     @property
     def complete_response(self) -> Union[ModelResponse, ChatCompletion]:
@@ -111,34 +121,43 @@ class CompletionResponse(BaseModel):
             raise ValueError("Cannot iterate over non-streaming response")
         if self.is_finished:
             return self
+
         if self.response_obj is not None:
-            if display:
-                interval = configs.getattrs("settings.logging.display.stream_interval")
-                pbar = tqdm(self.response_obj, desc="Streaming", dynamic_ncols=True)
-                current_time = time.time()
-                for chunk in pbar:
-                    if time.time() - current_time > interval:
-                        current_time = time.time()
-                        pbar.set_description(str(chunk.model_dump()))
-                logger.info(
-                    f"Response object streaming finished with:\n{chunk.model_dump()}"
-                )
-                pbar.close()
-            else:
-                for chunk in self.response_obj:
-                    pass
-            self.response_obj = chunk.model_dump()
+            target = self.response_obj
         else:
-            if display:
-                print("===== APPL BEGIN STREAMING =====", flush=True)
-                suffix = ""
-                for chunk in iter(self):
-                    suffix = self._print_chunk(chunk, suffix)
-                print(suffix, flush=True)
-                print("===== APPL END STREAMING =====", flush=True)
-            else:
-                for chunk in iter(self):
-                    pass
+            target = self._format_stream()
+        if display:
+            refresh_interval = configs.getattrs(
+                "settings.logging.display.stream_interval", 1.0
+            )
+            start_time = time.time()
+            title = "APPL Streaming"
+            style = "magenta"
+            with Live(
+                Panel("Waiting for Response ...", title=title, style=style),
+                refresh_per_second=refresh_interval,
+            ) as live:
+                content = ""
+                for i, chunk in enumerate(iter(target)):
+                    if isinstance(chunk, BaseModel):
+                        content = json.dumps(chunk.model_dump(), indent=2)
+                    else:
+                        content += str(chunk)
+
+                    time_elapsed = time.time() - start_time
+                    avg_iters_per_sec = (i + 1) / time_elapsed
+                    stream_info = (
+                        f"[{time_elapsed:.3f}s ({avg_iters_per_sec:.2f} it/s)]"
+                    )
+                    live.update(
+                        Panel(content, title=f"{title} - {stream_info}", style=style)
+                    )
+                    live.refresh()
+        else:
+            for chunk in iter(target):
+                pass
+        if self.response_obj is not None:
+            self.set_response_obj(chunk)
         return self
 
     def register_post_finish_callback(self, callback: Callable) -> None:
@@ -151,29 +170,27 @@ class CompletionResponse(BaseModel):
         else:
             self.post_finish_callbacks.append(callback)
 
-    def _print_chunk(
-        self, chunk: Union[ModelResponse, ChatCompletionChunk], suffix: str = ""
-    ) -> str:
-        delta: Union[Delta, ChoiceDelta] = chunk.choices[0].delta  # type: ignore
+    def _format_stream(self):
+        suffix = ""
+        for chunk in iter(self):
+            # chunk: Union[ModelResponse, ChatCompletionChunk]
+            delta: Union[Delta, ChoiceDelta] = chunk.choices[0].delta  # type: ignore
 
-        def flush(content: str) -> None:
-            print(content, end="", flush=True)
-
-        if delta is not None:
-            if delta.content is not None:
-                flush(delta.content)
-            elif getattr(delta, "tool_calls", None):
-                f: Union[Function, ChoiceDeltaToolCallFunction] = delta.tool_calls[
-                    0
-                ].function  # type: ignore
-                if f.name is not None:
-                    if suffix:
-                        flush(f"{suffix}, ")
-                    flush(f"{f.name}(")
-                    suffix = ")"
-                if f.arguments is not None:
-                    flush(f.arguments)
-        return suffix
+            if delta is not None:
+                if delta.content is not None:
+                    yield delta.content
+                elif getattr(delta, "tool_calls", None):
+                    f: Union[Function, ChoiceDeltaToolCallFunction] = delta.tool_calls[
+                        0
+                    ].function  # type: ignore
+                    if f.name is not None:
+                        if suffix:
+                            yield f"{suffix}, "
+                        yield f"{f.name}("
+                        suffix = ")"
+                    if f.arguments is not None:
+                        yield f.arguments
+        yield suffix
 
     def _finish(self, response: Any) -> None:
         if self.is_finished:
@@ -182,9 +199,10 @@ class CompletionResponse(BaseModel):
         self.is_finished = True
         self._complete_response = response
         self.usage = getattr(response, "usage", None)
+        self.cost = 0.0
         try:
-            self.cost = completion_cost(response) if response else 0.0
-        except NotFoundError:
+            self.cost = completion_cost(response)
+        except Exception:
             pass
         # parse the message and tool calls
         if isinstance(response, (ModelResponse, ChatCompletion)):
@@ -198,7 +216,13 @@ class CompletionResponse(BaseModel):
                 raise ValueError(f"Invalid response: {response}")
         # post finish hook
         for callback in self.post_finish_callbacks:
-            callback(self)
+            try:
+                callback(self)
+            except Exception as e:
+                logger.error(
+                    f"Error when calling post finish callback {callback.__name__}: {e}"
+                )
+                raise e
 
     def _finish_stream(self) -> None:
         try:

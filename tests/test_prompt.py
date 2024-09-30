@@ -150,6 +150,50 @@ def test_tripple_quote():
     assert str(func4()) == "begin\n1. first\n2. second"
 
 
+def test_tripple_quote_fstring():
+    @ppl
+    def func1():
+        x = "end"
+        f"""
+        begin
+        {x}
+        """
+        return records()
+
+    @ppl
+    def func2():
+        x = f"""
+        begin
+            Hello
+            
+            World
+        """
+        f"""
+        {x}
+        end
+        """
+        return records()
+
+    @ppl
+    def func3():
+        f"""
+        1+1={1 + \
+                1
+        }
+        """
+        # The recovered code from libcst will become:
+        #         f"""
+        #         1+1={1 + \
+        #         1
+        # }
+        #         """
+        return records()
+
+    assert str(func1()) == "begin\nend"
+    assert str(func2()) == "begin\n    Hello\n\n    World\nend"
+    assert str(func3()) == "1+1=2"
+
+
 def test_include_docstring():
     @ppl(include_docstring=True)
     def func():

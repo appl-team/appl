@@ -10,6 +10,7 @@ import sys
 
 import pytest
 from loguru import logger
+from pydantic import BaseModel
 
 import appl
 from appl import AIRole, Generation, Image, UserRole, as_tool, gen, ppl
@@ -77,3 +78,22 @@ def test_image():
         return gen("gpt4-turbo", stop=NEWLINE)
 
     assert "OpenAI" in str(query())
+
+
+def test_response_format():
+    class Result(BaseModel):
+        result: int
+
+    @ppl
+    def func():
+        "1+1="
+        return gen("gpt4o-mini", response_format=Result).response_obj
+
+    assert func().result == 2
+
+    @ppl
+    def func2():
+        "1+1="
+        return gen("gpt4o-mini", response_format=Result, stream=True).response_obj
+
+    assert func2().result == 2

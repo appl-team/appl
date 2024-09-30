@@ -6,7 +6,7 @@ from appl import StringFuture as S
 
 
 def _check_str(s: S, target: str):
-    assert type(s) == S
+    assert type(s) is S
     assert str(s) == target
 
 

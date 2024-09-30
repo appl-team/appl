@@ -10,6 +10,22 @@ from dotenv.main import _walk_to_root
 from .core.config import configs
 from .types import *
 
+try:
+    from langsmith import traceable as _langsmith_traceable  # type: ignore
+except Exception:
+    F = TypeVar("F", bound=Callable)
+
+    # compatible to the case when langsmith is not installed
+    def _langsmith_traceable(*trace_args: Any, **trace_kwargs: Any) -> Callable[[F], F]:
+        def decorator(func: F) -> F:
+            @functools.wraps(func)
+            def inner(*args: Any, **kwargs: Any) -> Any:
+                return func(*args, **kwargs)
+
+            return inner  # type: ignore
+
+        return decorator
+
 
 def _is_interactive():
     """Decide whether this is running in a REPL or IPython notebook."""
@@ -91,7 +107,7 @@ def get_meta_file(trace_file: str) -> str:
 
 
 def timeit(func: Callable) -> Callable:
-    """Decorator to time the execution of a function."""
+    """Time the execution of a function as a decorator."""
 
     @functools.wraps(func)
     def timer(*args, **kwargs):

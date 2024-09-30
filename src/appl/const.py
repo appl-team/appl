@@ -1,5 +1,3 @@
-from os import linesep as LINESEP
-
 INDENT2 = " " * 2
 INDENT4 = " " * 4
 INDENT8 = " " * 8

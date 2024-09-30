@@ -5,19 +5,19 @@ from dataclasses import dataclass
 from pydantic import model_validator
 from termcolor import COLORS, colored
 
-from appl.core.types import Dict
-
 from .config import configs
 from .tool import ToolCall
 from .types import *
 
 
 def get_role_color(role: MessageRole) -> Optional[str]:
+    """Get the color of the message based on the role."""
     color_dict = configs.getattrs("settings.messages.colors", {})
     return color_dict.get(role.type, None)
 
 
 def get_colored_role_text(role: Optional[MessageRole], content: str) -> str:
+    """Get the colored text based on the role."""
     if role:
         color = get_role_color(role)
         if color in COLORS:

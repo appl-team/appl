@@ -4,8 +4,8 @@ from functools import wraps
 from importlib.metadata import version
 
 import litellm
-from instructor.patch import Mode
-from langsmith import traceable
+import yaml
+from appl import __version__
 from litellm import (
     CustomStreamWrapper,
     ModelResponse,
@@ -16,9 +16,6 @@ from litellm.exceptions import NotFoundError
 from openai import OpenAI, Stream
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 
-from appl import __version__
-
-from ..core import trace
 from ..core.config import configs
 from ..core.message import Conversation
 from ..core.response import CompletionResponse
@@ -31,10 +28,11 @@ from ..core.trace import (
     find_in_cache,
 )
 from ..core.types import *
+from ..utils import _langsmith_traceable
 
 try:
     # instructor<0.5.0
-    from instructor.patch import wrap_chatcompletion
+    from instructor.patch import wrap_chatcompletion  # type: ignore
 
     def patch(create: Callable, mode: Mode) -> Callable:
         """Patch the `create` method.
@@ -50,6 +48,12 @@ try:
 except ImportError:
     from instructor.patch import patch  # type: ignore
 
+try:
+    from instructor.mode import Mode
+except ImportError:
+    # old version of instructor
+    from instructor.patch import Mode  # type: ignore
+
 if configs.getattrs("settings.misc.suppress_litellm_debug_info"):
     litellm.suppress_debug_info = True
 
@@ -61,6 +65,9 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
     if "gen_id" not in kwargs:
         raise ValueError("gen_id is required for tracing completion generation.")
     gen_id = kwargs.pop("gen_id")
+    raw_response_holder = []
+    if "_raw_response_holder" in kwargs:
+        raw_response_holder = kwargs.pop("_raw_response_holder")
     add_to_trace(CompletionRequestEvent(name=gen_id))
 
     log_llm_call_args = configs.getattrs("settings.logging.display.llm_raw_call_args")
@@ -70,7 +77,7 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
     if log_llm_call_args:
         logger.info(f"Call completion [{gen_id}] with args: {kwargs}")
 
-    @traceable(
+    @_langsmith_traceable(
         name=f"ChatCompletion_{gen_id}",
         run_type="llm",
         metadata={"appl": "completion", "appl_version": __version__},
@@ -89,17 +96,25 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
             raw_response = litellm.completion(**inner_kwargs)
         return raw_response, cache_ret is not None
 
-    raw_response, use_cache = wrapped(**kwargs)
+    try:
+        raw_response, use_cache = wrapped(**kwargs)
+    except Exception as e:
+        # log the error information for debugging
+        logger.error(f"Error encountered for the completion: {e}")
+        logger.info(f"kwargs:\n{kwargs}")
+        raise e
+
+    if raw_response_holder is not None:
+        raw_response_holder.append(raw_response)
 
     def post_completion(response: CompletionResponse) -> None:
         raw_response = response.complete_response
         cost = 0.0 if use_cache else response.cost
         response.cost = cost  # update the cost
-        add_to_trace(
-            CompletionResponseEvent(
-                name=gen_id, args=kwargs, ret=raw_response, cost=cost
-            )
+        event = CompletionResponseEvent(
+            name=gen_id, args=kwargs, ret=raw_response, cost=cost
         )
+        add_to_trace(event)
         if log_llm_response:
             logger.info(f"Completion [{gen_id}] response: {response}")
         if log_llm_usage and response.usage is not None:
@@ -168,8 +183,11 @@ class APIServer(BaseServer):
 
     def _create(self, **kwargs: Any) -> CompletionResponse:
         response: CompletionResponse = None  # type: ignore
+        # to store raw response when patched completion meets error
+        kwargs["_raw_response_holder"] = []
 
         response_model = kwargs.get("response_model", None)
+        response_format = kwargs.get("response_format", None)
         if self._wrap_mode is not None and response_model is not None:
 
             def wrapper(**inner_kwargs: Any) -> CompletionResponse:
@@ -177,18 +195,39 @@ class APIServer(BaseServer):
                 response = chat_completion(**inner_kwargs)
                 return response
 
-            # Use instructor.patch to enable using a pydantic model as response model
-            # added arguments: response_model, validation_context, max_retries
-            patched = patch(create=wrapper, mode=self._wrap_mode)
-            results = patched(**kwargs)
-            # fill in the response_model and response_obj
-            response.response_model = response_model
-            response.response_obj = results
-            # TODO?: update the cost for multiple retries
-            # instructor has updated the total usage for retries
-            # ?? response.cost = completion_cost({"usage": response.usage})
+            try:
+                # Use instructor.patch to enable using a pydantic model as response model
+                # added arguments: response_model, validation_context, max_retries
+                patched = patch(create=wrapper, mode=self._wrap_mode)
+                results = patched(**kwargs)
+                # fill in the response_model and response_obj
+                response.response_model = response_model
+                response.set_response_obj(results)
+                # TODO?: update the cost for multiple retries
+                # instructor has updated the total usage for retries
+                # ?? response.cost = completion_cost({"usage": response.usage})
+            except Exception as e:
+                # log the error information for debugging
+                logger.error(f"Error encountered for the patched completion: {e}")
+                _raw_response_holder = kwargs.pop("_raw_response_holder", [])
+                logger.info(f"kwargs:\n{yaml.dump(kwargs)}")
+                if _raw_response_holder:
+                    logger.info(f"raw_response:\n{_raw_response_holder[0]}")
+                raise e
         else:
             response = chat_completion(**kwargs)
+            if isinstance(response_format, type) and issubclass(
+                response_format, BaseModel
+            ):
+                response.response_model = response_format
+                assert (
+                    response.response_obj is None
+                ), "response_obj should not be set yet."
+                # retrieve the response message and convert it to the response model
+                # fetching the results will stream the response if it is a streaming
+                response.set_response_obj(
+                    response_format.model_validate_json(response.results)
+                )
         return response
 
     def _convert(self, conversation: Conversation) -> List[Dict[str, str]]:

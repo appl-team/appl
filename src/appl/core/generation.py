@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+import threading
 import time
 
 from . import trace
 from .config import configs
 from .context import PromptContext
-from .globals import inc_global
+from .globals import get_thread_local, inc_thread_local, set_thread_local
 from .message import AIMessage, BaseMessage, ToolMessage
 from .promptable import Promptable
 from .response import CompletionResponse
@@ -15,8 +16,26 @@ from .tool import BaseTool, ToolCall
 from .trace import GenerationInitEvent, add_to_trace
 from .types import *
 
+M = TypeVar("M", bound=Optional[BaseModel])
+APPL_GEN_NAME_PREFIX_KEY = "_appl_gen_name_prefix"
 
-class Generation:
+
+def set_gen_name_prefix(prefix: str) -> None:
+    """Set the prefix for generation names in the current thread."""
+    set_thread_local(APPL_GEN_NAME_PREFIX_KEY, prefix)
+
+
+def get_gen_name_prefix() -> Optional[str]:
+    """Get the prefix for generation names in the current thread."""
+    gen_name_prefix = get_thread_local(APPL_GEN_NAME_PREFIX_KEY, None)
+    if gen_name_prefix is None:
+        thread_name = threading.current_thread().name
+        if thread_name != "MainThread":
+            gen_name_prefix = thread_name
+    return gen_name_prefix
+
+
+class Generation(Generic[M]):
     """Represents a generation call to the model."""
 
     def __init__(
@@ -41,7 +60,9 @@ class Generation:
             **kwargs: Extra arguments for the generation call.
         """
         # name needs to be unique and ordered, so it has to be generated in the main thread
-        self._id = inc_global("gen_cnt") - 1  # take the value before increment
+        gen_name_prefix = get_gen_name_prefix()
+        # take the value before increment
+        self._id = inc_thread_local(f"{gen_name_prefix}_gen_cnt") - 1
 
         self._server = server
         self._args = args
@@ -71,6 +92,9 @@ class Generation:
     @property
     def id(self) -> str:
         """The unique ID of the generation."""
+        gen_name_prefix = get_gen_name_prefix()
+        if gen_name_prefix is not None:
+            return f"@{gen_name_prefix}_gen_{self._id}"
         return f"@gen_{self._id}"
 
     def __call__(self):
@@ -114,12 +138,12 @@ class Generation:
         return self.response.tool_calls
 
     @property
-    def response_obj(self) -> Any:
+    def response_obj(self) -> M:
         """The object of the response."""
         return self.response.response_obj
 
     @property
-    def results(self) -> Any:
+    def results(self) -> Union[M, str, List[ToolCall]]:
         """The results of the response."""
         return self.response.results
 
@@ -230,6 +254,7 @@ class Generation:
         )
 
     def __getattr__(self, name: str) -> Any:
+        assert name != "response", "Internal Error within self.response"
         return getattr(self.response, name)
 
     def __str__(self) -> str:

@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 from . import trace
 from .config import configs
-from .globals import inc_global
+from .globals import inc_global_var
 from .message import Conversation
 from .response import CompletionResponse
 from .tool import BaseTool, ToolCall
@@ -15,8 +15,8 @@ from .types import override
 
 
 def _update_cost(name: str, cost: float, currency: str = "USD") -> None:
-    num_requests = inc_global(f"{name}_num_requests")
-    total_cost = inc_global(f"{name}_api_cost", cost)
+    num_requests = inc_global_var(f"{name}_num_requests")
+    total_cost = inc_global_var(f"{name}_api_cost", cost)
     if configs.getattrs("settings.logging.display.llm_cost"):
         logger.info(
             f"API cost for this request: {cost:.4f}, "
@@ -46,6 +46,13 @@ class GenArgs(BaseModel):
         "auto", description="The format for the tools"
     )
     stream: Optional[bool] = Field(None, description="Whether to stream the results")
+    response_format: Optional[Union[dict, Type[BaseModel]]] = Field(
+        None, description="OpenAI's argument specifies the response format."
+    )
+    response_model: Optional[Type[BaseModel]] = Field(
+        None,
+        description="instructor's argument specifies the response format as a Pydantic model.",
+    )
 
     def preprocess(self, convert_func: Callable, is_openai: bool = False) -> dict:
         """Convert the GenArgs into a dictionary for creating the response."""
@@ -150,12 +157,10 @@ class BaseServer(ABC):
                 )
 
         dump_args = create_args.copy()
-        if "response_model" in dump_args:
-            v = dump_args["response_model"]
-            if issubclass(v, BaseModel):
-                dump_args["response_model"] = json.dumps(
-                    v.model_json_schema(), indent=4
-                )
+        for k, v in dump_args.items():
+            if k in ["response_format", "response_model"]:
+                if isinstance(v, type) and issubclass(v, BaseModel):
+                    dump_args[k] = json.dumps(v.model_json_schema(), indent=4)
 
         def trace_gen_response(response: CompletionResponse) -> None:
             add_to_trace(
