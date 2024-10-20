@@ -1,9 +1,7 @@
 import json
 import os
 
-import appl
-
-from ..compositor import Tagged
+from ..compositor import Tagged as OriginalTagged
 from ..core.config import Configs
 from ..core.io import load_file
 from ..core.printer import PromptRecords
@@ -20,9 +18,11 @@ from ..core.trace import (
     TracePrinterBase,
 )
 from ..core.types import *
-from ..func import ppl, records
+from ..func import partial, ppl, records
 
 folder = os.path.dirname(__file__)
+
+Tagged = partial(OriginalTagged, indent_inside=4)
 
 
 class TraceHTMLPrinter(TracePrinterBase):

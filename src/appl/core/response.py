@@ -1,18 +1,21 @@
 import json
+import os
+import shutil
 import time
 
 from litellm import CustomStreamWrapper, completion_cost, stream_chunk_builder
 from litellm.exceptions import NotFoundError
 from openai import Stream
 from pydantic import model_validator
-from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
+from rich.syntax import Syntax
 from tqdm import tqdm
 
 from .config import configs
 from .tool import ToolCall
 from .types import *
+from .utils import make_panel
 
 
 class CompletionResponse(BaseModel):
@@ -115,7 +118,9 @@ class CompletionResponse(BaseModel):
             return ResponseType.TOOL_CALL
         return ResponseType.TEXT
 
-    def streaming(self, display: bool = True) -> "CompletionResponse":
+    def streaming(
+        self, display: bool = True, title: str = "APPL Streaming"
+    ) -> "CompletionResponse":
         """Stream the response object and finish the response."""
         if not self.is_stream:
             raise ValueError("Cannot iterate over non-streaming response")
@@ -125,17 +130,33 @@ class CompletionResponse(BaseModel):
         if self.response_obj is not None:
             target = self.response_obj
         else:
-            target = self._format_stream()
+            target = self.format_stream()
         if display:
             refresh_interval = configs.getattrs(
                 "settings.logging.display.stream_interval", 1.0
             )
             start_time = time.time()
-            title = "APPL Streaming"
-            style = "magenta"
+
+            def panel(
+                content: str, iter_index: Optional[int] = None, truncate: bool = False
+            ) -> Panel:
+                style = "magenta"
+                display_title = title
+                if iter_index is not None:
+                    time_elapsed = time.time() - start_time
+                    avg_iters_per_sec = (iter_index + 1) / time_elapsed
+                    stream_info = (
+                        f"[{time_elapsed:.3f}s ({avg_iters_per_sec:.2f} it/s)]"
+                    )
+                    display_title += f" - {stream_info}"
+                return make_panel(
+                    content, title=display_title, style=style, truncate=truncate
+                )
+
             with Live(
-                Panel("Waiting for Response ...", title=title, style=style),
+                panel("Waiting for Response ..."),
                 refresh_per_second=refresh_interval,
+                # vertical_overflow="visible", # manually display the tail lines instead
             ) as live:
                 content = ""
                 for i, chunk in enumerate(iter(target)):
@@ -143,16 +164,11 @@ class CompletionResponse(BaseModel):
                         content = json.dumps(chunk.model_dump(), indent=2)
                     else:
                         content += str(chunk)
-
-                    time_elapsed = time.time() - start_time
-                    avg_iters_per_sec = (i + 1) / time_elapsed
-                    stream_info = (
-                        f"[{time_elapsed:.3f}s ({avg_iters_per_sec:.2f} it/s)]"
-                    )
-                    live.update(
-                        Panel(content, title=f"{title} - {stream_info}", style=style)
-                    )
-                    live.refresh()
+                    live.update(panel(content, i, truncate=True))
+                    # live.refresh() # might be too frequent
+                # display untruncated content at the end
+                live.update(panel(content, i))
+                live.refresh()
         else:
             for chunk in iter(target):
                 pass
@@ -170,7 +186,8 @@ class CompletionResponse(BaseModel):
         else:
             self.post_finish_callbacks.append(callback)
 
-    def _format_stream(self):
+    def format_stream(self):
+        """Format the stream response as a text generator."""
         suffix = ""
         for chunk in iter(self):
             # chunk: Union[ModelResponse, ChatCompletionChunk]

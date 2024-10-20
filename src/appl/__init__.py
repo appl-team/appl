@@ -8,7 +8,6 @@ import os
 import sys
 import threading
 from contextlib import contextmanager
-from importlib.metadata import version
 
 import pendulum
 import toml
@@ -18,10 +17,6 @@ from loguru import logger
 
 logger.remove()  # Remove default handler
 logger.add(sys.stderr, level="INFO")  # set to INFO
-try:
-    __version__ = version("applang")
-except Exception:
-    __version__ = "unknown"
 
 from typing import Any, Callable, Dict, Optional
 
@@ -66,6 +61,7 @@ from .func import (
     convo,
     empty_line,
     gen,
+    grow,
     need_ctx,
     openai_tool_schema,
     partial,
@@ -85,6 +81,7 @@ from .utils import (
     get_meta_file,
     timeit,
 )
+from .version import __version__
 
 
 def _get_loguru_format():
@@ -275,7 +272,7 @@ def init_within_thread(
 
         if handler_id is None:
             logger.warning("logging is not enabled")
-        yield handler_id
+        yield thread_log_path
     except Exception as e:
         logger.error(f"Error in thread: {e}")
         raise e

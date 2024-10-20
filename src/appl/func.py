@@ -5,7 +5,7 @@ import sys
 import threading
 import time
 from inspect import signature
-from typing import overload
+from typing import get_origin, overload
 
 from .core import (
     BaseTool,
@@ -21,6 +21,7 @@ from .core import (
     Tool,
 )
 from .core.globals import global_vars, inc_global_var
+from .core.runtime import appl_execute
 from .core.trace import FunctionCallEvent, FunctionReturnEvent, add_to_trace
 from .servers import server_manager
 from .types import *
@@ -32,8 +33,9 @@ from .utils import _langsmith_traceable
 # Callable[P, T] is used for static type inference (Pylance)
 P = ParamSpec("P")
 T = TypeVar("T")
-F = TypeVar("F", bound=Callable)
-M = TypeVar("M", bound=BaseModel)
+F = TypeVar("F", bound=Callable)  # function
+M = TypeVar("M")  # model
+R = TypeVar("R")  # return value
 
 
 def need_ctx(func: Callable[P, T]) -> Callable[P, T]:
@@ -42,7 +44,7 @@ def need_ctx(func: Callable[P, T]) -> Callable[P, T]:
     return func
 
 
-def partial(func: Callable, *args: Any, **kwargs: Any) -> Any:
+def partial(func: Callable[..., R], *args: Any, **kwargs: Any) -> Callable[..., R]:
     """Create a new function with partial application of the given arguments and keywords."""
     new_func = functools.partial(func, *args, **kwargs)
     if getattr(func, "__need_ctx__", True):
@@ -391,6 +393,17 @@ def build_tools(tools: OneOrMany[Union[BaseTool, Callable]]) -> Sequence[BaseToo
 
 
 @need_ctx
+def grow(content: Any, *, _ctx: Optional[PromptContext] = None) -> None:
+    """Append the content to the prompt."""
+    if _ctx is None:
+        raise ValueError(
+            "PromptContext is required for appending. "
+            "Normally, it should be automatically filled."
+        )
+    appl_execute(content, _ctx=_ctx)
+
+
+@need_ctx
 def gen(
     server: Optional[str] = None,
     *,
@@ -399,7 +412,7 @@ def gen(
     temperature: Optional[float] = None,
     top_p: Optional[float] = None,
     n: Optional[int] = None,
-    tools: OneOrMany[Union[BaseTool, Callable]] = [],
+    tools: OneOrMany[Union[BaseTool, Callable]] = [],  # TODO: support dict
     tool_format: str = "auto",
     stream: Optional[bool] = None,
     response_format: Optional[Union[dict, Type[M]]] = None,
@@ -448,6 +461,20 @@ def gen(
 
     if response_format is not None and response_model is not None:
         raise ValueError("response_format and response_model cannot be used together.")
+
+    if (
+        isinstance(get_origin(response_format), type)
+        or get_origin(response_format) is Literal
+        or isinstance(response_format, type)
+        and not issubclass(response_format, BaseModel)
+    ):
+
+        class Response(BaseModel):
+            response: response_format  # type: ignore
+
+        response_format = Response  # type: ignore
+        kwargs["_wrapped_attribute"] = "response"
+
     create_args = GenArgs(
         model=backend_server.model_name,
         messages=messages,
@@ -459,13 +486,13 @@ def gen(
         tools=build_tools(tools),
         tool_format=tool_format,  # type: ignore
         stream=stream,
-        response_format=response_format,
-        response_model=response_model,
+        response_format=response_format,  # type: ignore
+        response_model=response_model,  # type: ignore
     )
 
-    generation = Generation(
+    generation = Generation[M](
         backend_server, create_args, mock_response=mock_response, _ctx=_ctx, **kwargs
-    )  # type: ignore
+    )
 
     @_langsmith_traceable(name=generation.id, metadata={"appl": "gen"})  # type: ignore
     def langsmith_trace(*args: Any, **kwargs: Any) -> None:

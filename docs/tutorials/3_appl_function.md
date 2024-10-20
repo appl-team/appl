@@ -15,9 +15,6 @@ Each *APPL function* has a **prompt context**, which is an object that stores th
 ## Prompt Capturing
 As you have seen in the [QA examples](./2_qa_example.md), you can define prompts with [expression statements](https://docs.python.org/3/reference/simple_stmts.html#expression-statements) within *APPL functions*, including string literals (e.g., `"Hello"`), formatted strings (e.g., `f"My name is {name}"`), or more complex expressions. For types that subclass `Sequence`, such as `list` and `tuple`, the elements are recursively captured as prompts one by one. You may also define custom types and the ways to convert them to prompts by subclassing `Promptable` and implementing the `__prompt__` method. See the [Appendix](./appendix/prompt_capture.md) for more details.
 
-??? warning "Pay attention to return values of function calls"
-    Function calls are also expression statements, which means their return values (when not `None`) may be captured as prompts based on the type. To avoid capturing the return value, you may write it as a assignment statement, for example when calling the `pop` function : `_ = {"example": "Hello World"}.pop("example")`.
-
 ??? question "How about docstrings in *APPL functions*?"
     Docstring is a special expression statement in Python. There are two cases for docstrings in *APPL functions*:
     
@@ -68,6 +65,28 @@ As you have seen in the [QA examples](./2_qa_example.md), you can define prompts
     Second line.
         indented line.
     ```
+
+??? info "Add image prompt"
+    It's easy to add image prompts in *APPL functions* by using the `Image` class. The following example demonstrates how to add this [example image](https://maproom.wpenginepowered.com/wp-content/uploads/OpenAI_Logo.svg_-500x123.png) as part of prompt in an *APPL function*.
+    ```python
+    --8<-- "examples/basic/image_prompt.py"
+    ```
+
+??? info "Explicitly capture prompts"
+    If you want to capture prompts explicitly, simply use the `grow` function to append the content to the prompt.
+    ```python
+    from appl import gen, grow, ppl
+
+    @ppl
+    def count(word: str, char: str):
+        grow(f"How many {char}s are there in {word}?")
+        return gen()
+    ```
+
+    In other words, there is an implicit `grow` function wrapped around the expression statements in *APPL functions*.
+
+??? warning "Pay attention to return values of function calls"
+    Function calls are also expression statements, which means their return values (when not `None`) may be captured as prompts based on the type. To avoid capturing the return value, you may write it as a assignment statement, for example when calling the `pop` function : `_ = {"example": "Hello World"}.pop("example")`.
 
 ## Prompt Retrieval
 Similar to the local and global variables in Python (retrieved with `locals()` and `globals()` functions, respectively), you can retrieve the prompts captured in the current function (with `records()`) or the full conversation in the context (with `convo()`). This [example](#example) demonstrates how to retrieve the prompts captured in the current function and the full conversation in the context.

@@ -16,7 +16,7 @@ from .tool import BaseTool, ToolCall
 from .trace import GenerationInitEvent, add_to_trace
 from .types import *
 
-M = TypeVar("M", bound=Optional[BaseModel])
+M = TypeVar("M")
 APPL_GEN_NAME_PREFIX_KEY = "_appl_gen_name_prefix"
 
 
@@ -151,6 +151,11 @@ class Generation(Generic[M]):
     def str_future(self) -> StringFuture:
         """The StringFuture representation of the response."""
         return StringFuture(self)
+
+    @property
+    def text_stream(self):
+        """Get the response of the generation as a text stream."""
+        return self.response.format_stream()
 
     def _call_tool(
         self, name: str, args: str, parallel: bool = False, use_process: bool = False

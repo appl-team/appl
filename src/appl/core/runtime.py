@@ -2,6 +2,8 @@
 
 import inspect
 
+from PIL.ImageFile import ImageFile
+
 from .config import configs
 from .context import PromptContext
 from .generation import Generation
@@ -77,13 +79,15 @@ def appl_execute(
         _ctx.add_message(s)
     elif isinstance(s, Image):
         _ctx.add_image(s)
+    elif isinstance(s, ImageFile):
+        _ctx.add_image(Image.from_image(s))
     elif isinstance(s, Generation):
         appl_execute(s.as_prompt(), _ctx)
     elif isinstance(s, Promptable):
         # recursively apply
         appl_execute(promptify(s), _ctx)
-    elif isinstance(s, Sequence):
-        # sequence of items, recursively apply
+    elif isinstance(s, Iterable):
+        # iterable items, recursively apply
         for x in s:
             appl_execute(x, _ctx)
     elif isinstance(s, Namespace):  # for advanced usage only

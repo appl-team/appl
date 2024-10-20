@@ -413,6 +413,8 @@ class APPLCompiled:
     ) -> Any:
         """Call the compiled function."""
         _globals = _globals or self._original_func.__globals__
+        if "appl" not in _globals:
+            _globals["appl"] = sys.modules["appl"]
         local_vars = {"PromptContext": PromptContext}
         # get closure variables from locals
         for name in self.freevars:

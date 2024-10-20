@@ -13,5 +13,5 @@ from .core.printer import Indexing, PromptPrinter, PromptRecords
 from .core.promptable import BracketedDefinition, Definition, FormatterMeta, Promptable
 from .core.response import CompletionResponse
 from .core.server import BaseServer, GenArgs
-from .core.tool import BaseTool, Tool
+from .core.tool import BaseTool, Tool, ToolCall
 from .core.types import *

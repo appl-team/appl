@@ -8,13 +8,12 @@ You can skip these tests by setting the environment variable SKIP_MODEL_CALL_TES
 import os
 import sys
 
-import pytest
-from loguru import logger
-from pydantic import BaseModel
-
 import appl
+import pytest
 from appl import AIRole, Generation, Image, UserRole, as_tool, gen, ppl
 from appl.const import NEWLINE
+from loguru import logger
+from pydantic import BaseModel
 
 appl.init()
 # NOTE: init here could influence other tests in other files.
@@ -75,7 +74,7 @@ def test_image():
         Image(IMAGE_URL)
         "What's the text on the image? "
         "Your output should be in the format: The text on the image is: ..."
-        return gen("gpt4-turbo", stop=NEWLINE)
+        return gen("gpt4o-mini", stop=NEWLINE)
 
     assert "OpenAI" in str(query())
 

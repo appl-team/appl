@@ -195,6 +195,16 @@ class ToolCall(BaseModel):
         }
 
     @classmethod
+    def from_dict(cls, call: Dict) -> "ToolCall":
+        """Create a ToolCall from a dictionary in the OpenAI format."""
+        # throw error if incorrect format
+        return cls(
+            id=call["id"],
+            name=call["function"]["name"],
+            args=call["function"]["arguments"],
+        )
+
+    @classmethod
     def from_openai_tool_call(cls, call: ChatCompletionMessageToolCall) -> "ToolCall":
         """Create a ToolCall from an OpenAI tool call."""
         return cls(

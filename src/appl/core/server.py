@@ -134,6 +134,7 @@ class BaseServer(ABC):
             The response from the model.
         """
         log_llm_call_args = configs.getattrs("settings.logging.display.llm_call_args")
+        log_llm_usage = configs.getattrs("settings.logging.display.llm_usage")
         log_llm_response = configs.getattrs("settings.logging.display.llm_response")
 
         create_args = self._get_create_args(args, **kwargs)
@@ -143,6 +144,8 @@ class BaseServer(ABC):
         results = self._create(gen_id=gen_id, **create_args)
         if log_llm_response:
             logger.info(f"Generation [{gen_id}] results: {results}")
+        if results.usage and log_llm_usage:
+            logger.info(f"Generation [{gen_id}] token usage: {results.usage}")
         if results.cost:
             if "mock_response" in create_args:
                 if configs.getattrs("settings.logging.display.llm_cost"):

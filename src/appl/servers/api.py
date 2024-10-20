@@ -5,7 +5,6 @@ from importlib.metadata import version
 
 import litellm
 import yaml
-from appl import __version__
 from litellm import (
     CustomStreamWrapper,
     ModelResponse,
@@ -29,6 +28,7 @@ from ..core.trace import (
 )
 from ..core.types import *
 from ..utils import _langsmith_traceable
+from ..version import __version__
 
 try:
     # instructor<0.5.0
@@ -215,6 +215,7 @@ class APIServer(BaseServer):
                     logger.info(f"raw_response:\n{_raw_response_holder[0]}")
                 raise e
         else:
+            wrapped_attribute = kwargs.pop("_wrapped_attribute", None)
             response = chat_completion(**kwargs)
             if isinstance(response_format, type) and issubclass(
                 response_format, BaseModel
@@ -225,9 +226,13 @@ class APIServer(BaseServer):
                 ), "response_obj should not be set yet."
                 # retrieve the response message and convert it to the response model
                 # fetching the results will stream the response if it is a streaming
-                response.set_response_obj(
-                    response_format.model_validate_json(response.results)
-                )
+                response_obj = response_format.model_validate_json(response.results)
+                if wrapped_attribute:
+                    assert hasattr(
+                        response_obj, wrapped_attribute
+                    ), f"should have attribute {wrapped_attribute} in the response"
+                    response_obj = getattr(response_obj, wrapped_attribute)
+                response.set_response_obj(response_obj)
         return response
 
     def _convert(self, conversation: Conversation) -> List[Dict[str, str]]:

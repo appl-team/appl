@@ -1,5 +1,10 @@
+import base64
+from io import BytesIO
+from os import PathLike
 from typing import Optional
 
+import PIL.Image
+from PIL.ImageFile import ImageFile
 from pydantic import BaseModel, Field
 
 from .basic import *
@@ -9,7 +14,9 @@ from .futures import String, is_string
 class Image(BaseModel):
     """Represent an image in the message."""
 
-    url: str = Field(..., description="The URL of the image")
+    url: str = Field(
+        ..., description="Either a URL of the image or the base64 encoded image data."
+    )
     detail: Optional[str] = Field(
         None, description="Specifies the detail level of the image."
     )
@@ -21,6 +28,23 @@ class Image(BaseModel):
         for more information about the detail level.
         """
         super().__init__(url=url, detail=detail)
+
+    @classmethod
+    def from_image(cls, image: ImageFile, detail: Optional[str] = None) -> "Image":
+        """Construct an image prompt from a PIL ImageFile."""
+        buffered = BytesIO()
+        # Save the image to the buffer in PNG format
+        image.save(buffered, format="PNG")
+        # Get the byte data from the buffer
+        img_byte = buffered.getvalue()
+        img_base64 = base64.b64encode(img_byte).decode("utf-8")
+        return cls(url=f"data:image/png;base64,{img_base64}", detail=detail)
+
+    @classmethod
+    def from_file(cls, file: PathLike, detail: Optional[str] = None) -> "Image":
+        """Construct an image prompt from an image file."""
+        image = PIL.Image.open(file)
+        return cls.from_image(image, detail)
 
     def __repr__(self) -> str:
         return f"Image(url={self.url})"

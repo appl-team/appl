@@ -28,3 +28,4 @@ from .response import CompletionResponse
 from .runtime import appl_execute, appl_format, appl_with_ctx
 from .server import BaseServer, GenArgs
 from .tool import BaseTool, Tool
+from .utils import make_panel

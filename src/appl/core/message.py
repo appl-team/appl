@@ -101,6 +101,7 @@ class BaseMessage(BaseModel, ABC):
                 content = str(content)
         return content
 
+    # TODO: implement classmethod: from dict
     def get_dict(self, default_role: Optional[MessageRole] = None) -> Dict[str, Any]:
         """Return a dict representation of the message."""
         # materialize the content using str()
@@ -253,10 +254,13 @@ class ToolMessage(BaseMessage):
         content: Any = None,
         *,
         role: Optional[MessageRole] = None,
+        tool_call_id: str = "",
         **kwargs: Any,
     ) -> None:
         """Create a tool message with content and extra arguments."""
-        super().__init__(content=content, role=role, **kwargs)
+        super().__init__(
+            content=content, role=role, tool_call_id=tool_call_id, **kwargs
+        )
         self.validate_role(TOOL_ROLE)
 
     def get_dict(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
@@ -365,6 +369,7 @@ class Conversation(BaseModel):
         for m in other.messages:
             self.append(m)
 
+    # TODO: implement classmethod: from list of dict
     def as_list(
         self, default_role: Optional[MessageRole] = USER_ROLE
     ) -> List[Dict[str, str]]:

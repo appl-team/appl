@@ -32,7 +32,7 @@ nav:
     - Usage:
       - Servers: tutorials/usage/servers.md
       - Streaming: tutorials/usage/streaming.md
-      - Using Instructor: tutorials/usage/instructor.md
+      - Structured Output: tutorials/usage/structured.md
       - Using SRT: tutorials/usage/srt.md
     - Appendix:
       - Prompt Capture: tutorials/appendix/prompt_capture.md
@@ -42,6 +42,8 @@ nav:
     - Multi Agent Chat: cookbook/multi_agent_chat.md
     - Chat with Codes: cookbook/chat_with_codes.md
     - Very Long Prompt: cookbook/long_prompt.md
+  - Blog:
+    - blogs/index.md
   - API Reference:
     - appl: reference/
   - Development:

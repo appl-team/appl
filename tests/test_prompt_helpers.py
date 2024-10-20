@@ -1,8 +1,7 @@
 from typing import Dict, Optional
 
-import pytest
-
 import appl
+import pytest
 from appl import BracketedDefinition as Def
 from appl import define, define_bracketed, ppl, records
 from appl.compositor import *
@@ -46,7 +45,7 @@ def test_logged():
 def test_tagged():
     @ppl
     def func(attrs: Optional[Dict] = None):
-        with Tagged("tag1", attrs=attrs):
+        with Tagged("tag1", attrs=attrs, indent_inside=4):
             "a"
             "b"
         return records()

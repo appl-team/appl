@@ -358,7 +358,7 @@ class Tagged(Logged):
         ```
     """
 
-    _indent_inside: Optional[str] = INDENT
+    _indent_inside: Optional[str] = ""
 
     def __init__(
         self,

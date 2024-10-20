@@ -46,9 +46,14 @@ def _init_server(
 
 
 def _get_server_configs(name: str) -> dict:
+    server_configs = {}
     if name not in configs.get("servers", {}):
-        raise ValueError(f"Server {name} not found")
-    server_configs: dict = configs.servers[name]
+        logger.warning(
+            f"Server {name} not found in configs, using the server name as model name"
+        )
+        server_configs["model"] = name
+    else:
+        server_configs = configs.servers[name]
     for _ in range(100):  # prevent infinite loop (max 100 templates)
         if "template" not in server_configs:
             break
