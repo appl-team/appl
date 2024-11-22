@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, create_model
 
 import appl
 from appl import Generation, as_tool, gen, ppl
-from appl.core import CompletionResponse, ResponseType, ToolCall
+from appl.core import CompletionResponse, ToolCall
 
 
 def removed_keyword(d: Any, key: str) -> Any:

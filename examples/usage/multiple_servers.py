@@ -8,7 +8,6 @@ appl.init()
 def add1(a, b):
     f"what's {a} plus {b}?"
     return gen("azure-gpt35")
-    # The default server is "gpt35-turbo", if not specified
 
 
 @ppl

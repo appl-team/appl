@@ -1,11 +1,21 @@
 import copy
-import functools
 import inspect
-import sys
-import threading
-import time
-from inspect import signature
-from typing import get_origin, overload
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Literal,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+    get_origin,
+    overload,
+)
+
+from loguru import logger
+from pydantic import BaseModel
 
 from .core import (
     BaseTool,
@@ -19,12 +29,23 @@ from .core import (
     PromptFunc,
     PromptRecords,
     Tool,
+    need_ctx,
+    partial,
+    wraps,
 )
-from .core.globals import global_vars, inc_global_var
+from .core.printer import Indexing
+from .core.response import CompletionResponse
 from .core.runtime import appl_execute
-from .core.trace import FunctionCallEvent, FunctionReturnEvent, add_to_trace
+from .core.trace import traceable
 from .servers import server_manager
-from .types import *
+from .types import (
+    CallFuture,
+    ExecutorType,
+    MaybeOneOrMany,
+    OneOrMany,
+    ParamSpec,
+    StringFuture,
+)
 from .utils import _langsmith_traceable
 
 # https://docs.python.org/3/library/typing.html#typing.ParamSpec
@@ -36,29 +57,6 @@ T = TypeVar("T")
 F = TypeVar("F", bound=Callable)  # function
 M = TypeVar("M")  # model
 R = TypeVar("R")  # return value
-
-
-def need_ctx(func: Callable[P, T]) -> Callable[P, T]:
-    """Decorate a function to mark it as needing a prompt context."""
-    setattr(func, "__need_ctx__", True)
-    return func
-
-
-def partial(func: Callable[..., R], *args: Any, **kwargs: Any) -> Callable[..., R]:
-    """Create a new function with partial application of the given arguments and keywords."""
-    new_func = functools.partial(func, *args, **kwargs)
-    if getattr(func, "__need_ctx__", True):
-        new_func = need_ctx(new_func)  # type: ignore
-    return new_func
-
-
-def wraps(func: F) -> Callable[[F], F]:
-    """Replace the functools.wraps to take care of the type hint."""
-
-    def decorator(wrapper: F) -> F:
-        return functools.wraps(func)(wrapper)  # type: ignore
-
-    return decorator
 
 
 def auto_prime_gen(gen_func):
@@ -156,38 +154,26 @@ def ppl(
         )
 
         @need_ctx
-        @_langsmith_traceable(name=func.__name__, metadata={"appl": "func"})  # type: ignore
-        @functools.wraps(func)
+        @traceable()
+        @_langsmith_traceable(name=func.__qualname__, metadata={"appl": "func"})  # type: ignore
+        @wraps(func)
         def wrapper(
             *args: Any,
             _globals: Optional[Dict] = None,
             _locals: Optional[Dict] = None,
             **kwargs: Any,
         ) -> Any:
-            # get the function qualname and count the number of runs
-            func_name = prompt_func._qualname
-            func_run_cnt = inc_global_var(func_name) - 1
-            func_name += f"_{func_run_cnt}"
-            # add to trace (function call)
-            if global_vars.trace_engine:
-                # NOTE: compute repr(args) and repr(kwargs) might be time-consuming
-                add_to_trace(
-                    FunctionCallEvent(
-                        name=func_name,
-                        args={"args": repr(args), "kwargs": repr(kwargs)},
-                    )
-                )
             # closure variables
             freevars = prompt_func.compiled_func.freevars
             if _locals is None:
                 # * Workaround for closure variables
                 # Default: use the locals from the caller
                 frame = inspect.currentframe()
-                num_wrappers = (3 if auto_prime else 2) + num_extra_wrappers
+                num_wrappers = (4 if auto_prime else 3) + num_extra_wrappers
                 for _ in range(num_wrappers):
                     if frame is None:
                         raise RuntimeError("No caller frame found")
-                    # back to @_langsmith_traceable frame, and the caller frame
+                    # back to @_langsmith_traceable, @traceable, and the caller frame
                     frame = frame.f_back
                 if frame is None:
                     raise RuntimeError("No caller frame found")
@@ -202,7 +188,10 @@ def ppl(
                     for var in freevars:
                         if var not in _locals:
                             logger.warning(
-                                f"could not find variable {var} automatically from the caller frame."
+                                f"could not find variable {var} automatically from"
+                                f"the caller frame for function {func.__name__}. "
+                                "If you have wrapper around the function, you may need"
+                                "to set the `num_extra_wrappers` in @ppl function."
                             )
             results = prompt_func(
                 *args,
@@ -212,8 +201,6 @@ def ppl(
                 **kwargs,
             )
 
-            # add to trace (function return)
-            add_to_trace(FunctionReturnEvent(name=func_name))  # ret=results
             return results
 
         if auto_prime:
@@ -313,14 +300,17 @@ def as_tool_choice(obj: Union[str, Callable, BaseTool]) -> dict:
 
 
 def call(
-    func: Callable, *args: Any, use_process: bool = False, **kwargs: Any
+    func: Callable,
+    *args: Any,
+    executor_type: ExecutorType = ExecutorType.GENERAL_THREAD_POOL,
+    **kwargs: Any,
 ) -> CallFuture:
     """Create a CallFuture object from a function and its arguments.
 
     The CallFuture object will call the function in a separate thread or process,
     therefore the function need to be thread-safe or process-safe.
     """
-    return CallFuture(func, *args, use_process=use_process, **kwargs)
+    return CallFuture(func, *args, executor_type=executor_type, **kwargs)
 
 
 def openai_tool_schema(func: Callable) -> dict:
@@ -415,9 +405,11 @@ def gen(
     tools: OneOrMany[Union[BaseTool, Callable]] = [],  # TODO: support dict
     tool_format: str = "auto",
     stream: Optional[bool] = None,
-    response_format: Optional[Union[dict, Type[M]]] = None,
+    response_format: Optional[Union[dict, str, Type[M]]] = None,
     response_model: Optional[Type[M]] = None,
+    max_relay_rounds: int = 0,
     mock_response: Optional[Union[CompletionResponse, str]] = None,
+    messages_process_func: Optional[Callable[[Conversation], Conversation]] = None,
     _ctx: Optional[PromptContext] = None,
     **kwargs: Any,
 ) -> Generation[M]:
@@ -435,13 +427,19 @@ def gen(
             tools can be used. Defaults to None.
         tool_format (str, optional): the format for the tools. Defaults to "auto".
         stream (bool, optional): whether to stream the results. Defaults to False.
-        response_format (Union[dict, Type[M]], optional):
+        response_format (Union[dict, str, Type[M]], optional):
             OpenAI's argument specifies the response format. Defaults to None.
         response_model (Type[M], optional):
             instructor's argument specifies the response format as a Pydantic model.
+            use `instructor_patch_mode` to specify the mode for patching the raw completion.
             Recommended to use `response_format` instead. Defaults to None.
+        max_relay_rounds (int, optional):
+            the maximum number of relay rounds to continue the unfinished text generation. Defaults to 0.
         mock_response (Union[CompletionResponse, str], optional):
             mock response for testing. Defaults to None.
+        messages_process_func (Callable[[Conversation], Conversation], optional):
+            a function to process the messages before sending to the LLM.
+            Defaults to None.
         _ctx (PromptContext): prompt context, will be automatically filled.
         kwargs (Any): extra arguments for the generation.
 
@@ -458,9 +456,50 @@ def gen(
     messages.materialize()  # materialize the messages
     # TODO: double check the correctness
     messages = copy.deepcopy(messages)  # freeze the prompt for the generation
+    if messages_process_func:
+        messages = messages_process_func(messages)
 
-    if response_format is not None and response_model is not None:
-        raise ValueError("response_format and response_model cannot be used together.")
+    if isinstance(response_format, str):
+        if response_format != "json":
+            raise ValueError(
+                "Only 'json' is supported for response_format in string format."
+            )
+        response_format = {"type": "json_object"}
+
+    response_format_is_pydantic_model = False
+    if response_format is not None:
+        if isinstance(response_format, dict):
+            if "type" not in response_format:
+                raise ValueError("response_format must specify the type.")
+            if response_format["type"] not in ("json_object", "json_schema"):
+                raise ValueError(
+                    "Only 'json_object' and 'json_schema' are supported for response_format."
+                )
+        elif isinstance(response_format, type) and issubclass(
+            response_format, BaseModel
+        ):
+            response_format_is_pydantic_model = True
+        else:
+            raise ValueError(
+                "Invalid response_format, can be a dict or a Pydantic model."
+            )
+
+        if response_model is not None:
+            raise ValueError(
+                "response_format and response_model cannot be used together."
+            )
+
+    if max_relay_rounds > 0:
+        if response_format_is_pydantic_model or response_model is not None:
+            raise ValueError(
+                "max_relay_rounds cannot be used when response_format is "
+                "a Pydantic model or response_model is specified."
+            )
+        elif response_format is not None:
+            logger.warning(
+                "automatic continuation may not work well when response_format is specified. "
+                "Recommend using plain text generation instead."
+            )
 
     if (
         isinstance(get_origin(response_format), type)
@@ -491,7 +530,12 @@ def gen(
     )
 
     generation = Generation[M](
-        backend_server, create_args, mock_response=mock_response, _ctx=_ctx, **kwargs
+        backend_server,
+        create_args,
+        max_relay_rounds=max_relay_rounds,
+        mock_response=mock_response,
+        _ctx=_ctx,
+        **kwargs,
     )
 
     @_langsmith_traceable(name=generation.id, metadata={"appl": "gen"})  # type: ignore

@@ -5,11 +5,11 @@ import sys
 import time
 import traceback
 from threading import Lock
+from typing import Any, Callable, Literal, Optional
 
 from .compile import appl_compile
 from .context import PromptContext
 from .modifiers import Compositor
-from .types import *
 
 
 class PromptFunc:

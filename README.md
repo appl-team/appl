@@ -130,7 +130,8 @@ After the author's name is extracted, the `get_answer` function is called multip
 
 ## RoadMap
 - [x] Default to exclude """docstring""" from the prompt formation.
-- [ ] Use FastAPI to build a server for inspecting the traces.
+- [x] Add supports for LLM logging and tracing platforms to inspect the traces.
+  - [x] Supported Lunary (open-source)
 - [ ] Add more ... (contributions are welcome!)
   - [ ] Examples and tutorials to demonstrate the usage
   - [ ] Test cases to increase the coverage

@@ -2,6 +2,7 @@ import asyncio
 import time
 from functools import wraps
 from importlib.metadata import version
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import litellm
 import yaml
@@ -12,8 +13,10 @@ from litellm import (
     stream_chunk_builder,
 )
 from litellm.exceptions import NotFoundError
+from loguru import logger
 from openai import OpenAI, Stream
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
+from pydantic import BaseModel
 
 from ..core.config import configs
 from ..core.message import Conversation
@@ -26,33 +29,8 @@ from ..core.trace import (
     add_to_trace,
     find_in_cache,
 )
-from ..core.types import *
 from ..utils import _langsmith_traceable
 from ..version import __version__
-
-try:
-    # instructor<0.5.0
-    from instructor.patch import wrap_chatcompletion  # type: ignore
-
-    def patch(create: Callable, mode: Mode) -> Callable:
-        """Patch the `create` method.
-
-        Enables the following features:
-        - `response_model` parameter to parse the response from OpenAI's API
-        - `max_retries` parameter to retry the function if the response is not valid
-        - `validation_context` parameter to validate the response using the pydantic model
-        - `strict` parameter to use strict json parsing
-        """
-        return wrap_chatcompletion(create, mode)
-
-except ImportError:
-    from instructor.patch import patch  # type: ignore
-
-try:
-    from instructor.mode import Mode
-except ImportError:
-    # old version of instructor
-    from instructor.patch import Mode  # type: ignore
 
 if configs.getattrs("settings.misc.suppress_litellm_debug_info"):
     litellm.suppress_debug_info = True
@@ -86,13 +64,15 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         if cache_ret := find_in_cache(gen_id, inner_kwargs):
             if log_llm_cache:
                 logger.info("Found in cache, using cached response...")
+            # ? support rebuild the stream from cached response
             if inner_kwargs.get("stream", False):
-                raise ValueError("Not support stream using cache yet.")
-                # TODO: support rebuild the stream from cached response
+                logger.warning(
+                    "Using cached complete response for a streaming generation."
+                )
             raw_response = cache_ret
         else:
-            if log_llm_cache:
-                logger.info("Not found in cache, creating response...")
+            # if log_llm_cache:
+            #     logger.info("Not found in cache, creating response...")
             raw_response = litellm.completion(**inner_kwargs)
         return raw_response, cache_ret is not None
 
@@ -135,7 +115,6 @@ class APIServer(BaseServer):
         base_url: Optional[str] = None,
         api_key: Optional[str] = None,
         custom_llm_provider: Optional[str] = None,
-        wrap_mode: Optional[Mode] = Mode.JSON,
         cost_currency: str = "USD",
         **kwargs: Any,
     ) -> None:
@@ -147,7 +126,6 @@ class APIServer(BaseServer):
         for available options.
         """
         super().__init__()
-        self._wrap_mode = wrap_mode
         self._model = model
         self._base_url = base_url
         self._api_key = api_key
@@ -188,7 +166,14 @@ class APIServer(BaseServer):
 
         response_model = kwargs.get("response_model", None)
         response_format = kwargs.get("response_format", None)
-        if self._wrap_mode is not None and response_model is not None:
+        if response_model is not None:
+            try:
+                from instructor.mode import Mode
+                from instructor.patch import patch
+            except ImportError:
+                raise RuntimeError(
+                    "response_model requires instructor, install with `pip install instructor`"
+                )
 
             def wrapper(**inner_kwargs: Any) -> CompletionResponse:
                 nonlocal response
@@ -198,7 +183,8 @@ class APIServer(BaseServer):
             try:
                 # Use instructor.patch to enable using a pydantic model as response model
                 # added arguments: response_model, validation_context, max_retries
-                patched = patch(create=wrapper, mode=self._wrap_mode)
+                mode = kwargs.pop("instructor_patch_mode", Mode.JSON)
+                patched = patch(create=wrapper, mode=mode)
                 results = patched(**kwargs)
                 # fill in the response_model and response_obj
                 response.response_model = response_model

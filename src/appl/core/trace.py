@@ -1,11 +1,16 @@
+import threading
 import time
+from abc import ABC, abstractmethod
 from functools import cached_property
+from inspect import signature
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Union, overload
 
+from loguru import logger
 from pydantic import BaseModel, model_validator
 
 from .config import Configs, configs
-from .globals import global_vars
-from .types import *
+from .globals import global_vars, inc_global_var
+from .utils import wraps
 
 
 class TraceEventBase(BaseModel):
@@ -29,18 +34,22 @@ class FunctionCallEvent(TraceEventBase):
 
     args: Dict
     """The arguments of the function call."""
+    parent_func: Optional[str] = None
+    """The name of the parent function."""
 
 
 class FunctionReturnEvent(TraceEventBase):
     """A class representing a function return event."""
 
-    pass
+    ret: Any = None
+    """The return value of the function."""
 
 
 class GenerationInitEvent(TraceEventBase):
     """A class representing a generation init event."""
 
-    pass
+    parent_func: Optional[str] = None
+    """The name of the parent function."""
 
 
 class GenerationResponseEvent(TraceEventBase):
@@ -55,7 +64,8 @@ class GenerationResponseEvent(TraceEventBase):
 class CompletionRequestEvent(TraceEventBase):
     """A class representing a completion request event."""
 
-    pass
+    parent_func: Optional[str] = None
+    """The name of the parent function."""
 
 
 class CompletionResponseEvent(TraceEventBase):
@@ -101,6 +111,91 @@ def add_to_trace(event: TraceEventBase) -> None:
     """Add an event to the trace."""
     if global_vars.trace_engine:
         global_vars.trace_engine.append(event)
+
+
+F = TypeVar("F", bound=Callable)
+
+
+@overload
+def traceable(func: F) -> F: ...
+
+
+@overload
+def traceable(
+    func: Optional[str] = None,
+    *,
+    metadata: Optional[Dict] = None,
+) -> Callable[[F], F]: ...
+
+
+def traceable(
+    func: Optional[Union[F, str]] = None,
+    *,
+    metadata: Optional[Dict] = None,
+) -> Union[F, Callable[[F], F]]:
+    """Make a function traceable.
+
+    Args:
+        func (str): The custom name of the function.
+        metadata (Dict): The meta information of the function to be traced.
+    """
+    # TODO: record metadata
+    name: Optional[str] = None
+
+    def decorator(func: F) -> F:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            func_id = name
+            if func_id is None:
+                func_id = func.__qualname__
+            func_run_cnt = inc_global_var(func_id) - 1
+            func_id += f"_{func_run_cnt}"
+            logger.info(
+                f"Tracking function {func_id} with parent {global_vars.current_func.get()} in thread {threading.current_thread()}"
+            )
+
+            def _get_bind_args():
+                sig = signature(func)
+                kwargs_copy = kwargs.copy()
+                # remove special args that do not need to be passed
+                for key in ["_ctx", "_locals", "_globals"]:
+                    if key not in sig.parameters:
+                        kwargs_copy.pop(key, None)
+                return sig.bind_partial(*args, **kwargs_copy)
+
+            if global_vars.trace_engine:
+                # NOTE: compute repr(args) might be time-consuming
+                # TODO: jsonify the args
+                add_to_trace(
+                    FunctionCallEvent(
+                        name=func_id,
+                        args={
+                            k: repr(v) for k, v in _get_bind_args().arguments.items()
+                        },
+                    )
+                )
+
+            # set the current function, used for the function calls inside to get the parent function
+            token = global_vars.current_func.set(func_id)
+
+            # call the inner function
+            ret = func(*args, **kwargs)
+
+            # reset the current function name after the function call
+            global_vars.current_func.reset(token)
+            if global_vars.trace_engine:
+                add_to_trace(FunctionReturnEvent(name=func_id, ret=repr(ret)))
+                # TODO: replace the return value with the actual value when the computation of future is finished (in trace)
+                # TODO: jsonify the ret
+            return ret
+
+        return wrapper  # type: ignore
+
+    if callable(func):
+        return decorator(func)  # type: ignore
+    else:
+        name = func
+        return decorator
 
 
 class TraceEngineBase(ABC):

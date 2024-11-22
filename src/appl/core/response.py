@@ -1,21 +1,37 @@
 import json
 import os
 import shutil
+import sys
 import time
+from typing import Any, Callable, List, Literal, Optional, Union
 
 from litellm import CustomStreamWrapper, completion_cost, stream_chunk_builder
 from litellm.exceptions import NotFoundError
+from litellm.types.utils import Delta, Function, ModelResponse
+from loguru import logger
 from openai import Stream
-from pydantic import model_validator
+from openai.types import CompletionUsage
+from openai.types.chat import (
+    ChatCompletion,
+    ChatCompletionChunk,
+    ChatCompletionMessageToolCall,
+)
+from openai.types.chat.chat_completion import Choice
+from openai.types.chat.chat_completion_chunk import (
+    ChoiceDelta,
+    ChoiceDeltaToolCallFunction,
+)
+from pydantic import BaseModel, Field, model_validator
 from rich.live import Live
 from rich.panel import Panel
 from rich.syntax import Syntax
-from tqdm import tqdm
+from termcolor import colored
+from termcolor._types import Color
 
 from .config import configs
 from .tool import ToolCall
-from .types import *
-from .utils import make_panel
+from .types import ResponseType
+from .utils import get_live, make_panel, split_last, stop_live, strip_for_continue
 
 
 class CompletionResponse(BaseModel):
@@ -33,6 +49,12 @@ class CompletionResponse(BaseModel):
         None, description="The usage of the completion"
     )
     """The usage of the completion."""
+    finish_reason: Optional[str] = Field(
+        None, description="The reason why the completion is finished for the top-choice"
+    )
+    """The reason why the completion is finished for the top-choice."""
+    num_raw_completions: int = Field(1, description="The number of raw completions")
+    """The number of raw completions."""
     chunks: List[Union[ModelResponse, ChatCompletionChunk]] = Field(
         [], description="The chunks of the response when streaming"
     )
@@ -118,8 +140,71 @@ class CompletionResponse(BaseModel):
             return ResponseType.TOOL_CALL
         return ResponseType.TEXT
 
+    def update(
+        self, other: "CompletionResponse", split_marker: str = "\n"
+    ) -> "CompletionResponse":
+        """Update the response with the information contained in the other response."""
+        if not self.is_finished:
+            raise ValueError("Cannot update unfinished response")
+        if self.type != other.type:
+            raise ValueError(
+                f"Cannot update response with type {self.type} "
+                f"with another response of type {other.type}"
+            )
+        if self.type != ResponseType.TEXT:
+            raise NotImplementedError("Not supported for non-text response")
+        if self.message is None or other.message is None:
+            raise ValueError("Not supported for empty message when updating")
+
+        stripped_message = strip_for_continue(self.message)
+        _, last_part = split_last(stripped_message, split_marker)
+        message = other.message
+        if last_part in message:
+            # truncate the overlapping part, patch the messages together
+            self.message = (
+                stripped_message + message[message.index(last_part) + len(last_part) :]
+            )
+        else:
+            self.message += message  # extend the message
+            logger.warning(
+                f"Last part {last_part} not found in the message. "
+                "Appending the message directly."
+            )
+
+        def as_list(obj: Any) -> List[Any]:
+            if isinstance(obj, list):
+                return obj
+            return [obj]
+
+        for k in ["finish_reason", "response_model", "response_obj", "tool_calls"]:
+            if getattr(self, k) is None:
+                setattr(self, k, getattr(other, k))
+        self.raw_response = as_list(self.raw_response) + as_list(other.raw_response)
+        self.chunks += other.chunks
+        self.num_raw_completions += other.num_raw_completions
+        if other.cost is not None:
+            self.cost = (self.cost or 0) + other.cost
+        if other.usage is not None:
+
+            def merge_usage(usage1: BaseModel, usage2: BaseModel) -> None:
+                """Merge the usage from two responses recursively."""
+                for k, v in usage2.model_dump().items():
+                    if isinstance(v, int) or isinstance(v, float):
+                        if hasattr(usage1, k):
+                            setattr(usage1, k, getattr(usage1, k) + v)
+                    elif isinstance(v, BaseModel):
+                        merge_usage(getattr(usage1, k), v)
+
+            merge_usage(self.usage, other.usage)  # type: ignore
+
+        return self
+
     def streaming(
-        self, display: bool = True, title: str = "APPL Streaming"
+        self,
+        display: Optional[str] = None,
+        title: str = "APPL Streaming",
+        display_prefix_content: str = "",
+        live: Optional[Live] = None,
     ) -> "CompletionResponse":
         """Stream the response object and finish the response."""
         if not self.is_stream:
@@ -131,10 +216,11 @@ class CompletionResponse(BaseModel):
             target = self.response_obj
         else:
             target = self.format_stream()
-        if display:
-            refresh_interval = configs.getattrs(
-                "settings.logging.display.stream_interval", 1.0
-            )
+
+        display = display or configs.getattrs(
+            "settings.logging.display.display_mode", "live"
+        )
+        if display == "live":
             start_time = time.time()
 
             def panel(
@@ -153,30 +239,66 @@ class CompletionResponse(BaseModel):
                     content, title=display_title, style=style, truncate=truncate
                 )
 
-            with Live(
-                panel("Waiting for Response ..."),
-                refresh_per_second=refresh_interval,
-                # vertical_overflow="visible", # manually display the tail lines instead
-            ) as live:
-                content = ""
-                for i, chunk in enumerate(iter(target)):
-                    if isinstance(chunk, BaseModel):
-                        content = json.dumps(chunk.model_dump(), indent=2)
+            if live is None:
+                live = get_live()
+                need_stop = True
+            else:
+                need_stop = False
+            content = display_prefix_content
+            for i, chunk in enumerate(iter(target)):
+                if isinstance(chunk, BaseModel):
+                    content = json.dumps(chunk.model_dump(), indent=2)
+                else:
+                    content += str(chunk)
+                live.update(panel(content, i, truncate=True))
+                # live.refresh()  # might be too frequent
+            # display untruncated content at the end
+            live.update(panel(content, i))
+            live.refresh()
+            if need_stop:
+                stop_live()
+        elif display == "print":
+            last_content = ""
+
+            def eprint(content: str, color: Optional[Color] = None) -> None:
+                print(colored(content, color) if color else content, end="")
+                sys.stdout.flush()
+
+            eprint("\n===== START OF APPL STREAMING =====\n", color="magenta")
+            self.register_post_finish_callback(
+                lambda _: eprint(
+                    "\n===== END OF APPL STREAMING =====\n", color="magenta"
+                ),
+                order="first",
+            )
+            eprint(display_prefix_content, color="grey")
+            for chunk in iter(target):
+                if isinstance(chunk, BaseModel):
+                    content = json.dumps(chunk.model_dump(), indent=2)
+                    if last_content in content:
+                        eprint(content[content.index(last_content) :])
                     else:
-                        content += str(chunk)
-                    live.update(panel(content, i, truncate=True))
-                    # live.refresh() # might be too frequent
-                # display untruncated content at the end
-                live.update(panel(content, i))
-                live.refresh()
-        else:
+                        eprint(content)
+                    last_content = content
+                else:
+                    eprint(str(chunk))
+
+        elif display == "none":
             for chunk in iter(target):
                 pass
+        else:
+            raise ValueError(
+                f"Unknown display argument: {display}, only 'live', 'print' and 'none' are supported"
+            )
         if self.response_obj is not None:
             self.set_response_obj(chunk)
         return self
 
-    def register_post_finish_callback(self, callback: Callable) -> None:
+    def register_post_finish_callback(
+        self,
+        callback: Callable,
+        order: Literal["first", "last"] = "last",
+    ) -> None:
         """Register a post finish callback.
 
         The callback will be called after the response is finished.
@@ -184,7 +306,14 @@ class CompletionResponse(BaseModel):
         if self.is_finished:
             callback(self)
         else:
-            self.post_finish_callbacks.append(callback)
+            if order not in ["first", "last"]:
+                raise ValueError(
+                    f"Unknown order argument: {order}, only 'first' and 'last' are supported"
+                )
+            if order == "last":
+                self.post_finish_callbacks.append(callback)
+            else:
+                self.post_finish_callbacks.insert(0, callback)
 
     def format_stream(self):
         """Format the stream response as a text generator."""
@@ -224,6 +353,7 @@ class CompletionResponse(BaseModel):
         # parse the message and tool calls
         if isinstance(response, (ModelResponse, ChatCompletion)):
             message = response.choices[0].message  # type: ignore
+            self.finish_reason = response.choices[0].finish_reason
             if tool_calls := getattr(message, "tool_calls", None):
                 for call in tool_calls:
                     self.tool_calls.append(ToolCall.from_openai_tool_call(call))
@@ -231,6 +361,11 @@ class CompletionResponse(BaseModel):
                 self.message = message.content
             else:
                 raise ValueError(f"Invalid response: {response}")
+        elif response is None:
+            logger.warning("Response is None, only used for testing")
+        else:
+            raise ValueError(f"Unknown response type: {type(response)}")
+
         # post finish hook
         for callback in self.post_finish_callbacks:
             try:

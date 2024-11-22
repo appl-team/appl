@@ -26,11 +26,13 @@ from ast import (
     With,
     stmt,
 )
+from types import CodeType
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import libcst as cst
+from loguru import logger
 
 from .context import PromptContext
-from .types import *
 
 GLOBALS_KEYWORD = ast.keyword(
     arg="_globals",

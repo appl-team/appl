@@ -3,6 +3,7 @@ from typing import List
 
 import appl
 from appl import CallFuture, call, ppl, records
+from appl.types import ExecutorType
 
 
 def test_call_future():
@@ -35,7 +36,7 @@ def sleep(t):
 
 
 def test_call_future_process():
-    c = call(sleep, t=0.1, use_process=True)
+    c = call(sleep, t=0.1, executor_type=ExecutorType.NEW_PROCESS)
     assert c.val == 1
 
 

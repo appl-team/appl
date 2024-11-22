@@ -1,10 +1,11 @@
 import os
+from typing import Any
 
 import addict
 import yaml
+from loguru import logger
 
 from .io import get_ext, load_file
-from .types import *
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CONFIG_FILE = os.path.join(DIR, "..", "default_configs.yaml")

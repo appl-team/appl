@@ -2,22 +2,51 @@ from __future__ import annotations
 
 import json
 import threading
-import time
+from typing import (
+    Any,
+    Callable,
+    Generic,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
-from . import trace
+from loguru import logger
+from pydantic import BaseModel
+from rich.live import Live
+
 from .config import configs
 from .context import PromptContext
-from .globals import get_thread_local, inc_thread_local, set_thread_local
-from .message import AIMessage, BaseMessage, ToolMessage
+from .globals import (
+    get_thread_local,
+    inc_global_var,
+    inc_thread_local,
+    set_thread_local,
+)
+from .message import AIMessage, BaseMessage, ToolMessage, UserMessage
 from .promptable import Promptable
 from .response import CompletionResponse
 from .server import BaseServer, GenArgs
 from .tool import BaseTool, ToolCall
-from .trace import GenerationInitEvent, add_to_trace
-from .types import *
+from .trace import GenerationInitEvent, GenerationResponseEvent, add_to_trace
+from .types import (
+    CallFuture,
+    ExecutorType,
+    MessageRole,
+    MessageRoleType,
+    ResponseType,
+    String,
+    StringFuture,
+)
+from .utils import get_live, split_last, stop_live, strip_for_continue
 
 M = TypeVar("M")
 APPL_GEN_NAME_PREFIX_KEY = "_appl_gen_name_prefix"
+LAST_LINE_MARKER = "<last_line>"
+LAST_PART_MARKER = "<last_part>"
 
 
 def set_gen_name_prefix(prefix: str) -> None:
@@ -43,7 +72,9 @@ class Generation(Generic[M]):
         server: BaseServer,
         args: GenArgs,
         *,
+        max_relay_rounds: int = 0,
         mock_response: Optional[Union[CompletionResponse, str]] = None,
+        llm_executor_type: ExecutorType = ExecutorType.LLM_THREAD_POOL,
         lazy_eval: bool = False,
         _ctx: Optional[PromptContext] = None,
         **kwargs: Any,
@@ -54,7 +85,9 @@ class Generation(Generic[M]):
         Args:
             server: An LLM server where the generation request will be sent.
             args: The arguments of the generation call.
+            max_relay_rounds: the maximum number of relay rounds to continue the unfinished text generation.
             mock_response: A mock response for the generation call.
+            llm_executor_type: The type of the executor to run the LLM call.
             lazy_eval: If True, the generation call will be evaluated lazily.
             _ctx: The prompt context filled automatically by the APPL function.
             **kwargs: Extra arguments for the generation call.
@@ -62,50 +95,202 @@ class Generation(Generic[M]):
         # name needs to be unique and ordered, so it has to be generated in the main thread
         gen_name_prefix = get_gen_name_prefix()
         # take the value before increment
-        self._id = inc_thread_local(f"{gen_name_prefix}_gen_cnt") - 1
+        self._cnt = inc_thread_local(f"{gen_name_prefix}_gen_cnt") - 1
+        if gen_name_prefix is None:
+            self._id = f"@gen_{self._cnt}"
+        else:
+            self._id = f"@{gen_name_prefix}_gen_{self._cnt}"
 
         self._server = server
+        self._model_name = server.model_name
         self._args = args
+        self._max_relay_rounds = max_relay_rounds
+        self._mock_response = mock_response
+        self._llm_executor_type = llm_executor_type
+        self._lazy_eval = lazy_eval
         self._ctx = _ctx
         self._extra_args = kwargs
+        self._num_raw_completions = 0
+        self._cached_response: Optional[CompletionResponse] = None
 
         add_to_trace(GenerationInitEvent(name=self.id))
+        log_llm_call_args = configs.getattrs("settings.logging.display.llm_call_args")
+        if log_llm_call_args:
+            logger.info(
+                f"Call generation [{self.id}] with args: {args} and kwargs: {kwargs}"
+            )
+
         if isinstance(mock_response, CompletionResponse):
-            self._call = lambda: mock_response
+
+            def get_response() -> CompletionResponse:
+                return mock_response
+
+            self._call = self._wrap_response(get_response)
         else:
             if mock_response:
                 # use litellm's mock response
                 kwargs.update({"mock_response": mock_response})
-            # TODO: supports custom postprocessing messages
-            self._call = CallFuture(
-                self._server.create,
-                lazy_eval=lazy_eval,
-                args=args,
-                gen_id=self.id,
-                **kwargs,
-            )
+            self._call = self._wrap_response(self._call_llm())
 
         # tools
         self._tools: Sequence[BaseTool] = args.tools
         self._name2tools = {tool.name: tool for tool in self._tools}
 
+    def _call_llm(self) -> CallFuture[CompletionResponse]:
+        """Call the LLM server asynchronously to get the completion response."""
+        self._num_raw_completions += 1
+        return CallFuture(
+            self._server.create,
+            executor_type=self._llm_executor_type,
+            lazy_eval=self._lazy_eval,
+            args=self._args,
+            gen_id=f"{self.id}_raw_{self._num_raw_completions - 1}",
+            **self._extra_args,
+        )
+
+    def _continue_llm(
+        self, results: CompletionResponse, live: Optional[Live] = None
+    ) -> CompletionResponse:
+        assert results.message is not None, "Not support continue for empty message"
+
+        cutoff_content = strip_for_continue(results.message)
+        continue_prompt = configs.getattrs("prompts.continue_generation")
+        continue_prompt_alt = configs.getattrs("prompts.continue_generation_alt")
+
+        # Choose a proper split marker for the continuation
+        for split_marker in ["\n", " ", ","]:
+            content, last_part = split_last(cutoff_content, split_marker)
+            if content is not None:  # found split_marker in the content
+                prompt = (
+                    continue_prompt if split_marker == "\n" else continue_prompt_alt
+                )
+                marker = LAST_LINE_MARKER if split_marker == "\n" else LAST_PART_MARKER
+                break
+        marked_cutoff_content = f"{content}{split_marker}{marker}{last_part}{marker}"
+        prompt = prompt.format(last_marker=marker)
+
+        messages = self._args.messages
+        messages.append(AIMessage(content=marked_cutoff_content))
+        messages.append(UserMessage(content=prompt))
+        # print(messages, "\n") # DEBUG
+
+        # call the LLM again and wait for the result
+        response = self._call_llm().result()
+        if response.type == ResponseType.UNFINISHED:
+            response.streaming(
+                title=f"Continue generation [{self.id}]",
+                display_prefix_content=marked_cutoff_content + "\n",
+                live=live,
+            )
+
+        # pop the last two messages
+        for _ in range(2):
+            messages.pop()
+
+        results.update(response, split_marker)
+        return response
+
+    def _wrap_response(
+        self, get_response: Callable[[], CompletionResponse]
+    ) -> Callable[[], CompletionResponse]:
+        """Wrap the LLM calls to address incomplete completion."""
+
+        def inner() -> CompletionResponse:
+            log_llm_usage = configs.getattrs("settings.logging.display.llm_usage")
+            log_llm_response = configs.getattrs("settings.logging.display.llm_response")
+            log_llm_cost = configs.getattrs("settings.logging.display.llm_cost")
+
+            results = response = get_response()
+
+            if self._max_relay_rounds > 0:
+                live = None
+                display_mode = configs.getattrs(
+                    "settings.logging.display.display_mode", "live"
+                )
+                need_live = self._args.stream and display_mode == "live"
+                if response.type == ResponseType.UNFINISHED:
+                    if need_live:
+                        live = get_live()
+                    response.streaming(title=f"Generation [{self.id}]", live=live)
+
+                for i in range(self._max_relay_rounds):
+                    if response.finish_reason in ["length"]:
+                        generated_chars = len(results.message or "")
+                        logger.info(
+                            f"[Round {i + 1}/{self._max_relay_rounds}, "
+                            f"generated {generated_chars} chars] "
+                            f"Generation [{self.id}] was cut off due to max_tokens, "
+                            "automatically continue the generation."
+                        )
+                        if need_live and live is None:
+                            live = get_live()
+                        response = self._continue_llm(results, live=live)
+                    else:
+                        break
+
+                if live is not None:
+                    stop_live()
+
+            def handle_results(results: CompletionResponse) -> None:
+                if log_llm_response:
+                    logger.info(f"Generation [{self.id}] results: {results}")
+                if results.usage and log_llm_usage:
+                    logger.info(f"Generation [{self.id}] token usage: {results.usage}")
+
+                num_requests = inc_global_var(f"{self._model_name}_num_requests")
+                if log_llm_cost:
+                    currency = getattr(self._server, "_cost_currency", "USD")
+                    if self._mock_response is not None:
+                        logger.info(
+                            "Mock response, estimated cost for real request: "
+                            f"{results.cost:.4f} {currency}"
+                        )
+                    elif results.cost is None:
+                        logger.warning(
+                            f"No cost information for generation [{self.id}]"
+                        )
+                    else:
+                        total_cost = inc_global_var(
+                            f"{self._model_name}_api_cost", results.cost
+                        )
+                        logger.info(
+                            f"API cost for this request: {results.cost:.4f}, "
+                            f"in total: {total_cost:.4f} {currency}. "
+                            f"Total number of requests: {num_requests}."
+                        )
+                create_args = self._server._get_create_args(
+                    self._args, **self._extra_args
+                )
+                dump_args = create_args.copy()
+                for k, v in dump_args.items():
+                    if k in ["response_format", "response_model"]:
+                        if isinstance(v, type) and issubclass(v, BaseModel):
+                            dump_args[k] = json.dumps(v.model_json_schema(), indent=4)
+
+                add_to_trace(
+                    GenerationResponseEvent(
+                        name=self.id, args=dump_args, ret=str(results)
+                    )
+                )
+
+            results.register_post_finish_callback(handle_results)
+
+            return results
+
+        return inner
+
     @property
     def id(self) -> str:
         """The unique ID of the generation."""
-        gen_name_prefix = get_gen_name_prefix()
-        if gen_name_prefix is not None:
-            return f"@{gen_name_prefix}_gen_{self._id}"
-        return f"@gen_{self._id}"
-
-    def __call__(self):
-        """Get the response of the generation call."""
-        return self._call()
+        return self._id
 
     @property
     def response(self) -> CompletionResponse:
         """The response of the generation call."""
-        # NOTE: the result of the call will be cached in the CallFuture
-        return self._call()
+        # NOTE: the result of the call should be cached
+        if self._cached_response is None:
+            self._cached_response = self._call()
+        return self._cached_response
 
     @property
     def response_type(self) -> ResponseType:
@@ -158,7 +343,11 @@ class Generation(Generic[M]):
         return self.response.format_stream()
 
     def _call_tool(
-        self, name: str, args: str, parallel: bool = False, use_process: bool = False
+        self,
+        name: str,
+        args: str,
+        parallel: bool = False,
+        executor_type: ExecutorType = ExecutorType.GENERAL_THREAD_POOL,
     ) -> Any:
         try:
             kwargs = json.loads(args)
@@ -173,7 +362,7 @@ class Generation(Generic[M]):
         tool = self._name2tools[name]
         try:
             if parallel:
-                res = CallFuture(tool, use_process=use_process, **kwargs)
+                res = CallFuture(tool, executor_type=executor_type, **kwargs)
             else:
                 res = tool(**kwargs)
         except Exception as e:
@@ -185,7 +374,7 @@ class Generation(Generic[M]):
         self,
         filter_fn: Optional[Callable[[List[ToolCall]], List[ToolCall]]] = None,
         parallel: bool = False,
-        use_process: bool = False,
+        executor_type: ExecutorType = ExecutorType.GENERAL_THREAD_POOL,
         log_results: Optional[bool] = None,
     ) -> List[ToolMessage]:
         """Run all tool calls in the generation and return the results.
@@ -196,9 +385,10 @@ class Generation(Generic[M]):
                 a filtered list of ToolCall objects. This function can be
                 used to filter the tool calls that will be run.
             parallel: If True, run the tool calls in parallel. Default to False.
-            use_process:
-                If True, run the tool calls in separate processes,
-                effective when parallel is True. Default to False.
+            executor_type:
+                The type of the executor to run the tool calls, can be
+                "general_thread_pool", "general_process_pool", "new_thread" or
+                "new_process".
             log_results:
                 If True, log the results of the tool calls. Note This will wait for
                 the results to be ready. Default to use the setting in configs.
@@ -215,10 +405,10 @@ class Generation(Generic[M]):
             tool_calls = filter_fn(tool_calls)
         messages = []
         for tc in tool_calls:
-            role = MessageRole(TOOL, tc.name)
+            role = MessageRole(MessageRoleType.TOOL, tc.name)
             try:
                 tool_result = self._call_tool(
-                    tc.name, tc.args, parallel=parallel, use_process=use_process
+                    tc.name, tc.args, parallel=parallel, executor_type=executor_type
                 )
                 msg = ToolMessage(
                     tool_result, role=role, tool_call_id=tc.id, has_error=False
@@ -238,7 +428,8 @@ class Generation(Generic[M]):
         if self._args.tools:
             if self.is_tool_call:
                 return AIMessage(tool_calls=self.tool_calls)
-        return StringFuture(self._call)
+        # return a future object of value: str(self._call()), without blocking
+        return StringFuture(CallFuture(self._call))
 
     def __add__(self, other: Union[String, "Generation"]) -> StringFuture:
         # Assume generation is a string
@@ -266,4 +457,8 @@ class Generation(Generic[M]):
         return str(self.response.results)
 
     def __repr__(self) -> str:
-        return repr(str(self))
+        return f"Generation(id={self.id})"
+
+    def __call__(self):
+        """Get the response of the generation call."""
+        return self.response

@@ -15,6 +15,7 @@ from .globals import (
 from .io import *
 from .message import *
 from .modifiers import ApplStr, Compositor
+from .patch import patch_threading
 from .printer import (
     Indexing,
     PrinterPop,
@@ -28,4 +29,6 @@ from .response import CompletionResponse
 from .runtime import appl_execute, appl_format, appl_with_ctx
 from .server import BaseServer, GenArgs
 from .tool import BaseTool, Tool
-from .utils import make_panel
+from .trace import TraceEngineBase, TraceEventBase, traceable
+from .types import CallFuture, StringFuture
+from .utils import get_live, make_panel, need_ctx, partial, stop_live, wraps

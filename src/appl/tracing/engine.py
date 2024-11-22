@@ -1,8 +1,14 @@
 import json
 import os
 import pickle
+import re
 from threading import Lock
+from typing import Any, Dict, List, Optional, Type
 
+from loguru import logger
+from pydantic import BaseModel
+
+from ..core.globals import global_vars
 from ..core.trace import (
     CompletionRequestEvent,
     CompletionResponseEvent,
@@ -14,7 +20,6 @@ from ..core.trace import (
     TraceEventBase,
     TraceNode,
 )
-from ..core.types import *
 
 
 class TraceEngine(TraceEngineBase):
@@ -39,7 +44,6 @@ class TraceEngine(TraceEngineBase):
         self._trace_nodes: Dict[str, TraceNode] = {}
         self._gen_cache: Dict[str, List[Any]] = {}
         self._lock = Lock()
-        self._func_stack: List[str] = []
 
         if mode == "write":
             if os.path.exists(filename):
@@ -92,30 +96,44 @@ class TraceEngine(TraceEngineBase):
 
     def append(self, event: TraceEventBase) -> None:
         """Append an event to the trace."""
+        # print(
+        #     event.name,
+        #     global_vars.current_func.get(),
+        #     getattr(event, "parent_func", None),
+        # )
+
         if hasattr(event, "args"):
             event.args = self.args_to_json(event.args)
 
+        self._events.append(event)
+        name, time_stamp = event.name, event.time_stamp
         if self._mode == "write":
+            if isinstance(event, (FunctionCallEvent, GenerationInitEvent)):
+                event.parent_func = self._last_func
+            elif isinstance(event, CompletionRequestEvent):
+                match = re.match(r"(.+)_raw_\d+", event.name)
+                if match:
+                    event.parent_func = match.group(1)
+                else:
+                    assert False, f"Invalid completion request name: {event.name}"
+
             with self._lock:
                 logger.debug(f"add to trace {event}")
                 pickle.dump(event, self._file)
                 self._file.flush()
 
-        self._events.append(event)
-        name, time_stamp = event.name, event.time_stamp
         assert name is not None
         if isinstance(event, FunctionCallEvent):
-            newnode = self._add_node(name, self._last_func, type="func")
+            newnode = self._add_node(name, event.parent_func, type="func")
             newnode.start_time = time_stamp
             newnode.args = event.args
-            self._func_stack.append(name)
         elif isinstance(event, FunctionReturnEvent):
             node = self._get_node(name)
             if node:
+                node.ret = event.ret
                 node.end_time = time_stamp
-            self._pop_func()
         elif isinstance(event, GenerationInitEvent):
-            newnode = self._add_node(name, self._last_func)
+            newnode = self._add_node(name, event.parent_func, type="gen")
             newnode.start_time = time_stamp
         elif isinstance(event, GenerationResponseEvent):
             node = self._get_node(name)
@@ -124,11 +142,10 @@ class TraceEngine(TraceEngineBase):
                 node.args = event.args
                 node.ret = event.ret
         elif isinstance(event, CompletionRequestEvent):
-            # Use name + "_raw" to represent the raw completion request
-            newnode = self._add_node(name + "_raw", name)
+            newnode = self._add_node(name, event.parent_func, type="raw_llm")
             newnode.start_time = time_stamp
         elif isinstance(event, CompletionResponseEvent):
-            node = self._get_node(name + "_raw")
+            node = self._get_node(name)
             if node:
                 node.end_time = time_stamp
                 node.args = event.args
@@ -177,14 +194,11 @@ class TraceEngine(TraceEngineBase):
 
     @property
     def _last_func(self) -> Optional[str]:
-        if len(self._func_stack):
-            return self._func_stack[-1]
-        return None
-
-    def _pop_func(self) -> str:
-        return self._func_stack.pop()
+        return global_vars.current_func.get()
 
     def _cache_key(self, name: str, args: Dict) -> str:
+        # pop the arguments that do not affect the result
+        args.pop("stream", None)
         if self._strict:
             return f"{name} {args}"
         else:

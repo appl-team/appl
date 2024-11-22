@@ -7,6 +7,7 @@ import inspect
 import os
 import sys
 import threading
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from contextlib import contextmanager
 
 import pendulum
@@ -52,7 +53,10 @@ from .core.message import (
     ToolMessage,
     UserMessage,
 )
+from .core.patch import patch_threading
 from .core.promptable import define, define_bracketed, promptify
+from .core.trace import traceable
+from .core.utils import need_ctx, partial, wraps
 from .func import (
     as_func,
     as_tool,
@@ -62,9 +66,7 @@ from .func import (
     empty_line,
     gen,
     grow,
-    need_ctx,
     openai_tool_schema,
-    partial,
     ppl,
     records,
     reset_context,
@@ -155,6 +157,10 @@ def init(
 
     if update_config_hook:
         update_config_hook(configs)
+
+    # ============================================================
+    # Logging
+    # ============================================================
     log_format = configs.getattrs("settings.logging.format")
     log_level = configs.getattrs("settings.logging.log_level")
     log_file = configs.getattrs("settings.logging.log_file")
@@ -185,9 +191,29 @@ def init(
     if configs.getattrs("settings.logging.display.configs"):
         logger.info(f"Using configs:\n{yaml.dump(configs.to_dict())}")
 
+    # ============================================================
+    # Concurrency
+    # ============================================================
+    concurrency = configs.getattrs("settings.concurrency")
+    llm_max_workers = concurrency.get("llm_max_workers", 10)
+    thread_max_workers = concurrency.get("thread_max_workers", 20)
+    process_max_workers = concurrency.get("process_max_workers", 10)
+    global_vars.llm_thread_executor = ThreadPoolExecutor(
+        max_workers=llm_max_workers, thread_name_prefix="llm"
+    )
+    global_vars.thread_executor = ThreadPoolExecutor(
+        max_workers=thread_max_workers, thread_name_prefix="general"
+    )
+    global_vars.process_executor = ProcessPoolExecutor(max_workers=process_max_workers)
+
+    # ============================================================
+    # Tracing
+    # ============================================================
     tracing = configs.getattrs("settings.tracing")
     strict_match = tracing.get("strict_match", True)
     if tracing.get("enabled", False):
+        if tracing.get("patch_threading", True):
+            patch_threading()
         if (trace_file_format := tracing.get("path_format", None)) is not None:
             prefix = trace_file_format.format(
                 basename=caller_basename, funcname=caller_funcname, time=now

@@ -1,7 +1,10 @@
-from .core import PromptContext
+from typing import Any, Optional
+
+from typing_extensions import override
+
+from .core.context import PromptContext
 from .core.modifiers import PrinterModifier, PrinterPush
-from .core.types import override
-from .types import *
+from .core.types import MessageRole, MessageRoleType
 
 
 class RoleChanger(PrinterModifier):
@@ -38,7 +41,7 @@ class SystemRole(RoleChanger):
             name: The name of the system role. Defaults to None.
             **kwargs: The keyword arguments to pass to the RoleChanger constructor.
         """
-        role = MessageRole(SYSTEM, name=name)
+        role = MessageRole(MessageRoleType.SYSTEM, name=name)
         super().__init__(role=role, **kwargs)
 
 
@@ -52,7 +55,7 @@ class UserRole(RoleChanger):
             name: The name of the user role. Defaults to None.
             **kwargs: The keyword arguments to pass to the RoleChanger constructor.
         """
-        role = MessageRole(USER, name=name)
+        role = MessageRole(MessageRoleType.USER, name=name)
         super().__init__(role=role, **kwargs)
 
 
@@ -66,7 +69,7 @@ class AIRole(RoleChanger):
             name: The name of the assistant role. Defaults to None.
             **kwargs: The keyword arguments to pass to the Role
         """
-        role = MessageRole(ASSISTANT, name=name)
+        role = MessageRole(MessageRoleType.ASSISTANT, name=name)
         super().__init__(role=role, **kwargs)
 
 
@@ -80,5 +83,5 @@ class ToolRole(RoleChanger):
             name: The name of the tool role. Defaults to None.
             **kwargs: The keyword arguments to pass to the RoleChanger constructor.
         """
-        role = MessageRole(TOOL, name=name)
+        role = MessageRole(MessageRoleType.TOOL, name=name)
         super().__init__(role=role, **kwargs)

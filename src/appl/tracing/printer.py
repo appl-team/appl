@@ -1,5 +1,12 @@
+import copy
 import json
 import os
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional, Union
+
+from litellm import ModelResponse
+from loguru import logger
 
 from ..compositor import Tagged as OriginalTagged
 from ..core.config import Configs
@@ -17,12 +24,16 @@ from ..core.trace import (
     TraceNode,
     TracePrinterBase,
 )
-from ..core.types import *
 from ..func import partial, ppl, records
 
 folder = os.path.dirname(__file__)
 
 Tagged = partial(OriginalTagged, indent_inside=4)
+
+
+def timestamp_to_iso(time_stamp: float) -> str:
+    """Convert the timestamp to the ISO format."""
+    return datetime.fromtimestamp(time_stamp, timezone.utc).isoformat()
 
 
 class TraceHTMLPrinter(TracePrinterBase):
@@ -173,6 +184,124 @@ class TraceHTMLPrinter(TracePrinterBase):
 
     def _make_line(self, k: str, v: Any) -> str:
         return f"<tr><th>{k}</th><td>{v}</td></tr>"
+
+
+class TraceLunaryPrinter(TracePrinterBase):
+    """The printer used to log the trace to lunary."""
+
+    def print(
+        self, trace: TraceEngineBase, meta_data: Optional[Configs] = None
+    ) -> None:
+        """Log the trace to lunary."""
+        import lunary
+
+        project_id = os.environ.get(
+            "LUNARY_PUBLIC_KEY", "1c1975c5-13b9-4977-8003-89fff5c71c27"
+        )
+        url = os.environ.get("LUNARY_API_URL", "http://localhost:3333")
+        logger.info(f"project_id: {project_id}, api url: {url}")
+        lunary.config(app_id=project_id, api_url=url)
+
+        suffix = f"_{uuid.uuid4().hex}"
+        logger.info(f"suffix: {suffix}")
+
+        def get_parent_run_id(node: TraceNode) -> Optional[str]:
+            if node.parent is None:
+                return None
+            return node.parent.name + suffix
+
+        """Log the trace to lunary."""
+        for node in trace.trace_nodes.values():
+            if node.type == "func":
+                logger.info(
+                    f"sending func event {node.name} to lunary with parent {get_parent_run_id(node)}"
+                )
+                lunary.track_event(
+                    "chain",
+                    "start",
+                    run_id=node.name + suffix,
+                    name=node.name,
+                    parent_run_id=get_parent_run_id(node),
+                    input=node.args,
+                    timestamp=timestamp_to_iso(node.start_time),
+                )
+                lunary.track_event(
+                    "chain",
+                    "end",
+                    run_id=node.name + suffix,
+                    output=node.ret,
+                    timestamp=timestamp_to_iso(node.end_time),
+                )
+
+            elif node.type == "gen":
+                logger.info(
+                    f"sending llm event {node.name} to lunary with parent {get_parent_run_id(node)}"
+                )
+
+                # skip the raw generation, support for legacy traces
+                # if node.name.endswith("_raw"):
+                #     continue
+                metadata = copy.deepcopy(node.args or {})
+                model_name = metadata.pop("model", node.name)
+                messages = metadata.pop("messages", "")
+                metadata["gen_ID"] = node.name
+                lunary.track_event(
+                    "llm",
+                    "start",
+                    run_id=node.name + suffix,
+                    name=model_name,
+                    parent_run_id=get_parent_run_id(node),
+                    metadata=metadata,
+                    input=messages,
+                    timestamp=timestamp_to_iso(node.start_time),
+                )
+                lunary.track_event(
+                    "llm",
+                    "end",
+                    run_id=node.name + suffix,
+                    output={"role": "assistant", "content": node.ret},
+                    timestamp=timestamp_to_iso(node.end_time),
+                )
+            elif node.type == "raw_llm":
+                logger.info(
+                    f"sending raw llm event {node.name} to lunary with parent {get_parent_run_id(node)}"
+                )
+                metadata = copy.deepcopy(node.args or {})
+                model_name = metadata.pop("model", node.name)
+                messages = metadata.pop("messages", "")
+                lunary.track_event(
+                    "llm",
+                    "start",
+                    run_id=node.name + suffix,
+                    name=model_name,
+                    parent_run_id=get_parent_run_id(node),
+                    metadata=metadata,
+                    input=messages,
+                    timestamp=timestamp_to_iso(node.start_time),
+                )
+                response: ModelResponse = node.ret  # complete response
+                lunary.track_event(
+                    "llm",
+                    "end",
+                    run_id=node.name + suffix,
+                    output={
+                        "role": "assistant",
+                        "content": response.choices[0].message.content,  # type: ignore
+                        # TODO: support tool calls
+                    },
+                    timestamp=timestamp_to_iso(node.end_time),
+                )
+
+
+class TraceYAMLPrinter(TracePrinterBase):
+    """The printer used to print the trace in the format of YAML."""
+
+    def print(
+        self, trace: TraceEngineBase, meta_data: Optional[Configs] = None
+    ) -> None:
+        """Print the trace in the format of YAML."""
+        # TODO: implement the YAML printer
+        pass
 
 
 class TraceProfilePrinter(TracePrinterBase):

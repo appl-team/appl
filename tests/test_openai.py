@@ -8,12 +8,13 @@ You can skip these tests by setting the environment variable SKIP_MODEL_CALL_TES
 import os
 import sys
 
-import appl
 import pytest
-from appl import AIRole, Generation, Image, UserRole, as_tool, gen, ppl
-from appl.const import NEWLINE
 from loguru import logger
 from pydantic import BaseModel
+
+import appl
+from appl import AIRole, Generation, Image, UserRole, as_tool, gen, ppl
+from appl.const import NEWLINE
 
 appl.init()
 # NOTE: init here could influence other tests in other files.
@@ -22,7 +23,7 @@ appl.init()
 @ppl
 def add():
     "1+2="
-    return str(gen(max_tokens=10)).strip()
+    return str(gen("gpt4o-mini", max_tokens=10)).strip()
 
 
 try:
@@ -96,3 +97,13 @@ def test_response_format():
         return gen("gpt4o-mini", response_format=Result, stream=True).response_obj
 
     assert func2().result == 2
+
+
+def test_auto_continue():
+    @ppl
+    def func():
+        "Count from 1 to 50, in a format like 1, 2, ..."
+        "BEGIN: "
+        return gen("gpt4o-mini", max_tokens=100, max_relay_rounds=5)
+
+    assert "45, 46, 47" in str(func())

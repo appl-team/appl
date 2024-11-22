@@ -1,13 +1,27 @@
 from __future__ import annotations
 
+from abc import ABC
 from dataclasses import dataclass
+from typing import Any, Dict, Iterator, List, Optional, TypeVar
 
-from pydantic import model_validator
+from loguru import logger
+from pydantic import BaseModel, Field, model_validator
 from termcolor import COLORS, colored
 
 from .config import configs
 from .tool import ToolCall
-from .types import *
+from .types import (
+    ASSISTANT_ROLE,
+    SYSTEM_ROLE,
+    TOOL_ROLE,
+    USER_ROLE,
+    ContentList,
+    FutureValue,
+    Image,
+    MessageRole,
+    MessageRoleType,
+    StrOrImg,
+)
 
 
 def get_role_color(role: MessageRole) -> Optional[str]:
@@ -272,10 +286,10 @@ class ToolMessage(BaseMessage):
 
 MESSAGE_CLASS_DICT = {
     None: ChatMessage,
-    SYSTEM: SystemMessage,
-    USER: UserMessage,
-    ASSISTANT: AIMessage,
-    TOOL: ToolMessage,
+    MessageRoleType.SYSTEM: SystemMessage,
+    MessageRoleType.USER: UserMessage,
+    MessageRoleType.ASSISTANT: AIMessage,
+    MessageRoleType.TOOL: ToolMessage,
 }
 
 
@@ -286,7 +300,7 @@ def as_message(
     **kwargs: Any,
 ) -> BaseMessage:
     """Create a message with role, content and extra arguments."""
-    role_type = role.type if role else None
+    role_type = MessageRoleType(role.type) if role else None
     if role_type not in MESSAGE_CLASS_DICT:
         raise ValueError(f"Unknown role: {role}")
     cls = MESSAGE_CLASS_DICT[role_type]
@@ -368,6 +382,10 @@ class Conversation(BaseModel):
             self.append(sys_m)
         for m in other.messages:
             self.append(m)
+
+    def pop(self) -> BaseMessage:
+        """Pop the last message from the conversation."""
+        return self.messages.pop()
 
     # TODO: implement classmethod: from list of dict
     def as_list(

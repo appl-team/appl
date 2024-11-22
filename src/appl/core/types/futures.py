@@ -1,6 +1,25 @@
-import threading
+import operator
+from abc import ABC, abstractmethod
+from concurrent.futures import Future
+from enum import Enum
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    SupportsIndex,
+    TypeVar,
+    Union,
+)
 
-from .basic import *
+from pydantic import BaseModel, Field
+
+from ..globals import ExecutorType, get_executor
+
+R = TypeVar("R")
 
 
 class FutureValue(ABC):
@@ -24,14 +43,14 @@ class FutureValue(ABC):
         return self.val
 
 
-class CallFuture(FutureValue):
+class CallFuture(FutureValue, Generic[R]):
     """Represent a function call that may not be ready yet."""
 
     def __init__(
         self,
-        func: Callable,
+        func: Callable[..., R],
         *args: Any,
-        use_process: bool = False,
+        executor_type: ExecutorType = ExecutorType.GENERAL_THREAD_POOL,
         lazy_eval: bool = False,
         **kwargs: Any,
     ):
@@ -40,18 +59,12 @@ class CallFuture(FutureValue):
         Args:
             func: The function to call.
             *args: The arguments of the function.
-            use_process: Whether to use a process pool executor.
+            executor_type: The type of the executor to run the call.
             lazy_eval: Whether to delay the start of the call until needed.
             **kwargs: The keyword arguments of the function.
         """
-        # ? maybe use a global executor from the config, or use thread-level executor if running in multi-threading.
-        self._executor = (
-            ProcessPoolExecutor(max_workers=1)
-            if use_process
-            else ThreadPoolExecutor(
-                max_workers=1, thread_name_prefix=threading.current_thread().name
-            )
-        )
+        self._executor_type = executor_type
+        self._executor = get_executor(executor_type)
         self._submit_fn = lambda: self._executor.submit(func, *args, **kwargs)
         self._submitted = False
         self._info = func.__name__
@@ -73,17 +86,18 @@ class CallFuture(FutureValue):
             self._submitted = True
 
     @property
-    def future(self):
+    def future(self) -> Future:
         """The future object of the call."""
         if not self._submitted:
             self._submit()
         return self._future
 
-    def result(self, timeout: Optional[float] = None) -> Any:
+    def result(self, timeout: Optional[float] = None) -> R:
         """Get the result of the call."""
         # This will block until the result is available
         res = self.future.result(timeout)
-        self._executor.shutdown()  # the executor is not needed anymore
+        if self._executor_type in [ExecutorType.NEW_THREAD, ExecutorType.NEW_PROCESS]:
+            self._executor.shutdown()  # the executor is not needed anymore
         return res
 
     def cancel(self) -> bool:

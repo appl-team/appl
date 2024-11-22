@@ -1,10 +1,15 @@
+from enum import Enum
+
 from .basic import *
 
-# Roles
-SYSTEM = "system"
-USER = "user"
-ASSISTANT = "assistant"
-TOOL = "tool"
+
+class MessageRoleType(str, Enum):
+    """The type of the role."""
+
+    SYSTEM = "system"
+    USER = "user"
+    ASSISTANT = "assistant"
+    TOOL = "tool"
 
 
 class MessageRole(BaseModel):
@@ -13,34 +18,40 @@ class MessageRole(BaseModel):
     type: Optional[str] = None
     name: Optional[str] = None
 
-    def __init__(self, type: Optional[str] = None, name: Optional[str] = None):
+    def __init__(
+        self,
+        type: Optional[Union[str, MessageRoleType]] = None,
+        name: Optional[str] = None,
+    ):
         """Initialize the MessageRole object.
 
         Args:
             type: The type of the role.
             name: An optional name for the role, differentiate between roles of the same type."
         """
+        if isinstance(type, MessageRoleType):
+            type = type.value
         super().__init__(type=type, name=name)
 
     @property
     def is_system(self) -> bool:
         """Whether the role is a system role."""
-        return self.type == SYSTEM
+        return self.type == MessageRoleType.SYSTEM
 
     @property
     def is_user(self) -> bool:
         """Whether the role is a user role."""
-        return self.type == USER
+        return self.type == MessageRoleType.USER
 
     @property
     def is_assistant(self) -> bool:
         """Whether the role is an assistant role."""
-        return self.type == ASSISTANT
+        return self.type == MessageRoleType.ASSISTANT
 
     @property
     def is_tool(self) -> bool:
         """Whether the role is a tool role."""
-        return self.type == TOOL
+        return self.type == MessageRoleType.TOOL
 
     def get_dict(self) -> Dict[str, Any]:
         """Get the role as a dictionary."""
@@ -61,11 +72,11 @@ class MessageRole(BaseModel):
         return False
 
 
-SYSTEM_ROLE = MessageRole(SYSTEM)
+SYSTEM_ROLE = MessageRole(MessageRoleType.SYSTEM)
 """The system role with name not specified."""
-USER_ROLE = MessageRole(USER)
+USER_ROLE = MessageRole(MessageRoleType.USER)
 """The user role with name not specified."""
-ASSISTANT_ROLE = MessageRole(ASSISTANT)
+ASSISTANT_ROLE = MessageRole(MessageRoleType.ASSISTANT)
 """The assistant role with name not specified."""
-TOOL_ROLE = MessageRole(TOOL)
+TOOL_ROLE = MessageRole(MessageRoleType.TOOL)
 """The tool role with name not specified."""

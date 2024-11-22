@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from argparse import Namespace
 from copy import deepcopy
+from typing import Any, Optional
 
-from . import trace
 from .message import BaseMessage, Conversation
 from .printer import PrinterPop, PrinterPush, PromptPrinter, PromptRecords
-from .types import *
+from .types import Image, String, StringFuture
 
 
 class PromptContext:

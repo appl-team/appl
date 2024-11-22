@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import copy
 from dataclasses import dataclass
+from typing import List, Optional, Union
 
 import roman
+from loguru import logger
 
 from .message import BaseMessage, Conversation, as_message
-from .types import *
+from .types import Image, MessageRole, String, StringFuture
 
 
 class Indexing:

@@ -4,11 +4,14 @@ import copy
 import traceback
 from abc import ABC, abstractmethod
 from contextlib import AbstractContextManager
+from types import TracebackType
+from typing import Optional, TypeVar, Union
+
+from typing_extensions import override
 
 from .context import PromptContext
 from .printer import Indexing, PrinterPop, PrinterPush, PromptPrinter, PromptRecords
-from .types import *
-from .types import override
+from .types import MessageRole
 
 
 class PrinterModifier(AbstractContextManager):

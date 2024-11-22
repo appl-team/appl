@@ -5,12 +5,12 @@ All examples shows the composed prompt in APPL functions.
 
 from __future__ import annotations
 
-from appl.types import Any, Dict
+from types import TracebackType
+from typing import Any, Dict, Iterable, Optional, Union
 
 from .const import INDENT4 as INDENT
 from .core import ApplStr, Compositor, Indexing, PromptContext
 from .func import need_ctx
-from .types import *
 
 
 class LineSeparated(Compositor):

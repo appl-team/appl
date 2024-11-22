@@ -1,28 +1,14 @@
-import inspect
-import json
-import time
 from abc import ABC, abstractmethod
+from typing import Any, Callable, Literal, Optional, Sequence, Type, Union
 
-from . import trace
-from .config import configs
-from .globals import inc_global_var
+from loguru import logger
+from pydantic import BaseModel, Field
+from typing_extensions import override
+
 from .message import Conversation
 from .response import CompletionResponse
 from .tool import BaseTool, ToolCall
-from .trace import GenerationResponseEvent, add_to_trace
-from .types import *
-from .types import override
-
-
-def _update_cost(name: str, cost: float, currency: str = "USD") -> None:
-    num_requests = inc_global_var(f"{name}_num_requests")
-    total_cost = inc_global_var(f"{name}_api_cost", cost)
-    if configs.getattrs("settings.logging.display.llm_cost"):
-        logger.info(
-            f"API cost for this request: {cost:.4f}, "
-            f"in total: {total_cost:.4f} {currency}. "
-            f"Total number of requests: {num_requests}."
-        )
+from .types import MaybeOneOrMany
 
 
 class GenArgs(BaseModel):
@@ -133,44 +119,8 @@ class BaseServer(ABC):
         Returns:
             The response from the model.
         """
-        log_llm_call_args = configs.getattrs("settings.logging.display.llm_call_args")
-        log_llm_usage = configs.getattrs("settings.logging.display.llm_usage")
-        log_llm_response = configs.getattrs("settings.logging.display.llm_response")
-
         create_args = self._get_create_args(args, **kwargs)
-        if log_llm_call_args:
-            logger.info(f"Call generation [{gen_id}] with args: {create_args}")
-
         results = self._create(gen_id=gen_id, **create_args)
-        if log_llm_response:
-            logger.info(f"Generation [{gen_id}] results: {results}")
-        if results.usage and log_llm_usage:
-            logger.info(f"Generation [{gen_id}] token usage: {results.usage}")
-        if results.cost:
-            if "mock_response" in create_args:
-                if configs.getattrs("settings.logging.display.llm_cost"):
-                    logger.info(
-                        f"Mock response, estimated cost for real request: {results.cost:.4f}"
-                    )
-            else:
-                _update_cost(
-                    self.model_name,
-                    results.cost,
-                    getattr(self, "_cost_currency", "USD"),
-                )
-
-        dump_args = create_args.copy()
-        for k, v in dump_args.items():
-            if k in ["response_format", "response_model"]:
-                if isinstance(v, type) and issubclass(v, BaseModel):
-                    dump_args[k] = json.dumps(v.model_json_schema(), indent=4)
-
-        def trace_gen_response(response: CompletionResponse) -> None:
-            add_to_trace(
-                GenerationResponseEvent(name=gen_id, args=dump_args, ret=str(response))
-            )
-
-        results.register_post_finish_callback(trace_gen_response)
         return results
 
     @abstractmethod
@@ -187,7 +137,7 @@ class DummyServer(BaseServer):
     def model_name(self) -> str:
         return "_dummy"
 
-    def _get_create_args(self, args: GenArgs, **kwargs) -> dict:  # type: ignore
+    def _get_create_args(self, args: GenArgs, **kwargs: Any) -> dict:  # type: ignore
         return kwargs
 
     def _convert(self, conversation: Conversation) -> Any:

@@ -3,7 +3,15 @@ from typing import List
 import pytest
 
 import appl
-from appl import AIRole, PromptRecords, SystemMessage, gen, ppl, records
+from appl import (
+    AIRole,
+    CompletionResponse,
+    PromptRecords,
+    SystemMessage,
+    gen,
+    ppl,
+    records,
+)
 
 
 def test_gen():
@@ -41,6 +49,7 @@ def test_chat_gen():
 
     chat = chat_gen()
     assert str(chat.send("Hello")) == "World"
+    print(p[0].as_convo().as_list())
     assert p[0].as_convo().as_list() == [
         {"role": "system", "content": "Your name is Test"},
         {"role": "user", "content": "Hello"},

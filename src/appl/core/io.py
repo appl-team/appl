@@ -1,11 +1,10 @@
 import json
 import os
+from typing import IO, Any, Callable, Dict, Optional
 
 import addict
 import toml
 import yaml
-
-from .types import *
 
 # from importlib import import_module # read python
 PLAIN_TEXT_FILES = [".txt", ".log", ".md", ".html"]

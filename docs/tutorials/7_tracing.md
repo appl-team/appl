@@ -1,6 +1,6 @@
 # Using Tracing
 
-APPL supports tracing APPL functions and LM calls to facilitate users to understand and debug the program executions. The trace is useful for reproducing (potentially partial) execution results by loading cached responses of the LM calls, which enables failure recovery and avoids the extra costs of resending these calls. This also unlocks the possibility of debugging one LM call conveniently.
+APPL supports tracing APPL functions and LM calls to facilitate users to understand and debug the program executions. The trace is useful for reproducing (potentially partial) execution results by loading cached responses of the LM calls, which enables failure recovery and avoids the extra costs of resending these calls. This also unlocks the possibility of conveniently debugging one specific LM call out of the whole program.
 
 ## Enabling APPL Tracing
 
@@ -12,10 +12,11 @@ settings:
     enabled: true
     path_format: <Your custom path for trace files>
     # The default path format is "./dumps/traces/{basename}_{time:YYYY_MM_DD__HH_mm_ss}"
+    patch_threading: true # whether to patch `threading.Thread`
     strict_match: true # For loading the trace files, explain later.
 ```
 
-### Visualizing the Trace
+### Obtaining the Trace File
 Then we run the [QA example](./2_qa_example.md#answer-follow-up-questions) with tracing enabled:
 
 ```python linenums="1" title="answer_questions.py"
@@ -27,21 +28,11 @@ $ python answer_questions.py
 ```
 
 You can find the result trace file in the specified path. The default location is `./dumps/traces/answer_questions_<the timestamp>.pkl`.
-You can then visualize the traces using the script:
-
-```bash
-$ python -m appl.cli.vis_trace <path to the trace file> -o <output file>
-```
-
-The default output file is a HTML file, which can be viewed in a browser. We provide a sample trace file [here](../_assets/tracing/example_trace.html).
-
-If you specify the output file to be a `.json` file, the script will generate a JSON file that is loadable by Chrome's tracing viewer (with address: chrome://tracing/). The loaded trace will look like this:
-
-![Chrome Trace Viewer](../_assets/tracing/chrome_viewer.png)
+You can [visualize](#visualizing-the-trace) the trace file using the method you want.
 
 ### Resuming from a Previous Trace
 
-You can reproduce the results from a previous trace by specifying the `APPL_RESUME_TRACE` environment variable with the path to the trace file:
+You can reproduce the execution results from a previous trace by specifying the `APPL_RESUME_TRACE` environment variable with the path to the trace file:
 
 ```bash
 $ APPL_RESUME_TRACE=<path to the trace file> python answer_questions.py
@@ -56,7 +47,62 @@ Then each LM call will be loaded from the trace file if it exists. Such loading 
 !!! info "`strict_match` for calls with same prompts"
     When `strict_match` is `False`, the LM calls with the same prompt will load the same response from the trace file. To load the response for each LM call correspondingly, you can set `strict_match` to `True` (which is the default setting), then the `gen_id` of the LM call will also be used for matching.
 
-## LangSmith Tracing
+## Visualizing the Trace
+
+### Lunary (Recommended)
+
+Lunary is an open-source web-based tool for visualizing traces and LLM calls.
+
+You can host Lunary [locally](https://github.com/lunary-ai/lunary?tab=readme-ov-file#running-locally) or use [their hosted version](https://lunary.ai/).
+
+You can follow [the steps](https://github.com/lunary-ai/lunary?tab=readme-ov-file#running-locally) to start a local Lunary server.
+After installing the Postgres, you may create a database for Lunary:
+```bash
+createuser postgres --createdb
+createdb lunary -U postgres
+# Your postgres url is: "postgresql://postgres:@localhost:5432/lunary"
+# you can verify the database by:
+psql postgresql://postgres:@localhost:5432/lunary
+```
+
+Then you can use this url to set the DATABASE_URL in "packages/backend/.env". You may also change other environment variables in the ".env" file according to your needs.
+Then you can set the environment variables for the Lunary server by:
+
+```bash
+# `1c1975c5-13b9-4977-8003-89fff5c71c27` is the project ID of the default project, you can get the project ID from the website.
+export LUNARY_API_KEY=<your project ID>
+# `http://localhost:3333` is the default url
+export LUNARY_API_URL=<the url of the Lunary server>
+```
+
+Then you can visualize the traces by:
+
+```bash
+$ python -m appl.cli.vis_trace <path to the trace file> --lunary
+```
+
+Then you will see:
+
+![Lunary](../_assets/tracing/lunary.png)
+
+We have forked the Lunary project and we plan to add some features including displaying the codes of the functions, you can find the [source code](https://github.com/appl-team/lunary) here.
+
+### Simple HTML and Chrome Tracing
+
+You can then visualize the traces using the script:
+
+```bash
+$ python -m appl.cli.vis_trace <path to the trace file> -o <output file>
+```
+
+The default output file is a HTML file, which can be viewed in a browser. We provide a sample trace file [here](../_assets/tracing/example_trace.html).
+
+If you specify the output file to be a `.json` file, the script will generate a JSON file that is loadable by Chrome's tracing viewer (with address: chrome://tracing/). The loaded trace will look like this:
+
+![Chrome Trace Viewer](../_assets/tracing/chrome_viewer.png)
+
+
+### LangSmith
 
 Optionally, you can use LangSmith to inspect the LM calls and responses in the trace files. You need to [obtain your API key](https://smith.langchain.com/settings) from LangSmith and add the following environment variables to your `.env` file:
 
