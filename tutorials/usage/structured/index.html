@@ -1598,6 +1598,8 @@
       
         
       
+        
+      
     
     
       
@@ -1839,6 +1841,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/core/patch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> patch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/core/printer/" class="md-nav__link">
         
   
@@ -1886,7 +1909,7 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_4_12" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_4_13" >
         
           
           
@@ -1902,14 +1925,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_1_1_4_12" id="__nav_5_1_1_4_12_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_1_1_4_13" id="__nav_5_1_1_4_13_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_4_12_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_1_4_12">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1_4_13">
             <span class="md-nav__icon md-icon"></span>
             <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> promptable
           </label>
@@ -2132,7 +2155,7 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_4_18" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_4_19" >
         
           
           
@@ -2148,14 +2171,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_1_1_4_18" id="__nav_5_1_1_4_18_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_1_1_4_19" id="__nav_5_1_1_4_19_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_4_18_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_1_4_18">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_4_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1_4_19">
             <span class="md-nav__icon md-icon"></span>
             <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> types
           </label>
@@ -3125,18 +3148,15 @@
 <span class="normal"><a href="#__codelineno-4-37">37</a></span>
 <span class="normal"><a href="#__codelineno-4-38">38</a></span>
 <span class="normal"><a href="#__codelineno-4-39">39</a></span>
-<span class="normal"><a href="#__codelineno-4-40">40</a></span>
-<span class="normal"><a href="#__codelineno-4-41">41</a></span>
-<span class="normal"><a href="#__codelineno-4-42">42</a></span>
-<span class="normal"><a href="#__codelineno-4-43">43</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># https://jxnl.github.io/instructor/why/?h=iterable#partial-extraction</span>
+<span class="normal"><a href="#__codelineno-4-40">40</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1"># https://jxnl.github.io/instructor/why/?h=iterable#partial-extraction</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="kn">import</span> <span class="nn">appl</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">Generation</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="kn">from</span> <span class="nn">appl.core</span> <span class="kn">import</span> <span class="n">make_panel</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="kn">from</span> <span class="nn">instructor</span> <span class="kn">import</span> <span class="n">Partial</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="kn">from</span> <span class="nn">instructor</span> <span class="kn">import</span> <span class="n">Partial</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="kn">import</span> <span class="nn">appl</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="kn">from</span> <span class="nn">appl.core</span> <span class="kn">import</span> <span class="n">get_live</span><span class="p">,</span> <span class="n">make_panel</span>
 </span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10"></a>
 </span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="n">appl</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12"></a>
@@ -3152,7 +3172,7 @@
 </span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22"></a>
 </span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23"></a><span class="nd">@ppl</span>
 </span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24"></a><span class="k">def</span> <span class="nf">generate_info</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Info</span><span class="p">:</span>
-</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25"></a>    <span class="sa">f</span><span class="s2">&quot;randomly generate 3 users.&quot;</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25"></a>    <span class="sa">f</span><span class="s2">&quot;randomly generate 10 users.&quot;</span>
 </span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">(</span><span class="n">response_format</span><span class="o">=</span><span class="n">Info</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">response_obj</span>
 </span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27"></a>
 </span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28"></a>
@@ -3162,15 +3182,12 @@
 </span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32"></a>
 </span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33"></a><span class="nd">@ppl</span>
 </span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34"></a><span class="k">def</span> <span class="nf">generate_info_instructor</span><span class="p">():</span>
-</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35"></a>    <span class="sa">f</span><span class="s2">&quot;randomly generate 3 users.&quot;</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35"></a>    <span class="sa">f</span><span class="s2">&quot;randomly generate 10 users.&quot;</span>
 </span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">(</span><span class="n">response_model</span><span class="o">=</span><span class="n">Partial</span><span class="p">[</span><span class="n">Info</span><span class="p">],</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">response_obj</span>
 </span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37"></a>
 </span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38"></a>
-</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39"></a><span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">make_panel</span><span class="p">(</span><span class="s2">&quot;Waiting for Response ...&quot;</span><span class="p">),</span> <span class="n">auto_refresh</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="k">as</span> <span class="n">live</span><span class="p">:</span>
-</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40"></a>    <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">generate_info_instructor</span><span class="p">():</span>
-</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41"></a>        <span class="c1"># returned object is a generator containing partial response</span>
-</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42"></a>        <span class="n">obj</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43"></a>        <span class="n">live</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">make_panel</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">))</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generated Info:&quot;</span><span class="p">,</span> <span class="n">generate_info_instructor</span><span class="p">())</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40"></a><span class="c1"># streaming is displayed but not return a generator object</span>
 </span></code></pre></div></td></tr></table></div>
 <p>It will gradually print the output:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
