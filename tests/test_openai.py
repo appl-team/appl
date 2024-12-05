@@ -13,17 +13,19 @@ from loguru import logger
 from pydantic import BaseModel
 
 import appl
-from appl import AIRole, Generation, Image, UserRole, as_tool, gen, ppl
+from appl import AIRole, Audio, Generation, Image, UserRole, as_tool, convo, gen, ppl
 from appl.const import NEWLINE
 
 appl.init()
 # NOTE: init here could influence other tests in other files.
 
+TEST_OPENAI_MODEL = "gpt-4o-mini"
+
 
 @ppl
 def add():
     "1+2="
-    return str(gen("gpt4o-mini", max_tokens=10)).strip()
+    return str(gen(TEST_OPENAI_MODEL, max_tokens=10)).strip()
 
 
 try:
@@ -66,6 +68,7 @@ def test_tool_call():
 
 
 IMAGE_URL = "https://maproom.wpenginepowered.com/wp-content/uploads/OpenAI_Logo.svg_-500x123.png"
+AUDIO_URL = "https://cdn.openai.com/API/docs/audio/alloy.wav"
 
 
 def test_image():
@@ -75,9 +78,44 @@ def test_image():
         Image(IMAGE_URL)
         "What's the text on the image? "
         "Your output should be in the format: The text on the image is: ..."
-        return gen("gpt4o-mini", stop=NEWLINE)
+        return gen(TEST_OPENAI_MODEL, stop=NEWLINE)
 
     assert "OpenAI" in str(query())
+
+
+def test_image_outside_ppl():
+    assert "OpenAI" in str(
+        gen(
+            TEST_OPENAI_MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Look, it's a commercial logo."},
+                        {"type": "image_url", "image_url": {"url": IMAGE_URL}},
+                        {
+                            "type": "text",
+                            "text": "What's the text on the image?\nYour output should be in the format: The text on the image is: ...",
+                        },
+                    ],
+                }
+            ],
+            stop=NEWLINE,
+        )
+    )
+
+
+def test_audio():
+    @ppl
+    def query():
+        "what is the text in the audio?"
+        Audio.from_url(AUDIO_URL, "wav")
+        return gen("gpt-4o-audio-preview")
+
+    assert (
+        "The sun rises in the east and sets in the west. This simple fact has been observed by humans for thousands of years."
+        in str(query())
+    )
 
 
 def test_response_format():
@@ -87,14 +125,14 @@ def test_response_format():
     @ppl
     def func():
         "1+1="
-        return gen("gpt4o-mini", response_format=Result).response_obj
+        return gen(TEST_OPENAI_MODEL, response_format=Result).response_obj
 
     assert func().result == 2
 
     @ppl
     def func2():
         "1+1="
-        return gen("gpt4o-mini", response_format=Result, stream=True).response_obj
+        return gen(TEST_OPENAI_MODEL, response_format=Result, stream=True).response_obj
 
     assert func2().result == 2
 
@@ -104,6 +142,6 @@ def test_auto_continue():
     def func():
         "Count from 1 to 50, in a format like 1, 2, ..."
         "BEGIN: "
-        return gen("gpt4o-mini", max_tokens=100, max_relay_rounds=5)
+        return gen(TEST_OPENAI_MODEL, max_tokens=100, max_relay_rounds=5)
 
     assert "45, 46, 47" in str(func())

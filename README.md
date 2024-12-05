@@ -153,6 +153,7 @@ For a more comprehensive tutorial, please refer to the [tutorial](https://appl-t
 For more detailed usage and examples, please refer to the [cookbook](https://appl-team.github.io/appl/cookbook).
 
 APPL can be used to reproduce some popular LM-based applications easily, such as:
+* [Tree of Thoughts](https://github.com/princeton-nlp/tree-of-thought-llm)[[APPL implementation](examples/advanced/tree_of_thoughts/)]: deliberate problem solving with Large Language Models.
 * [Wordware's TwitterPersonality](https://twitter.wordware.ai/)[[APPL implementation](https://github.com/appl-team/TwitterPersonality)]: analyzes your tweets to determine your Twitter personality.
 
 ## Citation and Acknowledgment

@@ -1,6 +1,21 @@
-# Using Tracing
+# Using Caching and Tracing
 
-APPL supports tracing APPL functions and LM calls to facilitate users to understand and debug the program executions. The trace is useful for reproducing (potentially partial) execution results by loading cached responses of the LM calls, which enables failure recovery and avoids the extra costs of resending these calls. This also unlocks the possibility of conveniently debugging one specific LM call out of the whole program.
+APPL supports tracing APPL functions and LM calls to facilitate users to understand and debug the program executions. Both the trace and the persistent LLM caching are useful for reproducing (potentially partial) execution results by loading cached responses of the LM calls, which enables failure recovery and avoids the extra costs of resending these calls. This also unlocks the possibility of conveniently debugging one specific LM call out of the whole program.
+
+## Enabling APPL Caching
+The persistent LLM caching (default path: `~/.appl/caches/cache.db`) is automatically enabled since v0.1.5.
+LLM calls with temperature 0 will look up the cache first, use the cached responses if found, generate and cache the responses otherwise.
+
+```yaml title="appl.yaml"
+settings:
+  caching:
+    enabled: true # default to enable the caching
+    folder: "~/.appl/caches" # The folder to store the cache files
+    max_size: 100000  # Maximum number of entries in cache
+    time_to_live: 43200 # Time-to-live in minutes (30 days)
+    cleanup_interval: 1440 # Cleanup interval in minutes (1 day)
+    allow_temp_greater_than_0: false # Whether to cache the generation results with temperature to be greater than 0
+```
 
 ## Enabling APPL Tracing
 
@@ -38,7 +53,7 @@ You can reproduce the execution results from a previous trace by specifying the 
 $ APPL_RESUME_TRACE=<path to the trace file> python answer_questions.py
 ```
 
-Then each LM call will be loaded from the trace file if it exists. Such loading can be useful for:
+Then each LM call will be loaded from the trace file if it exists (loading from the trace is of higher priority than the persistent cache). Such loading can be useful for:
 
 - Debugging a specific LM call: the LM calls before that can be loaded from the trace file, therefore no need to resend them with extra costs.
 - Reproducible results: the trace file can be shared with others to reproduce the same results.

@@ -26,7 +26,7 @@ class PromptFunc:
         ctx_method: str = "new",
         comp: Optional[Compositor] = None,
         default_return: Optional[Literal["prompt"]] = None,
-        include_docstring: bool = False,
+        docstring_as: Optional[str] = None,
         new_ctx_func: Callable = PromptContext,
         # default_sep: Optional[str] = None,
         # ? set the default printer behavior for the prompt function?
@@ -54,9 +54,9 @@ class PromptFunc:
             default_return (str, optional):
                 The default return value, "prompt" means return the prompt within
                 the function. Defaults to None.
-            include_docstring (bool, optional):
-                set to True to include the triple-quoted docstring in the prompt.
-                Defaults to False.
+            docstring_as (str, optional):
+                Include the triple-quoted docstring as a message in the prompt.
+                Options include "user" and "system". Defaults to None.
             new_ctx_func (Callable, optional):
                 the function to create a new context. Defaults to PromptContext.
         """
@@ -70,7 +70,7 @@ class PromptFunc:
         if default_return is not None and default_return != "prompt":
             raise NotImplementedError("Only support default_return='prompt' now.")
         self._default_return = default_return
-        self._include_docstring = include_docstring
+        self._docstring_as = docstring_as
         self._new_ctx_func = new_ctx_func
         self._persist_ctx: Optional[PromptContext] = None
         self._reset_context_func: Optional[Callable[[], None]] = None
@@ -171,7 +171,7 @@ class PromptFunc:
         child_ctx._func_name = self._name
         child_ctx._func_docstring = self._doc
         child_ctx._docstring_quote_count = self._func._docstring_quote_count
-        child_ctx._include_docstring = self._include_docstring  # set in the context
+        child_ctx._docstring_as = self._docstring_as  # set in the context
 
         compositor: Optional[Compositor] = kwargs.pop(
             "compositor", self._default_compositor

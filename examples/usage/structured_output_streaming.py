@@ -1,7 +1,12 @@
 # https://jxnl.github.io/instructor/why/?h=iterable#partial-extraction
 from typing import List
 
-from instructor import Partial
+try:
+    from instructor import Partial
+
+    run_instructor = True
+except ImportError:
+    run_instructor = False
 from pydantic import BaseModel
 
 import appl
@@ -29,12 +34,12 @@ def generate_info() -> Info:
 print(f"Generated Info: {generate_info()}")
 # streaming is displayed but not return a generator object
 
+if run_instructor:
 
-@ppl
-def generate_info_instructor():
-    f"randomly generate 10 users."
-    return gen(response_model=Partial[Info], stream=True).response_obj
+    @ppl
+    def generate_info_instructor():
+        f"randomly generate 10 users."
+        return gen(response_model=Partial[Info], stream=True).response_obj
 
-
-print("Generated Info:", generate_info_instructor())
-# streaming is displayed but not return a generator object
+    print("Generated Info:", generate_info_instructor())
+    # streaming is displayed but not return a generator object

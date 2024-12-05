@@ -1,6 +1,8 @@
-from ..types import *
+from typing import Any, List, Optional
+
+from ..types.futures import String
 from .base import Promptable
-from .formatter import Formattable, FormatterMeta
+from .formatter import Formattable
 
 
 class Definition(Promptable, Formattable):

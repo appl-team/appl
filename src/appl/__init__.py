@@ -21,9 +21,11 @@ logger.add(sys.stderr, level="INFO")  # set to INFO
 
 from typing import Any, Callable, Dict, Optional
 
+from .caching import DBCache
 from .compositor import ApplStr as Str
 from .compositor import iter
 from .core import (
+    Audio,
     BracketedDefinition,
     CallFuture,
     CompletionResponse,
@@ -35,6 +37,7 @@ from .core import (
     PromptContext,
     PromptPrinter,
     PromptRecords,
+    SchemaTool,
     StringFuture,
     Tool,
 )
@@ -66,12 +69,12 @@ from .func import (
     empty_line,
     gen,
     grow,
-    openai_tool_schema,
     ppl,
     records,
     reset_context,
     str_future,
 )
+from .func import gen as completion  # create alias
 from .role_changer import AIRole, SystemRole, ToolRole, UserRole
 from .servers import server_manager
 from .tracing import TraceEngine
@@ -100,13 +103,13 @@ global_vars.initialized = False
 
 
 def init(
-    resume_cache: Optional[str] = None,
+    resume_trace: Optional[str] = None,
     update_config_hook: Optional[Callable] = None,
 ) -> None:
     """Initialize APPL with dotenv and config files.
 
     Args:
-        resume_cache: Path to the trace file used as resume cache. Defaults to None.
+        resume_trace: Path to the trace file used as resume cache. Defaults to None.
         update_config_hook: A hook to update the configs. Defaults to None.
 
     Examples:
@@ -207,6 +210,20 @@ def init(
     global_vars.process_executor = ProcessPoolExecutor(max_workers=process_max_workers)
 
     # ============================================================
+    # Caching
+    # ============================================================
+    caching = configs.getattrs("settings.caching")
+    if caching.get("enabled", False):
+        global_vars.cache_folder = os.path.expanduser(
+            caching.get("folder", "~/.appl/caches")
+        )
+        db_file = os.path.join(global_vars.cache_folder, "cache.db")
+        logger.info(f"Using cache folder: {global_vars.cache_folder}")
+        global_vars.llm_cache = DBCache(db_file)
+    else:
+        global_vars.llm_cache = None
+
+    # ============================================================
     # Tracing
     # ============================================================
     tracing = configs.getattrs("settings.tracing")
@@ -229,13 +246,15 @@ def init(
         else:
             logger.warning("Tracing is enabled but no trace file is specified")
 
-    resume_cache = resume_cache or os.environ.get("APPL_RESUME_TRACE", None)
-    if resume_cache:
-        global_vars.resume_cache = resume_cache
-        logger.info(f"Using resume cache: {resume_cache}")
-        global_vars.resume_cache = TraceEngine(
-            resume_cache, mode="read", strict=strict_match
+    resume_trace = resume_trace or os.environ.get("APPL_RESUME_TRACE", None)
+    if resume_trace:
+        global_vars.resume_trace = resume_trace
+        logger.info(f"Using resume cache: {resume_trace}")
+        global_vars.resume_trace = TraceEngine(
+            resume_trace, mode="read", strict=strict_match
         )
+    else:
+        global_vars.resume_trace = None
 
 
 @contextmanager

@@ -21,7 +21,7 @@ You can also nest the compositors to create more complex structures, like:
 ```python linenums="1"
 @ppl
 def compose(items: list[str]):
-    with Tagged("div"):  # (1)
+    with Tagged("div", indent_inside=4):  # (1)
         "Display the items:"
         with NumberedList(indent=4): # (2)
             items # (3)
@@ -30,7 +30,7 @@ def compose(items: list[str]):
 print(compose(["item1", "item2"]))
 ```
 
-1. The default indentation inside the tag is 4 spaces, can be changed by setting the `indent_inside` parameter.
+1. The default is no indentation inside the tag, can be changed by setting the `indent_inside` parameter.
 2. Explicitly set the indentation for the content inside the list.
 3. Fits different number of items.
 
@@ -81,10 +81,10 @@ With the help of modern IDEs like VSCode, you can easily navigate to the definit
 We use the example in [PromptCoder](https://github.com/dhh1995/PromptCoder?tab=readme-ov-file#usage) to illustrate the usage of these prompt coding helpers:
 
 ```python linenums="1"
-import appl
 from appl import BracketedDefinition as Def
-from appl import define, empty_line, ppl, records
+from appl import define, ppl, records
 from appl.compositor import *
+from appl.const import EMPTY
 
 # (1)
 class InputReq(Def):
@@ -94,26 +94,14 @@ class OutputReq(Def):
     name = "Output Requirement"
 
 @ppl
-def requirements(opr: str):
-    "Requirements"
+def get_prompt(opr: str, language: str):
+    "## Requirements"
     with NumberedList():
         InputReq(desc="The input should be two numbers.") # (2)
         OutputReq(desc=f"The output should be the {opr} of the two numbers.") # (3)
-    return records()
-
-@ppl
-def instruction(language: str):
-    "Instruction"
-    with LineSeparated():
-        f"Write a function in {language} that satisfies the {InputReq} and {OutputReq}." # (4)
-    return records()
-
-@ppl
-def get_prompt(opr: str, language: str):
-    with LineSeparated(indexing="##"):
-        requirements(opr)  # (5)
-        empty_line()  # (6)
-        instruction(language)
+    EMPTY
+    "## Instruction"
+    f"Write a function in {language} that satisfies the {InputReq} and {OutputReq}." # (4)
     return records()
 ```
 
@@ -121,13 +109,11 @@ def get_prompt(opr: str, language: str):
     Alternatively, but not recommended, you can define classes as follows:
     `InputReq = define("Input Requirement")` and `OutputReq = define("Output Requirement")`.
     But then VSCode cannot recognize it as a class.
-2. Complete the input requirement with a description.
-3. Complete the output requirement with a description.
+2. Instantiate the input requirement with a description.
+3. Instantiate the output requirement with a description.
 4. The naming can be used to distinguish:
     - variable naming (e.g. language): the dynamic input.
     - class naming (e.g. InputReq): the reference to the concept.
-5. The returned prompt will be formatted using the compositor.
-6. Create an empty line regardless of other compositors.
 
 The result of `get_prompt("sum", "Python")` will be:
 ```md

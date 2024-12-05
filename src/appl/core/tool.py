@@ -8,19 +8,69 @@ from docstring_parser import Docstring, parse
 from loguru import logger
 from openai.types.chat import ChatCompletionMessageToolCall
 from pydantic import BaseModel, ConfigDict, Field, create_model, field_serializer
-
-from .types import Image, String
+from typing_extensions import override
 
 # from pydantic._internal._model_construction import ModelMetaclass
 
 
 class BaseTool(BaseModel, ABC):
-    """The base class for a Tool."""
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    """The base class for a Tool that can be called by LLMs."""
 
     name: str = Field(..., description="The name of the Tool")
     """The name of the Tool."""
+
+    @property
+    @abstractmethod
+    def openai_schema(self) -> Dict[str, Any]:
+        """Get the OpenAI schema of the tool."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def _call(self, *args: Any, **kwargs: Any) -> Any:
+        raise NotImplementedError
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        """Call the tool."""
+        return self._call(*args, **kwargs)
+
+
+class SchemaTool(BaseTool):
+    """The Tool that has a fixed schema."""
+
+    tool_schema: Dict[str, Any] = Field(..., description="The schema of the tool")
+    """The schema of the tool."""
+
+    def __init__(self, tool_schema: Dict[str, Any], func: Optional[Callable] = None):
+        """Create a SchemaTool from a schema dictionary."""
+        if "type" not in tool_schema:
+            raise ValueError("Schema must contain the 'type' field.")
+        tp = tool_schema["type"]
+        if tp not in ("function", "object"):
+            raise ValueError(f"Invalid schema type: {tp}")
+        if "name" not in tool_schema[tp]:
+            raise ValueError(f"Schema must contain the 'name' field in {tp}.")
+        name = tool_schema[tp]["name"]
+        super().__init__(name=name, tool_schema=tool_schema)  # type: ignore
+        self._func = func
+
+    @override
+    @property
+    def openai_schema(self) -> Dict[str, Any]:
+        return self.tool_schema
+
+    @override
+    def _call(self, *args: Any, **kwargs: Any) -> Any:
+        if self._func is None:
+            raise ValueError("Tool has no function to call.")
+        return self._func(*args, **kwargs)
+
+
+class Tool(BaseTool):
+    """The Tool built from a Python function, can be called by LLMs."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    # overwrite pydantic, allow BaseModel in fields
+
     short_desc: str = Field("", description="The short description of the Tool")
     """The short description of the Tool."""
     long_desc: str = Field("", description="The long description of the Tool")
@@ -39,12 +89,20 @@ class BaseTool(BaseModel, ABC):
     """Additional information of the Tool."""
 
     # TODO: add toolkit option
-    def __init__(self, func: Callable, **predefined: Any):
-        """Create a tool from a function."""
+    def __init__(self, func: Callable, use_short_desc: bool = False, **predefined: Any):
+        """Create a tool from a function.
+
+        Args:
+            func: The function to create the tool from.
+            use_short_desc:
+                Whether to use the short description instead of the full description.
+            predefined: Additional arguments for the tool.
+        """
         name = func.__name__
         sig = inspect.signature(func)
         doc = func.__doc__
         super().__init__(name=name, **self.parse_data(sig, doc, predefined))
+        self._use_short_desc = use_short_desc
         self._predefined = predefined
         self._func = func
         self.__name__ = name
@@ -108,6 +166,7 @@ class BaseTool(BaseModel, ABC):
         data["examples"] = doc.examples
         return data
 
+    @override
     @property
     def openai_schema(self) -> dict:
         """Get the OpenAI schema of the tool."""
@@ -126,9 +185,16 @@ class BaseTool(BaseModel, ABC):
         s += f'    """{self.__doc__}"""'
         return s
 
-    @abstractmethod
-    def _get_description(self) -> str:
-        raise NotImplementedError
+    def _get_description(self):
+        if not self.short_desc:
+            logger.warning(f"Tool {self.name} has no description.")
+            return self.name
+
+        if (not self.long_desc) or self._use_short_desc:
+            return self.short_desc
+
+        # use full desc
+        return self.short_desc + "\n\n" + self.long_desc
 
     @field_serializer("params", when_used="json")
     def _serialize_params(self, params: type[BaseModel]) -> dict:
@@ -141,38 +207,10 @@ class BaseTool(BaseModel, ABC):
     def __str__(self) -> str:
         return self.to_str()
 
+    @override
     def _call(self, *args: Any, **kwargs: Any) -> Any:
         kwargs.update(self._predefined)  # use predefined kwargs
         return self._func(*args, **kwargs)
-
-    __call__ = _call
-
-
-class Tool(BaseTool):
-    """The Tool class that can be called by LLMs."""
-
-    def __init__(self, func: Callable, use_short_desc: bool = False, **kwargs: Any):
-        """Create a tool from a function.
-
-        Args:
-            func: The function to create the tool from.
-            use_short_desc:
-                Whether to use the short description instead of the full description.
-            kwargs: Additional arguments for the tool.
-        """
-        super().__init__(func=func, **kwargs)
-        self._use_short_desc = use_short_desc
-
-    def _get_description(self):
-        if not self.short_desc:
-            logger.warning(f"Tool {self.name} has no description.")
-            return self.name
-
-        if (not self.long_desc) or self._use_short_desc:
-            return self.short_desc
-
-        # use full desc
-        return self.short_desc + "\n\n" + self.long_desc
 
 
 class ToolCall(BaseModel):
@@ -184,6 +222,20 @@ class ToolCall(BaseModel):
     """The name of the function to call."""
     args: str = Field(..., description="The arguments to call the function with.")
     """The arguments to call the function with."""
+
+    def __init__(self, **kwargs: Any):
+        """Create a tool call from a dictionary."""
+        if "type" in kwargs:
+            if kwargs["type"] == "function":
+                super().__init__(
+                    id=kwargs["id"],
+                    name=kwargs["function"]["name"],
+                    args=kwargs["function"]["arguments"],
+                )
+            else:
+                raise ValueError(f"Invalid tool call type: {kwargs['type']}")
+        else:
+            super().__init__(**kwargs)
 
     def get_dict(self):
         """Get the OpenAI format dictionary representation of the tool call."""

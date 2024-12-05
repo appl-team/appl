@@ -8,7 +8,7 @@ import roman
 from loguru import logger
 
 from .message import BaseMessage, Conversation, as_message
-from .types import Image, MessageRole, String, StringFuture
+from .types import ContentPart, MessageRole, String, StringFuture
 
 
 class Indexing:
@@ -116,7 +116,7 @@ class PrinterPop:
     """A record to pop the last printer state from the stack."""
 
 
-RecordType = Union[BaseMessage, StringFuture, Image, PrinterPush, PrinterPop]
+RecordType = Union[BaseMessage, StringFuture, ContentPart, PrinterPush, PrinterPop]
 """Types allowed in the prompt records."""
 
 
@@ -137,12 +137,12 @@ class PromptRecords:
         return PromptPrinter()(self)
 
     def record(self, record: Union[str, RecordType]) -> None:
-        """Record a string, message, image, printer push or printer pop."""
+        """Record a string, message, image, audio, printer push or printer pop."""
         if isinstance(record, str):  # compatible to str
             record = StringFuture(record)
         if (
             isinstance(record, StringFuture)
-            or isinstance(record, Image)
+            or isinstance(record, ContentPart)
             or isinstance(record, BaseMessage)
             or isinstance(record, PrinterPush)
             or isinstance(record, PrinterPop)
@@ -306,17 +306,17 @@ class PromptPrinter:
         return as_message(role, content)
 
     def _print(
-        self, contents: Union[String, Image, BaseMessage, PromptRecords]
+        self, contents: Union[String, ContentPart, BaseMessage, PromptRecords]
     ) -> Conversation:
         convo = Conversation(system_messages=[], messages=[])
 
-        def handle(rec: Union[RecordType, Image, str]) -> None:
+        def handle(rec: Union[RecordType, ContentPart, str]) -> None:
             if isinstance(rec, (str, StringFuture)):
                 convo.append(self._print_message(rec))
-            elif isinstance(rec, Image):
+            elif isinstance(rec, ContentPart):
                 convo.append(as_message(self._states[-1].role, rec))
                 state = self._states[-1]
-                # reset current state after image, TODO: double check
+                # reset current state after image or audio, TODO: double check
                 state.is_start = True
                 state.current_sep = ""
             elif isinstance(rec, BaseMessage):

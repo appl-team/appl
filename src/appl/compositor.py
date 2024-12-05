@@ -347,7 +347,7 @@ class Tagged(Logged):
 
     Example:
         ```py
-        >>> with Tagged("div"):
+        >>> with Tagged("div", indent_inside=4):
         ...     "item1"
         ...     "item2"
         <<< The prompt will be:

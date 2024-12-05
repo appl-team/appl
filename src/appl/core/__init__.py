@@ -28,7 +28,7 @@ from .promptable import BracketedDefinition, Definition, Promptable, define, pro
 from .response import CompletionResponse
 from .runtime import appl_execute, appl_format, appl_with_ctx
 from .server import BaseServer, GenArgs
-from .tool import BaseTool, Tool
+from .tool import BaseTool, SchemaTool, Tool
 from .trace import TraceEngineBase, TraceEventBase, traceable
-from .types import CallFuture, StringFuture
+from .types import Audio, CallFuture, Image, StringFuture
 from .utils import get_live, make_panel, need_ctx, partial, stop_live, wraps

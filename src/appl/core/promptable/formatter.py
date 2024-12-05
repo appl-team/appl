@@ -1,7 +1,7 @@
 from abc import ABCMeta
-from typing import Any
+from typing import Any, Optional
 
-from ..types import *
+from ..types.futures import String
 
 
 # ABCMeta is required since Promptable is an abstract class

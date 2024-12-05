@@ -13,6 +13,8 @@ from appl import (
     records,
 )
 
+IMAGE_URL = "https://maproom.wpenginepowered.com/wp-content/uploads/OpenAI_Logo.svg_-500x123.png"
+
 
 def test_gen():
     appl.init()
@@ -30,6 +32,104 @@ def test_gen():
         return gen("_dummy")
 
     assert "dummy" in str(dummy())
+
+
+def test_gen_outside_ppl():
+    res = gen(
+        "_dummy",
+        messages=[{"role": "user", "content": "Hello"}],
+        mock_response="World",
+    )
+    assert str(res) == "World"
+
+    res = gen(
+        "_dummy",
+        messages=[
+            {"role": "user", "content": "Hello"},
+            {"role": "assistant", "content": "World"},
+        ],
+        mock_response="World",
+    )
+    assert str(res) == "World"
+
+    res = gen(
+        "_dummy",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "What's in this image?"},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": IMAGE_URL},
+                    },
+                ],
+            }
+        ],
+        mock_response="OpenAI",
+    )
+    assert str(res) == "OpenAI"
+
+    res = gen(
+        "_dummy",
+        messages=[
+            {"role": "user", "content": "what's 1+1?"},
+            {
+                "role": "assistant",
+                "tool_calls": [
+                    {
+                        "id": "t1",
+                        "type": "function",
+                        "function": {
+                            "name": "add",
+                            "arguments": '{"a": 1, "b": 1}',
+                        },
+                    }
+                ],
+            },
+            {"role": "tool", "content": "2", "tool_call_id": "t1"},
+        ],
+        mock_response="2",
+    )
+    assert str(res) == "2"
+
+
+def test_gen_tool_call_outside_ppl():
+    tool_schema = {
+        "type": "function",
+        "function": {
+            "name": "get_current_weather",
+            "description": "Get the current weather in a given location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The city and state, e.g. San Francisco, CA",
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": ["celsius", "fahrenheit"],
+                    },
+                },
+                "required": ["location"],
+            },
+        },
+    }
+    res = gen(
+        "_dummy",
+        messages=[{"role": "user", "content": "What's the weather in San Francisco?"}],
+        tools=[tool_schema],
+        mock_response="Sunny",
+    )
+    assert str(res) == "Sunny"
+    res = gen(
+        "_dummy",
+        messages=[{"role": "user", "content": "What's the weather in San Francisco?"}],
+        tools=tool_schema,
+        mock_response="Sunny",
+    )
+    assert str(res) == "Sunny"
 
 
 def test_chat_gen():

@@ -2,7 +2,17 @@ from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Dict, Iterator, List, Optional, TypeVar
+from typing import (
+    Any,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    TypeVar,
+    Union,
+    get_args,
+)
 
 from loguru import logger
 from pydantic import BaseModel, Field, model_validator
@@ -16,11 +26,13 @@ from .types import (
     TOOL_ROLE,
     USER_ROLE,
     ContentList,
+    ContentPart,
     FutureValue,
-    Image,
     MessageRole,
     MessageRoleType,
-    StrOrImg,
+    String,
+    StringFuture,
+    TextContent,
 )
 
 
@@ -108,6 +120,8 @@ class BaseMessage(BaseModel, ABC):
         if content is not None:
             if isinstance(content, ContentList):
                 return content.get_contents()  # return a list of dict
+            if isinstance(content, Dict):
+                return content  # not change the content
             if isinstance(content, FutureValue):
                 # materialize the content
                 content = content.val
@@ -115,7 +129,6 @@ class BaseMessage(BaseModel, ABC):
                 content = str(content)
         return content
 
-    # TODO: implement classmethod: from dict
     def get_dict(self, default_role: Optional[MessageRole] = None) -> Dict[str, Any]:
         """Return a dict representation of the message."""
         # materialize the content using str()
@@ -138,7 +151,7 @@ class BaseMessage(BaseModel, ABC):
             if isinstance(other.content, ContentList) and not isinstance(
                 res.content, ContentList
             ):
-                res.content = ContentList(contents=[res.content])
+                res.content = ContentList([TextContent(res.content)])
             res.content += other.content
             return res
         return None
@@ -294,19 +307,43 @@ MESSAGE_CLASS_DICT = {
 
 
 def as_message(
-    role: Optional[MessageRole],
-    content: StrOrImg,
+    role: Optional[Union[MessageRole, str]],
+    content: Union[ContentPart, String, Dict, Iterable[Dict[str, Any]], None] = None,
     *args: Any,
     **kwargs: Any,
 ) -> BaseMessage:
     """Create a message with role, content and extra arguments."""
+    if isinstance(role, str):
+        role = MessageRole(type=role)
     role_type = MessageRoleType(role.type) if role else None
     if role_type not in MESSAGE_CLASS_DICT:
         raise ValueError(f"Unknown role: {role}")
     cls = MESSAGE_CLASS_DICT[role_type]
-    if isinstance(content, Image):
-        content = ContentList(contents=[content])  # type: ignore
-    return cls(content=content, role=role, *args, **kwargs)
+    processed_content: Union[ContentList, String, Dict, None] = None
+    if content is None:
+        if role_type != MessageRoleType.ASSISTANT or "tool_calls" not in kwargs:
+            raise ValueError("Content must be provided for non-tool-calls messages.")
+        processed_content = content
+    elif isinstance(content, (StringFuture, str, dict)):
+        processed_content = content
+    elif isinstance(content, ContentPart):
+        processed_content = ContentList(contents=[content])
+    elif isinstance(content, Iterable):
+        processed_content = ContentList(contents=content)  # type: ignore # mypy failed
+    else:
+        raise ValueError(f"Invalid content: {content}")
+    return cls(content=processed_content, role=role, *args, **kwargs)
+
+
+def convert_to_message(
+    m: Union[BaseMessage, Dict],
+) -> BaseMessage:
+    """Convert a message in different formats to a BaseMessage."""
+    if isinstance(m, BaseMessage):
+        return m
+    if isinstance(m, Dict):
+        return as_message(**m)
+    raise ValueError(f"Invalid message: {m}")
 
 
 def collapse_messages(messages: List[Message]) -> List[Message]:
@@ -337,6 +374,31 @@ class Conversation(BaseModel):
     messages: List[BaseMessage] = Field(
         [], description="The messages in the conversation"
     )
+
+    def __init__(
+        self,
+        messages: Optional[Union[Iterable[BaseMessage], Iterable[Dict]]] = None,
+        *,
+        system_messages: Optional[Iterable[SystemMessage]] = None,
+    ) -> None:
+        """Create a conversation with messages and system messages."""
+        if messages is None:
+            messages = []
+        elif isinstance(messages, Iterable):
+            messages = [convert_to_message(m) for m in messages]
+        else:
+            raise ValueError(f"Invalid messages: {messages}")
+        if system_messages is None:
+            system_messages = [m for m in messages if isinstance(m, SystemMessage)]
+            messages = [m for m in messages if not isinstance(m, SystemMessage)]
+        else:
+            for m in messages:
+                if isinstance(m, SystemMessage):
+                    raise ValueError("System messages found in both arguments.")
+        super().__init__(
+            messages=messages,
+            system_messages=system_messages,
+        )
 
     @property
     def has_message_role(self) -> bool:
@@ -387,7 +449,6 @@ class Conversation(BaseModel):
         """Pop the last message from the conversation."""
         return self.messages.pop()
 
-    # TODO: implement classmethod: from list of dict
     def as_list(
         self, default_role: Optional[MessageRole] = USER_ROLE
     ) -> List[Dict[str, str]]:
@@ -401,7 +462,7 @@ class Conversation(BaseModel):
         """Make a copy of the conversation."""
         return Conversation(
             system_messages=self.system_messages.copy(),
-            messages=self.messages.copy(),
+            messages=self.messages.copy(),  # type: ignore
         )
 
     def __repr__(self) -> str:

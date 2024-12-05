@@ -1,5 +1,6 @@
-import appl
 import pytest
+
+import appl
 from appl import Generation, convo, define, gen, need_ctx, ppl, records
 from appl.compositor import *
 
@@ -195,17 +196,28 @@ def test_tripple_quote_fstring():
 
 
 def test_include_docstring():
-    @ppl(include_docstring=True)
-    def func():
+    @ppl(docstring_as="system")
+    def func1():
         """This is a docstring"""
         "Hello"
         return records()
 
-    assert str(func()) == "This is a docstring\nHello"
+    assert func1().as_convo().as_list() == [
+        {"role": "system", "content": "This is a docstring"},
+        {"role": "user", "content": "Hello"},
+    ]
+
+    @ppl(docstring_as="user")
+    def func2():
+        """This is a docstring"""
+        "Hello"
+        return records()
+
+    assert str(func2()) == "This is a docstring\nHello"
 
 
 def test_include_multiline_docstring():
-    @ppl(include_docstring=True)
+    @ppl(docstring_as="user")
     def func():
         """This is a
         multiline docstring"""
@@ -215,7 +227,7 @@ def test_include_multiline_docstring():
 
     assert str(func()) == "This is a\nmultiline docstring\nHello"
 
-    @ppl(include_docstring=True)
+    @ppl(docstring_as="user")
     def func2():
         """
         This is a

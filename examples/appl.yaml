@@ -4,10 +4,10 @@ settings:
     #   enabled: true
     display:
       configs: false
-      llm_call_args: false # true
-      llm_response: false # true
-      llm_cache: false
-      llm_cost: true # true
+      # llm_call_args: false # true
+      # llm_response: false # true
+      # llm_cache: false # true
+      # llm_cost: false # true
   tracing:
     enabled: true
 

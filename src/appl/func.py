@@ -4,6 +4,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    List,
     Literal,
     Optional,
     Sequence,
@@ -18,6 +19,7 @@ from loguru import logger
 from pydantic import BaseModel
 
 from .core import (
+    BaseMessage,
     BaseTool,
     Compositor,
     Conversation,
@@ -28,11 +30,13 @@ from .core import (
     PromptContext,
     PromptFunc,
     PromptRecords,
+    SchemaTool,
     Tool,
     need_ctx,
     partial,
     wraps,
 )
+from .core.globals import global_vars
 from .core.printer import Indexing
 from .core.response import CompletionResponse
 from .core.runtime import appl_execute
@@ -80,7 +84,7 @@ def ppl(
     comp: Optional[Compositor] = None,
     *,
     default_return: Optional[Literal["prompt"]] = None,
-    include_docstring: bool = False,
+    docstring_as: Optional[str] = None,
     auto_prime: bool = False,
     num_extra_wrappers: int = 0,
     new_ctx_func: Callable = PromptContext,
@@ -92,7 +96,7 @@ def ppl(
     comp: Optional[Compositor] = None,
     *,
     default_return: Optional[Literal["prompt"]] = None,
-    include_docstring: bool = False,
+    docstring_as: Optional[str] = None,
     auto_prime: bool = False,
     num_extra_wrappers: int = 0,
     new_ctx_func: Callable = PromptContext,
@@ -123,9 +127,9 @@ def ppl(
         default_return (str, optional):
             The default return value, "prompt" means return the prompt within
             the function. Defaults to None.
-        include_docstring (bool, optional):
-            set to True to include the triple-quoted docstring in the prompt.
-            Defaults to False.
+        docstring_as (str, optional):
+            Include the triple-quoted docstring as a message in the prompt.
+            Options include "user" and "system". Defaults to None.
         auto_prime (bool, optional):
             set to True to automatically prime the generator. Defaults to False.
         num_extra_wrappers (int, optional):
@@ -150,7 +154,7 @@ def ppl(
         # if not _is_class_method and "<locals>" in qualname and ctx_method == "resume":
         #     raise ValueError("Cannot use 'resume' with local functions.")
         prompt_func = PromptFunc(
-            func, ctx_method, comp, default_return, include_docstring, new_ctx_func
+            func, ctx_method, comp, default_return, docstring_as, new_ctx_func
         )
 
         @need_ctx
@@ -238,6 +242,7 @@ def as_func(
     """Fill the globals and locals for a ppl function.
 
     When locals not provided, it will use the locals from the caller.
+    Commonly used for wrapper functions to pass the closure variables.
     """
     frame = inspect.currentframe()
     if _locals is None and frame is not None and frame.f_back is not None:
@@ -313,11 +318,6 @@ def call(
     return CallFuture(func, *args, executor_type=executor_type, **kwargs)
 
 
-def openai_tool_schema(func: Callable) -> dict:
-    """Build openai tool schema from a function."""
-    return as_tool(func).openai_schema
-
-
 @need_ctx
 def get_var(name: str, _ctx: PromptContext) -> Any:
     """Get a variable by name from the prompt context."""
@@ -364,18 +364,22 @@ def empty_line(num_lines: int = 1) -> PromptRecords:
     return records
 
 
-def build_tools(tools: OneOrMany[Union[BaseTool, Callable]]) -> Sequence[BaseTool]:
+def build_tools(
+    tools: OneOrMany[Union[BaseTool, Callable, Dict]],
+) -> Sequence[BaseTool]:
     """Build a list of tools from the given tools or functions."""
 
-    def convert_to_tool(tool: Union[BaseTool, Callable]) -> BaseTool:
+    def convert_to_tool(tool: Union[BaseTool, Callable, Dict]) -> BaseTool:
         if isinstance(tool, BaseTool):
             return tool
         if callable(tool):
             return as_tool(tool)
+        if isinstance(tool, dict):
+            return SchemaTool(tool_schema=tool)
         raise ValueError(f"Invalid tool: {tool}")
 
     # process tools
-    if isinstance(tools, BaseTool) or callable(tools):
+    if isinstance(tools, BaseTool) or callable(tools) or isinstance(tools, dict):
         return [convert_to_tool(tools)]
     if isinstance(tools, Sequence):
         return [convert_to_tool(tool) for tool in tools]
@@ -384,7 +388,7 @@ def build_tools(tools: OneOrMany[Union[BaseTool, Callable]]) -> Sequence[BaseToo
 
 @need_ctx
 def grow(content: Any, *, _ctx: Optional[PromptContext] = None) -> None:
-    """Append the content to the prompt."""
+    """Append the content to the prompt in the current context."""
     if _ctx is None:
         raise ValueError(
             "PromptContext is required for appending. "
@@ -397,12 +401,13 @@ def grow(content: Any, *, _ctx: Optional[PromptContext] = None) -> None:
 def gen(
     server: Optional[str] = None,
     *,
+    messages: Optional[Union[Conversation, List[BaseMessage], List[Dict]]] = None,
     max_tokens: Optional[int] = None,
     stop: MaybeOneOrMany[str] = None,
     temperature: Optional[float] = None,
     top_p: Optional[float] = None,
     n: Optional[int] = None,
-    tools: OneOrMany[Union[BaseTool, Callable]] = [],  # TODO: support dict
+    tools: OneOrMany[Union[BaseTool, Callable, Dict]] = [],
     tool_format: str = "auto",
     stream: Optional[bool] = None,
     response_format: Optional[Union[dict, str, Type[M]]] = None,
@@ -418,12 +423,14 @@ def gen(
     Args:
         server (str, optional):
             name of the backend server. Defaults to the default server set in the configs.
+        messages (Union[Conversation, List[BaseMessage]], optional):
+            the messages as the prompt for the LLM. Defaults to retrieve from the context.
         max_tokens (int, optional): maximum number of tokens to generate. Defaults to None.
         stop (str|Sequence[str], optional): stop sequence(s). Defaults to None.
         temperature (float, optional): temperature for sampling. Defaults to None.
         top_p (float, optional): nucleus sampling parameter. Defaults to None.
         n (int, optional): number of choices to generate. Defaults to 1.
-        tools (BaseTool|Callable|Sequence[BaseTool|Callable], optional):
+        tools (BaseTool|Callable|Dict|Sequence[BaseTool|Dict|Callable], optional):
             tools can be used. Defaults to None.
         tool_format (str, optional): the format for the tools. Defaults to "auto".
         stream (bool, optional): whether to stream the results. Defaults to False.
@@ -446,13 +453,18 @@ def gen(
     Returns:
         Generation: a future object representing the generation result
     """
+    if not global_vars.initialized:
+        raise ValueError("APPL is not initialized. Please call appl.init() first.")
+
     backend_server = server_manager.get_server(server)
-    if _ctx is None:
-        raise ValueError(
-            "PromptContext is required for generation."
-            "Normally, it should be automatically filled."
-        )
-    messages = _ctx.messages
+    if isinstance(messages, list):
+        messages = Conversation(messages=messages)
+    if messages is None:
+        if _ctx is None:
+            raise ValueError(
+                "PromptContext is required for generation when messages is not provided."
+            )
+        messages = _ctx.messages
     messages.materialize()  # materialize the messages
     # TODO: double check the correctness
     messages = copy.deepcopy(messages)  # freeze the prompt for the generation

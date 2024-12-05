@@ -18,6 +18,7 @@ from openai import OpenAI, Stream
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 from pydantic import BaseModel
 
+from ..caching import add_to_cache, find_in_cache
 from ..core.config import configs
 from ..core.message import Conversation
 from ..core.response import CompletionResponse
@@ -27,7 +28,7 @@ from ..core.trace import (
     CompletionRequestEvent,
     CompletionResponseEvent,
     add_to_trace,
-    find_in_cache,
+    find_in_trace,
 )
 from ..utils import _langsmith_traceable
 from ..version import __version__
@@ -54,6 +55,7 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
     log_llm_cache = configs.getattrs("settings.logging.display.llm_cache")
     if log_llm_call_args:
         logger.info(f"Call completion [{gen_id}] with args: {kwargs}")
+    cache_hit = None
 
     @_langsmith_traceable(
         name=f"ChatCompletion_{gen_id}",
@@ -61,23 +63,23 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         metadata={"appl": "completion", "appl_version": __version__},
     )  # type: ignore
     def wrapped(**inner_kwargs: Any) -> Tuple[Any, bool]:
-        if cache_ret := find_in_cache(gen_id, inner_kwargs):
+        nonlocal cache_hit
+        if trace_ret := find_in_trace(gen_id, inner_kwargs):
+            cache_hit = "trace"
+            raw_response = trace_ret
             if log_llm_cache:
-                logger.info("Found in cache, using cached response...")
-            # ? support rebuild the stream from cached response
-            if inner_kwargs.get("stream", False):
-                logger.warning(
-                    "Using cached complete response for a streaming generation."
-                )
+                logger.info(f"[{gen_id}] Found in trace, using cached response...")
+        elif cache_ret := find_in_cache(inner_kwargs):
+            cache_hit = "cache"
             raw_response = cache_ret
+            if log_llm_cache:
+                logger.info(f"[{gen_id}] Found in cache, using cached response...")
         else:
-            # if log_llm_cache:
-            #     logger.info("Not found in cache, creating response...")
             raw_response = litellm.completion(**inner_kwargs)
-        return raw_response, cache_ret is not None
+        return raw_response
 
     try:
-        raw_response, use_cache = wrapped(**kwargs)
+        raw_response = wrapped(**kwargs)
     except Exception as e:
         # log the error information for debugging
         logger.error(f"Error encountered for the completion: {e}")
@@ -89,12 +91,20 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
 
     def post_completion(response: CompletionResponse) -> None:
         raw_response = response.complete_response
-        cost = 0.0 if use_cache else response.cost
+        cost = 0.0 if cache_hit else response.cost
         response.cost = cost  # update the cost
         event = CompletionResponseEvent(
             name=gen_id, args=kwargs, ret=raw_response, cost=cost
         )
         add_to_trace(event)
+        if cache_hit is not None:
+            # ? support rebuild the stream from cached response
+            if kwargs.get("stream", False):
+                logger.warning(
+                    "Using cached complete response for a streaming generation."
+                )
+        else:
+            add_to_cache(kwargs, raw_response)  # type: ignore
         if log_llm_response:
             logger.info(f"Completion [{gen_id}] response: {response}")
         if log_llm_usage and response.usage is not None:

@@ -18,11 +18,11 @@ As you have seen in the [QA examples](./2_qa_example.md), you can define prompts
 ??? question "How about docstrings in *APPL functions*?"
     Docstring is a special expression statement in Python. There are two cases for docstrings in *APPL functions*:
     
-    1. If the docstring is triple-quoted, it will **NOT** be captured as a prompt by default. To also include the docstring as a part of the prompt, you may specify `include_docstring=True` in the `@ppl` decorator, like
+    1. If the docstring is triple-quoted, it will **NOT** be captured as a prompt by default. To also include the docstring as a part of the prompt (as a system message or user message), you may specify `docstring_as` to be "system" or "user" in the `@ppl` decorator, like
         ```python
-        @ppl(include_docstring=True)
+        @ppl(docstring_as="system")
         def my_function():
-            """Docstring as a part of the prompt.
+            """Docstring as system message.
             
             Details."""
             "Another prompt."
@@ -32,12 +32,12 @@ As you have seen in the [QA examples](./2_qa_example.md), you can define prompts
         ```
         Outputs:
         ```
-        Docstring as a part of the prompt.
+        Docstring as system message.
 
         Details.
         Another prompt.
         ```
-    1. Otherwise, it will be captured as a prompt. But if the content is not meant to be the docstring of the function, it is recommended to use f-string instead.
+    2. Otherwise, it will be captured as a prompt. But if the content is not meant to be the docstring of the function, it is recommended to use f-string instead.
         ```python
         @ppl
         def my_function():

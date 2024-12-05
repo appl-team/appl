@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 from .message import BaseMessage, Conversation
 from .printer import PrinterPop, PrinterPush, PromptPrinter, PromptRecords
-from .types import Image, String, StringFuture
+from .types import ContentPart, String, StringFuture
 
 
 class PromptContext:
@@ -35,7 +35,7 @@ class PromptContext:
         self._records = PromptRecords()
         self._func_name: Optional[str] = None
         self._func_docstring: Optional[str] = None
-        self._include_docstring: bool = False
+        self._docstring_as: Optional[str] = None
         self._docstring_quote_count: Optional[int] = None
         self._is_first_str: bool = True
 
@@ -55,10 +55,10 @@ class PromptContext:
         self.messages.extend(self.printer(string))
         self.records.record(string)
 
-    def add_image(self, img: Image) -> None:
-        """Add an image to the prompt context."""
-        self.messages.extend(self.printer(img))
-        self.records.record(img)
+    def add_content_part(self, content_part: ContentPart) -> None:
+        """Add a content part to the prompt context."""
+        self.messages.extend(self.printer(content_part))
+        self.records.record(content_part)
 
     def add_message(self, message: BaseMessage) -> None:
         """Add a message to the prompt context."""

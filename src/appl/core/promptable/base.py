@@ -1,4 +1,7 @@
-from ..types import *
+from abc import ABC, abstractmethod
+from typing import Any
+
+from ..types.futures import StringFuture
 
 
 class Promptable(ABC):

@@ -10,10 +10,10 @@ from PIL.ImageFile import ImageFile
 from .config import configs
 from .context import PromptContext
 from .generation import Generation
-from .message import BaseMessage
+from .message import BaseMessage, SystemMessage, UserMessage
 from .printer import PromptRecords
 from .promptable import Promptable, promptify
-from .types import CallFuture, Image, StringFuture
+from .types import CallFuture, ContentPart, Image, StringFuture
 
 
 def appl_with_ctx(
@@ -55,13 +55,22 @@ def appl_execute(
             docstring = _ctx._func_docstring
             if docstring is not None:
                 docstring = inspect.cleandoc(docstring)
-            if _ctx._include_docstring:
+            if _ctx._docstring_as is not None:
                 if docstring is None:
                     logger.warning(
                         f"No docstring found for {_ctx._func_name}, cannot include it."
                     )
                 else:
                     assert s == docstring, f"Docstring mismatch: {s}"
+                    if _ctx._docstring_as == "system":
+                        _ctx.add_message(SystemMessage(s))
+                        add_str = False
+                    elif _ctx._docstring_as != "user":
+                        raise ValueError(
+                            f"Unknown message role for docstring: {_ctx._docstring_as}."
+                            "Only support 'system' and 'user' now."
+                        )
+                    # else: user message, treat as a normal string
             elif s == docstring and _ctx._docstring_quote_count != 1:
                 add_str = False
                 if configs.getattrs(
@@ -69,8 +78,9 @@ def appl_execute(
                 ):
                     logger.warning(
                         f'The docstring """{s}""" for `{_ctx._func_name}` is excluded from the prompt. '
-                        "To include the docstring, set include_docstring=True in the @ppl function."
+                        "To include the docstring, set the message role in `docstring_as` in the @ppl function."
                     )
+            # else: single quote string as docstring, treat as a normal string
         if add_str:
             _ctx.add_string(StringFuture(s))
         _ctx._is_first_str = False
@@ -80,10 +90,10 @@ def appl_execute(
         _ctx.add_records(s)
     elif isinstance(s, BaseMessage):
         _ctx.add_message(s)
-    elif isinstance(s, Image):
-        _ctx.add_image(s)
+    elif isinstance(s, ContentPart):  # Image, Audio, ...
+        _ctx.add_content_part(s)
     elif isinstance(s, ImageFile):
-        _ctx.add_image(Image.from_image(s))
+        _ctx.add_content_part(Image.from_image(s))
     elif isinstance(s, Generation):
         appl_execute(s.as_prompt(), _ctx)
     elif isinstance(s, Promptable):

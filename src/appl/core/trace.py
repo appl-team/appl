@@ -150,9 +150,10 @@ def traceable(
                 func_id = func.__qualname__
             func_run_cnt = inc_global_var(func_id) - 1
             func_id += f"_{func_run_cnt}"
-            logger.info(
-                f"Tracking function {func_id} with parent {global_vars.current_func.get()} in thread {threading.current_thread()}"
-            )
+            if configs.getattrs("settings.tracing.display_trace_info", True):
+                logger.info(
+                    f"Tracking function {func_id} with parent {global_vars.current_func.get()} in thread {threading.current_thread()}"
+                )
 
             def _get_bind_args():
                 sig = signature(func)
@@ -237,25 +238,23 @@ class TraceEngineBase(ABC):
         raise NotImplementedError
 
 
-def find_in_cache(
-    name: str, args: Dict, cache: Optional[TraceEngineBase] = None
+def find_in_trace(
+    name: str, args: Dict, trace: Optional[TraceEngineBase] = None
 ) -> Any:
-    """Find a completion result in the cache.
+    """Find a completion result in the trace.
 
     Args:
         name: The name of the completion.
         args: The arguments of the completion.
-        cache: The cache to search in. Defaults to the global resume cache.
+        trace: The trace to search in. Defaults to the global trace engine.
 
     Returns:
         The completion result if found, otherwise None.
     """
-    if cache is None:
-        if "resume_cache" in global_vars:
-            cache = global_vars.resume_cache
-    if cache is not None:
-        return cache.find_cache(name, args)
-    return None
+    trace = trace or getattr(global_vars, "resume_trace", None)
+    if trace is None:
+        return None
+    return trace.find_cache(name, args)
 
 
 class TracePrinterBase(ABC):

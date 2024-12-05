@@ -16,6 +16,7 @@ from typing import (
 )
 
 from pydantic import BaseModel, Field
+from typing_extensions import TypeAlias
 
 from ..globals import ExecutorType, get_executor
 
@@ -263,7 +264,7 @@ class StringFuture(FutureValue, BaseModel):
 
 
 # Type aliases
-String = Union[StringFuture, str]
+String: TypeAlias = Union[StringFuture, str]
 """String is a type alias for StringFuture or str."""
 
 
