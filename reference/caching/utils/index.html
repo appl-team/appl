@@ -10,28 +10,28 @@
       
       
       
-        <link rel="canonical" href="https://appl-team.github.io/appl/reference/core/types/deps/">
+        <link rel="canonical" href="https://appl-team.github.io/appl/reference/caching/utils/">
       
       
-        <link rel="prev" href="../custom/">
+        <link rel="prev" href="../db/">
       
       
-        <link rel="next" href="../futures/">
+        <link rel="next" href="../../compositor/">
       
       
-      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.36">
     
     
       
-        <title>deps - APPL</title>
+        <title>utils - APPL</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.06209087.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.06209087.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -50,13 +50,13 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/_markdown_exec_pyodide.css">
+      <link rel="stylesheet" href="../../../assets/_markdown_exec_pyodide.css">
     
-      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../../style.css">
+      <link rel="stylesheet" href="../../../style.css">
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -92,7 +92,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#appl.core.types.deps" class="md-skip">
+        <a href="#appl.caching.utils" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="APPL" class="md-header__button md-logo" aria-label="APPL" data-md-component="logo">
+    <a href="../../.." title="APPL" class="md-header__button md-logo" aria-label="APPL" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -130,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> deps
+              <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> utils
             
           </span>
         </div>
@@ -251,7 +251,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../.." class="md-tabs__link">
+        <a href="../../.." class="md-tabs__link">
           
   
     
@@ -271,7 +271,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../tutorials/" class="md-tabs__link">
+        <a href="../../../tutorials/" class="md-tabs__link">
           
   
     
@@ -291,7 +291,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../cookbook/" class="md-tabs__link">
+        <a href="../../../cookbook/" class="md-tabs__link">
           
   
     
@@ -311,7 +311,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../blogs/" class="md-tabs__link">
+        <a href="../../../blogs/" class="md-tabs__link">
           
   
     
@@ -349,7 +349,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../../" class="md-tabs__link">
+        <a href="../../" class="md-tabs__link">
           
   
     
@@ -375,7 +375,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../dev/" class="md-tabs__link">
+        <a href="../../../dev/" class="md-tabs__link">
           
   
     
@@ -410,7 +410,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="APPL" class="md-nav__button md-logo" aria-label="APPL" data-md-component="logo">
+    <a href="../../.." title="APPL" class="md-nav__button md-logo" aria-label="APPL" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -473,7 +473,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../.." class="md-nav__link ">
+            <a href="../../.." class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -506,7 +506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../install/" class="md-nav__link">
+      <a href="../../../install/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -527,7 +527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../setup/" class="md-nav__link">
+      <a href="../../../setup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -548,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../faq/" class="md-nav__link">
+      <a href="../../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -569,7 +569,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../contribute/" class="md-nav__link">
+      <a href="../../../contribute/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -640,7 +640,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../tutorials/" class="md-nav__link ">
+            <a href="../../../tutorials/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -673,7 +673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/1_get_started/" class="md-nav__link">
+      <a href="../../../tutorials/1_get_started/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -694,7 +694,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/2_qa_example/" class="md-nav__link">
+      <a href="../../../tutorials/2_qa_example/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -715,7 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/3_appl_function/" class="md-nav__link">
+      <a href="../../../tutorials/3_appl_function/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -736,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/4_concurrent/" class="md-nav__link">
+      <a href="../../../tutorials/4_concurrent/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -757,7 +757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/5_tool_calls/" class="md-nav__link">
+      <a href="../../../tutorials/5_tool_calls/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -778,7 +778,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/6_prompt_coding/" class="md-nav__link">
+      <a href="../../../tutorials/6_prompt_coding/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -799,7 +799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/7_tracing/" class="md-nav__link">
+      <a href="../../../tutorials/7_tracing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -872,7 +872,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/usage/servers/" class="md-nav__link">
+      <a href="../../../tutorials/usage/servers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -893,7 +893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/usage/streaming/" class="md-nav__link">
+      <a href="../../../tutorials/usage/streaming/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -914,7 +914,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/usage/structured/" class="md-nav__link">
+      <a href="../../../tutorials/usage/structured/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -935,7 +935,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/usage/srt/" class="md-nav__link">
+      <a href="../../../tutorials/usage/srt/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1010,7 +1010,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorials/appendix/prompt_capture/" class="md-nav__link">
+      <a href="../../../tutorials/appendix/prompt_capture/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1079,7 +1079,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../cookbook/" class="md-nav__link ">
+            <a href="../../../cookbook/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1112,7 +1112,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cookbook/react/" class="md-nav__link">
+      <a href="../../../cookbook/react/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1133,7 +1133,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cookbook/multi_agent_chat/" class="md-nav__link">
+      <a href="../../../cookbook/multi_agent_chat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1154,7 +1154,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cookbook/chat_with_codes/" class="md-nav__link">
+      <a href="../../../cookbook/chat_with_codes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1175,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cookbook/long_prompt/" class="md-nav__link">
+      <a href="../../../cookbook/long_prompt/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1228,7 +1228,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../blogs/" class="md-nav__link ">
+            <a href="../../../blogs/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1389,6 +1389,8 @@
       
         
       
+        
+      
     
     
       
@@ -1406,7 +1408,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1436,10 +1438,189 @@
                 
   
   
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_1_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> caching
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_1_1_2" id="__nav_5_1_1_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_1_1_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_1_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> caching
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
-      <a href="../../../compositor/" class="md-nav__link">
+      <a href="../db/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> db
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> utils
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> utils
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#appl.caching.utils.dict_to_pydantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;dict_to_pydantic
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appl.caching.utils.encode_to_uuid_v5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;encode_to_uuid_v5
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appl.caching.utils.pydantic_to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;pydantic_to_dict
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compositor/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1460,7 +1641,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../const/" class="md-nav__link">
+      <a href="../../const/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1478,8 +1659,6 @@
                 
   
   
-    
-  
   
   
     
@@ -1535,16 +1714,18 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_1_4" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_5" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../core/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1555,14 +1736,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_1_1_4" id="__nav_5_1_1_4_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_1_1_5" id="__nav_5_1_1_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_1_1_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5_1_1_4">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_1_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1_5">
             <span class="md-nav__icon md-icon"></span>
             <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> core
           </label>
@@ -1577,7 +1758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../compile/" class="md-nav__link">
+      <a href="../../core/compile/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1598,7 +1779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/" class="md-nav__link">
+      <a href="../../core/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1619,7 +1800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../context/" class="md-nav__link">
+      <a href="../../core/context/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1640,7 +1821,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../function/" class="md-nav__link">
+      <a href="../../core/function/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1661,7 +1842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../generation/" class="md-nav__link">
+      <a href="../../core/generation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1682,7 +1863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../globals/" class="md-nav__link">
+      <a href="../../core/globals/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1703,7 +1884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/" class="md-nav__link">
+      <a href="../../core/io/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1724,7 +1905,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../message/" class="md-nav__link">
+      <a href="../../core/message/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1745,7 +1926,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modifiers/" class="md-nav__link">
+      <a href="../../core/modifiers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1766,7 +1947,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../patch/" class="md-nav__link">
+      <a href="../../core/patch/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1787,7 +1968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../printer/" class="md-nav__link">
+      <a href="../../core/printer/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1834,12 +2015,12 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_4_13" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_5_13" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../promptable/" class="md-nav__link ">
+            <a href="../../core/promptable/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1850,14 +2031,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_1_1_4_13" id="__nav_5_1_1_4_13_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_1_1_5_13" id="__nav_5_1_1_5_13_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_4_13_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_1_4_13">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_5_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1_5_13">
             <span class="md-nav__icon md-icon"></span>
             <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> promptable
           </label>
@@ -1872,7 +2053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../promptable/base/" class="md-nav__link">
+      <a href="../../core/promptable/base/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1893,7 +2074,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../promptable/definition/" class="md-nav__link">
+      <a href="../../core/promptable/definition/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1914,7 +2095,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../promptable/formatter/" class="md-nav__link">
+      <a href="../../core/promptable/formatter/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1943,7 +2124,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../response/" class="md-nav__link">
+      <a href="../../core/response/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1964,7 +2145,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../runtime/" class="md-nav__link">
+      <a href="../../core/runtime/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1985,7 +2166,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../server/" class="md-nav__link">
+      <a href="../../core/server/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2006,7 +2187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tool/" class="md-nav__link">
+      <a href="../../core/tool/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2027,7 +2208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../trace/" class="md-nav__link">
+      <a href="../../core/trace/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2045,8 +2226,6 @@
                 
   
   
-    
-  
   
   
     
@@ -2066,8 +2245,6 @@
       
         
       
-        
-      
     
     
       
@@ -2076,16 +2253,18 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_1_4_19" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_5_19" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../core/types/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2096,14 +2275,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_1_1_4_19" id="__nav_5_1_1_4_19_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_1_1_5_19" id="__nav_5_1_1_5_19_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_4_19_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5_1_1_4_19">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_5_1_1_5_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1_5_19">
             <span class="md-nav__icon md-icon"></span>
             <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> types
           </label>
@@ -2118,7 +2297,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../basic/" class="md-nav__link">
+      <a href="../../core/types/basic/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2139,7 +2318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../content/" class="md-nav__link">
+      <a href="../../core/types/content/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2160,7 +2339,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../custom/" class="md-nav__link">
+      <a href="../../core/types/custom/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2178,41 +2357,10 @@
                 
   
   
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> deps
-  </span>
-  
-
-      </a>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
   
   
     <li class="md-nav__item">
-      <a href="../futures/" class="md-nav__link">
+      <a href="../../core/types/futures/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2233,7 +2381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../role/" class="md-nav__link">
+      <a href="../../core/types/role/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2262,7 +2410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../utils/" class="md-nav__link">
+      <a href="../../core/utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2291,7 +2439,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../func/" class="md-nav__link">
+      <a href="../../func/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2312,7 +2460,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../role_changer/" class="md-nav__link">
+      <a href="../../role_changer/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2357,12 +2505,12 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_8" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../servers/" class="md-nav__link ">
+            <a href="../../servers/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2373,14 +2521,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_1_1_7" id="__nav_5_1_1_7_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_1_1_8" id="__nav_5_1_1_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_1_1_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_1_7">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_1_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1_8">
             <span class="md-nav__icon md-icon"></span>
             <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> servers
           </label>
@@ -2395,7 +2543,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../servers/api/" class="md-nav__link">
+      <a href="../../servers/api/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2416,7 +2564,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../servers/manager/" class="md-nav__link">
+      <a href="../../servers/manager/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2469,12 +2617,12 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_8" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1_1_9" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../tracing/" class="md-nav__link ">
+            <a href="../../tracing/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2485,14 +2633,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_1_1_8" id="__nav_5_1_1_8_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_1_1_9" id="__nav_5_1_1_9_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_1_1_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_1_8">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_1_1_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1_9">
             <span class="md-nav__icon md-icon"></span>
             <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> tracing
           </label>
@@ -2507,7 +2655,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tracing/engine/" class="md-nav__link">
+      <a href="../../tracing/engine/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2528,7 +2676,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tracing/printer/" class="md-nav__link">
+      <a href="../../tracing/printer/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2557,7 +2705,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../types/" class="md-nav__link">
+      <a href="../../types/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2578,7 +2726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../utils/" class="md-nav__link">
+      <a href="../../utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2599,7 +2747,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../version/" class="md-nav__link">
+      <a href="../../version/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2674,7 +2822,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../dev/" class="md-nav__link ">
+            <a href="../../../dev/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2707,7 +2855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../dev/manage/" class="md-nav__link">
+      <a href="../../../dev/manage/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2728,7 +2876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../dev/docs/" class="md-nav__link">
+      <a href="../../../dev/docs/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2749,7 +2897,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../coverage/" class="md-nav__link">
+      <a href="../../../coverage/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2790,6 +2938,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#appl.caching.utils.dict_to_pydantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;dict_to_pydantic
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appl.caching.utils.encode_to_uuid_v5" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;encode_to_uuid_v5
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appl.caching.utils.pydantic_to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;pydantic_to_dict
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2803,7 +2986,7 @@
                   
 
   
-    <a href="https://github.com/appl-team/appl/edit/main/src/appl/core/types/deps.py" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/appl-team/appl/edit/main/src/appl/caching/utils.py" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -2812,7 +2995,7 @@
     
       
     
-    <a href="https://github.com/appl-team/appl/raw/main/src/appl/core/types/deps.py" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/appl-team/appl/raw/main/src/appl/caching/utils.py" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
@@ -2823,15 +3006,166 @@
 
 
 
-<h1 id="appl.core.types.deps" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">deps</span>
+<h1 id="appl.caching.utils" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">utils</span>
 
 
-<a href="#appl.core.types.deps" class="headerlink" title="Permanent link">&para;</a></h1>
+<a href="#appl.caching.utils" class="headerlink" title="Permanent link">&para;</a></h1>
 
     <div class="doc doc-contents first">
 
-        <p>Import types from dependencies.</p>
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="appl.caching.utils.dict_to_pydantic" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">dict_to_pydantic</span>
+
+
+<a href="#appl.caching.utils.dict_to_pydantic" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">dict_to_pydantic</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">],</span> <span class="bp">cls</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Type" href="https://docs.python.org/3/library/typing.html#typing.Type">Type</a></span><span class="p">[</span><span class="n"><span title="appl.caching.utils.M">M</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><span title="appl.caching.utils.M">M</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Convert a dictionary to a Pydantic object.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/appl/caching/utils.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">def</span> <span class="nf">dict_to_pydantic</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">M</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">M</span><span class="p">:</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a dictionary to a Pydantic object.&quot;&quot;&quot;</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="appl.caching.utils.encode_to_uuid_v5" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">encode_to_uuid_v5</span>
+
+
+<a href="#appl.caching.utils.encode_to_uuid_v5" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">encode_to_uuid_v5</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">value</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="uuid.UUID" href="https://docs.python.org/3/library/uuid.html#uuid.UUID">UUID</a></span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">NAMESPACE_DNS</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Encode a string into a UUID version 5.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+          <b><code>value</code></b>
+              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>)
+          –
+          <div class="doc-md-description">
+            <p>The input string to encode.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code>namespace</code></b>
+              (<code><a class="autorefs autorefs-external" title="uuid.UUID" href="https://docs.python.org/3/library/uuid.html#uuid.UUID">UUID</a></code>, default:
+                  <code><a class="autorefs autorefs-external" title="uuid.NAMESPACE_DNS" href="https://docs.python.org/3/library/uuid.html#uuid.NAMESPACE_DNS">NAMESPACE_DNS</a></code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The namespace for the UUID (default: DNS namespace).</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>
+          –
+          <div class="doc-md-description">
+            <p>The generated UUID as a string.</p>
+          </div>
+        </li>
+    </ul>
+
+            <details class="quote">
+              <summary>Source code in <code>src/appl/caching/utils.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="k">def</span> <span class="nf">encode_to_uuid_v5</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">NAMESPACE_DNS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Encode a string into a UUID version 5.</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="sd">        value: The input string to encode.</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="sd">        namespace: The namespace for the UUID (default: DNS namespace).</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">        The generated UUID as a string.</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid5</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+</span></code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="appl.caching.utils.pydantic_to_dict" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">pydantic_to_dict</span>
+
+
+<a href="#appl.caching.utils.pydantic_to_dict" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">pydantic_to_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n"><span title="pydantic.BaseModel">BaseModel</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Dict" href="https://docs.python.org/3/library/typing.html#typing.Dict">Dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Any" href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Convert a Pydantic object to a dictionary.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/appl/caching/utils.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="k">def</span> <span class="nf">pydantic_to_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Pydantic object to a dictionary.&quot;&quot;&quot;</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+</span></code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
 
     </div>
 
@@ -2873,7 +3207,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../custom/" class="md-footer__link md-footer__link--prev" aria-label="Previous: &lt;code class=&#34;doc-symbol doc-symbol-nav doc-symbol-module&#34;&gt;&lt;/code&gt; custom">
+          <a href="../db/" class="md-footer__link md-footer__link--prev" aria-label="Previous: &lt;code class=&#34;doc-symbol doc-symbol-nav doc-symbol-module&#34;&gt;&lt;/code&gt; db">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2883,20 +3217,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> custom
+                <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> db
               </div>
             </div>
           </a>
         
         
           
-          <a href="../futures/" class="md-footer__link md-footer__link--next" aria-label="Next: &lt;code class=&#34;doc-symbol doc-symbol-nav doc-symbol-module&#34;&gt;&lt;/code&gt; futures">
+          <a href="../../compositor/" class="md-footer__link md-footer__link--next" aria-label="Next: &lt;code class=&#34;doc-symbol doc-symbol-nav doc-symbol-module&#34;&gt;&lt;/code&gt; compositor">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> futures
+                <code class="doc-symbol doc-symbol-nav doc-symbol-module"></code> compositor
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2971,12 +3305,12 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.tooltips", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.tooltips", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.56dfad97.min.js"></script>
       
-        <script src="../../../../assets/_markdown_exec_pyodide.js"></script>
+        <script src="../../../assets/_markdown_exec_pyodide.js"></script>
       
     
   </body>
