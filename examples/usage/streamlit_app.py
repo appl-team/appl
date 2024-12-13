@@ -1,8 +1,9 @@
-import appl
 import streamlit as st
+
+import appl
 from appl import AIMessage, Conversation, UserMessage, gen, ppl
 
-appl.init()
+appl.init(enable_tracing=False)
 
 with st.sidebar:
     model_name = st.selectbox(

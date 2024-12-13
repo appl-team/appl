@@ -64,9 +64,30 @@ Then each LM call will be loaded from the trace file if it exists (loading from 
 
 ## Visualizing the Trace
 
-### Lunary (Recommended)
+### Langfuse (Recommended)
 
-Lunary is an open-source web-based tool for visualizing traces and LLM calls.
+Langfuse is an open-source web-based tool for visualizing traces and LLM calls.
+
+You can host Langfuse [locally](https://langfuse.com/self-hosting) or use [public version](https://langfuse.com/).
+
+```bash
+git clone https://github.com/langfuse/langfuse.git
+cd langfuse
+docker compose up
+```
+
+Then you can set the environment variables for the Langfuse server by:
+
+```bash
+export LANGFUSE_PUBLIC_KEY=<your public key>
+export LANGFUSE_SECRET_KEY=<your secret key>
+export LANGFUSE_HOST=http://localhost:3000
+```
+You can find your Langfuse public and private API keys in the project settings page.
+
+### Lunary 
+
+Lunary is another open-source web-based tool for visualizing traces and LLM calls.
 
 You can host Lunary [locally](https://github.com/lunary-ai/lunary?tab=readme-ov-file#running-locally) or use [their hosted version](https://lunary.ai/).
 
@@ -93,7 +114,7 @@ export LUNARY_API_URL=<the url of the Lunary server>
 Then you can visualize the traces by:
 
 ```bash
-$ python -m appl.cli.vis_trace <path to the trace file> --lunary
+$ python -m appl.cli.vis_trace <path to the trace file> --platform lunary
 ```
 
 Then you will see:

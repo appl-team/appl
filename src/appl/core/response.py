@@ -217,10 +217,10 @@ class CompletionResponse(BaseModel):
         else:
             target = self.format_stream()
 
-        display = display or configs.getattrs(
-            "settings.logging.display.display_mode", "live"
+        streaming_display_mode = display or configs.getattrs(
+            "settings.logging.display.streaming_mode", "live"
         )
-        if display == "live":
+        if streaming_display_mode == "live":
             start_time = time.time()
 
             def panel(
@@ -257,7 +257,7 @@ class CompletionResponse(BaseModel):
             live.refresh()
             if need_stop:
                 stop_live()
-        elif display == "print":
+        elif streaming_display_mode == "print":
             last_content = ""
 
             def eprint(content: str, color: Optional[Color] = None) -> None:
@@ -283,12 +283,12 @@ class CompletionResponse(BaseModel):
                 else:
                     eprint(str(chunk))
 
-        elif display == "none":
+        elif streaming_display_mode == "none":
             for chunk in iter(target):
                 pass
         else:
             raise ValueError(
-                f"Unknown display argument: {display}, only 'live', 'print' and 'none' are supported"
+                f"Unknown display mode for streaming: {streaming_display_mode}, only 'live', 'print' and 'none' are supported"
             )
         if self.response_obj is not None:
             self.set_response_obj(chunk)

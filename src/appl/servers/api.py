@@ -94,7 +94,11 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         cost = 0.0 if cache_hit else response.cost
         response.cost = cost  # update the cost
         event = CompletionResponseEvent(
-            name=gen_id, args=kwargs, ret=raw_response, cost=cost
+            name=gen_id,
+            args=kwargs,
+            ret=raw_response,
+            cost=cost,
+            metadata={"cache_hit": cache_hit},
         )
         add_to_trace(event)
         if cache_hit is not None:

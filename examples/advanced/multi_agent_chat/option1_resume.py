@@ -1,13 +1,14 @@
 from typing import Optional
 
 import appl
-from appl import AIRole, PromptContext, SystemMessage, gen, ppl, records
+from appl import AIRole, PromptContext, SystemMessage, gen, ppl, records, traceable
 
 appl.init()
 
 
 class Agent(object):
-    def __init__(self, name: Optional[str] = None):
+    def __init__(self, model_name: str, name: Optional[str] = None):
+        self._model_name = model_name
         self._name = name
         self._setup()
 
@@ -23,15 +24,22 @@ class Agent(object):
             return
         msg  # add to the prompt
         with AIRole():
-            (reply := gen(max_tokens=50))  # generate reply and add to the prompt
+            (reply := gen(self._model_name, max_tokens=50))
+            # generate reply and add to the prompt
         return reply
 
 
-alice = Agent("Alice")
-bob = Agent("Bob")
-msg = "Hello"
-for i in range(2):
-    msg = str(alice.chat(msg))
-    print("Alice:", msg)
-    msg = str(bob.chat(msg))
-    print("Bob:", msg)
+@traceable
+def main():
+    alice = Agent("gpt-4o", "Alice")
+    bob = Agent("gpt-4o-mini", "Bob")
+    msg = "Hello"
+    for i in range(2):
+        msg = str(alice.chat(msg))
+        print("Alice:", msg)
+        msg = str(bob.chat(msg))
+        print("Bob:", msg)
+
+
+if __name__ == "__main__":
+    main()

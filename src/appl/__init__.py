@@ -9,6 +9,7 @@ import sys
 import threading
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from contextlib import contextmanager
+from pathlib import Path
 
 import pendulum
 import toml
@@ -83,6 +84,7 @@ from .utils import (
     find_dotenv,
     find_files,
     get_folder,
+    get_git_info,
     get_meta_file,
     timeit,
 )
@@ -104,12 +106,14 @@ global_vars.initialized = False
 
 def init(
     resume_trace: Optional[str] = None,
+    enable_tracing: Optional[bool] = None,
     update_config_hook: Optional[Callable] = None,
 ) -> None:
     """Initialize APPL with dotenv and config files.
 
     Args:
         resume_trace: Path to the trace file used as resume cache. Defaults to None.
+        enable_tracing: Whether to enable tracing. Defaults to None.
         update_config_hook: A hook to update the configs. Defaults to None.
 
     Examples:
@@ -161,6 +165,20 @@ def init(
     if update_config_hook:
         update_config_hook(configs)
 
+    try:
+        git_info = get_git_info()
+    except Exception as e:
+        logger.warning(f"git info not found: {e}")
+        git_info = {}
+    metadata: Dict[str, Any] = {}
+    metadata["appl_version"] = __version__
+    metadata["run_cmd"] = f"{Path(sys.executable).stem} {' '.join(sys.argv)}"
+    metadata["git_info"] = git_info
+    metadata["caller_path"] = caller_path
+    metadata["caller_basename"] = caller_basename
+    metadata["caller_funcname"] = caller_funcname
+    metadata["start_time"] = now.format("YYYY-MM-DD HH:mm:ss")
+
     # ============================================================
     # Logging
     # ============================================================
@@ -183,6 +201,7 @@ def init(
             logger.info(f"Logging to file: {log_file_path} with level {file_log_level}")
             # no need to overwrite the default format when writing to file
             logger.add(log_file_path, level=file_log_level, format=log_format)
+            metadata["log_file"] = os.path.abspath(log_file_path)
 
     configs["info"] = Configs(
         {
@@ -228,7 +247,9 @@ def init(
     # ============================================================
     tracing = configs.getattrs("settings.tracing")
     strict_match = tracing.get("strict_match", True)
-    if tracing.get("enabled", False):
+    if enable_tracing is None:
+        enable_tracing = tracing.get("enabled", False)
+    if enable_tracing:
         if tracing.get("patch_threading", True):
             patch_threading()
         if (trace_file_format := tracing.get("path_format", None)) is not None:
@@ -239,7 +260,12 @@ def init(
             meta_file = f"{prefix}_meta.json"
             tracing.trace_file = trace_file_path
             logger.info(f"Tracing file: {trace_file_path}")
-            dump_file(configs.to_dict(), meta_file)
+            metadata["tracing_file"] = os.path.abspath(trace_file_path)
+
+            meta_file_contents = configs.to_dict()
+            static_metadata = meta_file_contents.get("metadata", {})
+            meta_file_contents["metadata"] = {**static_metadata, **metadata}
+            dump_file(meta_file_contents, meta_file)
             global_vars.trace_engine = TraceEngine(
                 trace_file_path, mode="write", strict=strict_match
             )

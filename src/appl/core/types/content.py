@@ -102,8 +102,8 @@ class Image(ContentPart):
     @classmethod
     def from_file(cls, file: PathLike, detail: Optional[str] = None) -> "Image":
         """Construct an image prompt from an image file."""
-        image = PIL.Image.open(file)
-        return cls.from_image(image, detail)
+        image = PIL.Image.open(Path(file))
+        return cls.from_image(image, detail)  # type: ignore
 
     def _get_data(self) -> Dict[str, Any]:
         d = {"url": self.url}

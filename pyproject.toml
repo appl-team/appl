@@ -29,6 +29,7 @@ dependencies = [
     "libcst>=1.4.0",
     "rich>=13.8.1",
     "pillow>=11.0.0",
+    "deprecated>=1.2.15",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -61,6 +62,7 @@ Homepage = "https://github.com/appl-team/appl"
 ext = [
     "lunary>=1.0.36",
     "instructor>=1.5.2",
+    "langfuse>=2.56.1",
 ]
 [tool.pdm]
 distribution = true

@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 
+from deprecated import deprecated
 from litellm import ModelResponse
 from loguru import logger
 
@@ -36,6 +37,9 @@ def timestamp_to_iso(time_stamp: float) -> str:
     return datetime.fromtimestamp(time_stamp, timezone.utc).isoformat()
 
 
+@deprecated(
+    reason="This printer is deprecated and will be removed in a future version."
+)
 class TraceHTMLPrinter(TracePrinterBase):
     """The printer used to print the trace in the format of HTML."""
 
@@ -55,7 +59,9 @@ class TraceHTMLPrinter(TracePrinterBase):
         }
 
     @ppl
-    def print(self, trace: TraceEngineBase, meta_data: Optional[Configs] = None) -> str:
+    def print(
+        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+    ) -> str:
         """Print the trace in the format of HTML."""
         with Tagged("html"):
             self._head
@@ -63,11 +69,13 @@ class TraceHTMLPrinter(TracePrinterBase):
                 for node in trace.trace_nodes.values():
                     if node.parent is None:
                         self._print_node(node, trace.min_timestamp)
-        if meta_data:
+        if trace_metadata:
             with Tagged("table", attrs={"class": "table small"}):
-                if start_time := meta_data.getattrs("info.start_time"):
+                if start_time := trace_metadata.getattrs("info.start_time"):
                     self._make_line("Start Time", start_time)
-                self._make_line("Full Configs", f"<pre>{meta_data.to_yaml()}</pre>")
+                self._make_line(
+                    "Full Configs", f"<pre>{trace_metadata.to_yaml()}</pre>"
+                )
         return str(records())
 
     @ppl
@@ -190,7 +198,7 @@ class TraceLunaryPrinter(TracePrinterBase):
     """The printer used to log the trace to lunary."""
 
     def print(
-        self, trace: TraceEngineBase, meta_data: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
     ) -> None:
         """Log the trace to lunary."""
         import lunary
@@ -204,6 +212,11 @@ class TraceLunaryPrinter(TracePrinterBase):
 
         suffix = f"_{uuid.uuid4().hex}"
         logger.info(f"suffix: {suffix}")
+
+        user_id = None
+        if trace_metadata:
+            metadata = trace_metadata.get("metadata", {})
+            user_id = metadata.get("user_id", None)
 
         def get_parent_run_id(node: TraceNode) -> Optional[str]:
             if node.parent is None:
@@ -224,6 +237,7 @@ class TraceLunaryPrinter(TracePrinterBase):
                     parent_run_id=get_parent_run_id(node),
                     input=node.args,
                     timestamp=timestamp_to_iso(node.start_time),
+                    user_id=user_id,
                 )
                 lunary.track_event(
                     "chain",
@@ -233,71 +247,204 @@ class TraceLunaryPrinter(TracePrinterBase):
                     timestamp=timestamp_to_iso(node.end_time),
                 )
 
-            elif node.type == "gen":
-                logger.info(
-                    f"sending llm event {node.name} to lunary with parent {get_parent_run_id(node)}"
-                )
+            elif node.type in ["gen", "raw_llm"]:
+                merged_metadata: Dict[str, Any] = node.metadata or {}
+                extra_info = copy.deepcopy(node.args or {})
+                model_name = extra_info.pop("model", node.name)
+                messages = extra_info.pop("messages", "")
+                merged_metadata.update(extra_info)
 
-                # skip the raw generation, support for legacy traces
-                # if node.name.endswith("_raw"):
-                #     continue
-                metadata = copy.deepcopy(node.args or {})
-                model_name = metadata.pop("model", node.name)
-                messages = metadata.pop("messages", "")
-                metadata["gen_ID"] = node.name
-                lunary.track_event(
-                    "llm",
-                    "start",
-                    run_id=node.name + suffix,
-                    name=model_name,
-                    parent_run_id=get_parent_run_id(node),
-                    metadata=metadata,
-                    input=messages,
-                    timestamp=timestamp_to_iso(node.start_time),
-                )
-                lunary.track_event(
-                    "llm",
-                    "end",
-                    run_id=node.name + suffix,
-                    output={"role": "assistant", "content": node.ret},
-                    timestamp=timestamp_to_iso(node.end_time),
-                )
-            elif node.type == "raw_llm":
-                logger.info(
-                    f"sending raw llm event {node.name} to lunary with parent {get_parent_run_id(node)}"
-                )
-                metadata = copy.deepcopy(node.args or {})
-                model_name = metadata.pop("model", node.name)
-                messages = metadata.pop("messages", "")
-                lunary.track_event(
-                    "llm",
-                    "start",
-                    run_id=node.name + suffix,
-                    name=model_name,
-                    parent_run_id=get_parent_run_id(node),
-                    metadata=metadata,
-                    input=messages,
-                    timestamp=timestamp_to_iso(node.start_time),
-                )
-                response: ModelResponse = node.ret  # complete response
-                lunary.track_event(
-                    "llm",
-                    "end",
-                    run_id=node.name + suffix,
-                    output={
+                if node.type == "gen":
+                    logger.info(
+                        f"sending llm event {node.name} to lunary with parent {get_parent_run_id(node)}"
+                    )
+
+                    # skip the raw generation, support for legacy traces
+                    # if node.name.endswith("_raw"):
+                    #     continue
+                    merged_metadata["gen_ID"] = node.name
+                    lunary.track_event(
+                        "llm",
+                        "start",
+                        run_id=node.name + suffix,
+                        name=model_name,
+                        parent_run_id=get_parent_run_id(node),
+                        metadata=merged_metadata,
+                        input=messages,
+                        timestamp=timestamp_to_iso(node.start_time),
+                        user_id=user_id,
+                    )
+                    lunary.track_event(
+                        "llm",
+                        "end",
+                        run_id=node.name + suffix,
+                        output={"role": "assistant", "content": node.ret},
+                        timestamp=timestamp_to_iso(node.end_time),
+                    )
+                elif node.type == "raw_llm":
+                    logger.info(
+                        f"sending raw llm event {node.name} to lunary with parent {get_parent_run_id(node)}"
+                    )
+                    lunary.track_event(
+                        "llm",
+                        "start",
+                        run_id=node.name + suffix,
+                        name=model_name,
+                        parent_run_id=get_parent_run_id(node),
+                        metadata=merged_metadata,
+                        input=messages,
+                        timestamp=timestamp_to_iso(node.start_time),
+                        user_id=user_id,
+                    )
+                    response: ModelResponse = node.ret  # complete response
+                    message = response.choices[0].message  # type: ignore
+                    output = {
                         "role": "assistant",
-                        "content": response.choices[0].message.content,  # type: ignore
-                        # TODO: support tool calls
-                    },
-                    timestamp=timestamp_to_iso(node.end_time),
+                        "content": message.content or "",  # type: ignore
+                    }
+                    if message.tool_calls:
+                        output["tool_calls"] = [
+                            {
+                                "id": tool.id,
+                                "type": "function",
+                                "function": {
+                                    "name": tool.function.name,
+                                    "arguments": tool.function.arguments,
+                                },
+                            }
+                            for tool in message.tool_calls
+                            # TODO: support tool calls
+                        ]
+                    lunary.track_event(
+                        "llm",
+                        "end",
+                        run_id=node.name + suffix,
+                        output=output,
+                        timestamp=timestamp_to_iso(node.end_time),
+                    )
+
+
+class TraceLangfusePrinter(TracePrinterBase):
+    """The printer used to print the trace to langfuse."""
+
+    def print(
+        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+    ) -> None:
+        """Print the trace to langfuse."""
+        from langfuse import Langfuse
+        from langfuse.client import StatefulTraceClient
+
+        project_public_key = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
+        url = os.environ.get("LANGFUSE_HOST", "http://localhost:3000")
+        logger.info(f"project_public_key: {project_public_key}, api url: {url}")
+
+        if trace_metadata:
+            metadata: Dict[str, Any] = trace_metadata.to_dict().get("metadata", {})
+            metadata["settings"] = trace_metadata.to_dict().get("settings", {})
+        else:
+            metadata = {}
+
+        user_id = metadata.get("user_id", None)
+        if user_id is None:
+            git_info: Dict[str, Any] = metadata.get("git_info", {})
+            user_id = git_info.get("git_user_email", "unknown")
+
+        session_id = metadata.get("start_time", str(uuid.uuid4()))
+        if "caller_basename" in metadata:
+            base_name = metadata["caller_basename"]
+            # Use basename + start_time as the session_id
+            session_id = f"[{base_name}] {session_id}"
+        else:
+            base_name = metadata.get("name", "main")
+
+        root = Langfuse().trace(
+            name=base_name,
+            user_id=user_id,
+            session_id=session_id,
+            metadata=metadata,
+        )
+
+        def visit_tree(node: TraceNode, trace_node: StatefulTraceClient) -> None:
+            """Visit the trace node tree and send the trace event to langfuse."""
+            start_time = datetime.fromtimestamp(node.start_time, timezone.utc)
+            if node.end_time == 0.0:
+                logger.warning(f"trace event {node.name} does not finish")
+                end_time = start_time
+            else:
+                end_time = datetime.fromtimestamp(node.end_time, timezone.utc)
+
+            logger.info(f"sending trace event {node.name} with type {node.type}")
+            if node.type == "func":
+                metadata = node.metadata or {}
+                # metadata = metadata.copy()
+                # if "source_code" in metadata:
+                #     metadata["source_code"] = (
+                #         "\n```python\n" + metadata["source_code"] + "\n```\n"
+                #     )
+                client = trace_node.span(
+                    name=node.name,
+                    start_time=start_time,
+                    end_time=end_time,
+                    input=node.args,
+                    output=node.ret,
+                    metadata=metadata,
                 )
+            elif node.type in ["gen", "raw_llm"]:
+                inputs = (node.args or {}).copy()
+                outputs = node.ret
+
+                model_name = inputs.pop("model", None)
+                metadata = inputs.pop("metadata", {})
+                metadata = (node.metadata or {}) | metadata
+                model_parameters = inputs
+                messages = model_parameters.pop("messages", [])
+                inputs = {"messages": messages}
+                if tools := model_parameters.pop("tools", None):
+                    inputs["tools"] = tools
+
+                if node.type == "gen":
+                    model_name = None
+                    usage = None
+                else:
+                    outputs: ModelResponse = outputs  # type: ignore
+                    usage = outputs.usage
+                    message = outputs.choices[0].message  # type: ignore
+                    outputs = message.content
+                    if message.tool_calls:
+                        outputs = {
+                            "content": message.content,
+                            "tool_calls": [
+                                f"ToolCall(id={tool.id}, name={tool.function.name}, args={tool.function.arguments})"
+                                for tool in message.tool_calls
+                            ],
+                        }
+
+                client = trace_node.generation(
+                    name=node.name,
+                    start_time=start_time,
+                    end_time=end_time,
+                    input=inputs,
+                    output=outputs,
+                    model=model_name,
+                    model_parameters=model_parameters,
+                    usage=usage,
+                    metadata=metadata,
+                )
+            else:
+                raise ValueError(f"Unknown node type: {node.type}")
+            for child in node.children:
+                visit_tree(child, client)
+
+        for node in trace.trace_nodes.values():
+            if node.parent is None:
+                visit_tree(node, root)
 
 
 class TraceYAMLPrinter(TracePrinterBase):
     """The printer used to print the trace in the format of YAML."""
 
     def print(
-        self, trace: TraceEngineBase, meta_data: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
     ) -> None:
         """Print the trace in the format of YAML."""
         # TODO: implement the YAML printer
@@ -342,7 +489,7 @@ class TraceProfilePrinter(TracePrinterBase):
         return data
 
     def print(
-        self, trace: TraceEngineBase, meta_data: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
     ) -> Dict:
         """Print the trace in the format of Chrome tracing."""
         events = []

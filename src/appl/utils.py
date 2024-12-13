@@ -1,5 +1,6 @@
 import functools
 import os
+import subprocess
 import sys
 import time
 from typing import Any, Callable, Dict, Optional, Type, TypeVar
@@ -93,6 +94,25 @@ def find_dotenv(
     if raise_error_if_not_found:
         raise IOError("File not found")
     return ""
+
+
+def get_git_info() -> Dict[str, Any]:
+    """Get the git info of the current project."""
+
+    def _run_git_cmd(cmd: list[str]) -> str:
+        # run git command and capture stdout and stderr
+        return subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+
+    git_user_name = _run_git_cmd(["git", "config", "user.name"])
+    git_user_email = _run_git_cmd(["git", "config", "user.email"])
+    git_branch = _run_git_cmd(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    git_commit_hash = _run_git_cmd(["git", "rev-parse", "HEAD"])
+    return {
+        "git_user_name": git_user_name,
+        "git_user_email": git_user_email,
+        "git_branch": git_branch,
+        "git_commit_hash": git_commit_hash,
+    }
 
 
 def get_num_tokens(prompt: str, encoding: str = "cl100k_base") -> int:

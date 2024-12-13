@@ -123,27 +123,42 @@ class TraceEngine(TraceEngineBase):
                 self._file.flush()
 
         assert name is not None
+
+        def _merge_metadata(
+            data: Optional[Dict], other: Optional[Dict]
+        ) -> Optional[Dict]:
+            if data is None:
+                return other
+            if other is None:
+                return data
+            return {**data, **other}
+
         if isinstance(event, FunctionCallEvent):
             newnode = self._add_node(name, event.parent_func, type="func")
             newnode.start_time = time_stamp
             newnode.args = event.args
+            newnode.metadata = event.metadata
         elif isinstance(event, FunctionReturnEvent):
             node = self._get_node(name)
             if node:
                 node.ret = event.ret
                 node.end_time = time_stamp
+                node.metadata = _merge_metadata(node.metadata, event.metadata)
         elif isinstance(event, GenerationInitEvent):
             newnode = self._add_node(name, event.parent_func, type="gen")
             newnode.start_time = time_stamp
+            newnode.metadata = event.metadata
         elif isinstance(event, GenerationResponseEvent):
             node = self._get_node(name)
             if node:
                 node.end_time = time_stamp
                 node.args = event.args
                 node.ret = event.ret
+                node.metadata = _merge_metadata(node.metadata, event.metadata)
         elif isinstance(event, CompletionRequestEvent):
             newnode = self._add_node(name, event.parent_func, type="raw_llm")
             newnode.start_time = time_stamp
+            newnode.metadata = event.metadata
         elif isinstance(event, CompletionResponseEvent):
             node = self._get_node(name)
             if node:
@@ -151,6 +166,7 @@ class TraceEngine(TraceEngineBase):
                 node.args = event.args
                 node.ret = event.ret
                 node.info["cost"] = event.cost
+                node.metadata = _merge_metadata(node.metadata, event.metadata)
 
             # cached for raw completion response
             key = self._cache_key(name, event.args)

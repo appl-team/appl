@@ -10,7 +10,7 @@ from pydantic import BaseModel, model_validator
 
 from .config import Configs, configs
 from .globals import global_vars, inc_global_var
-from .utils import wraps
+from .utils import get_source_code, wraps
 
 
 class TraceEventBase(BaseModel):
@@ -20,6 +20,8 @@ class TraceEventBase(BaseModel):
     """The name of the event."""
     time_stamp: float = None  # type: ignore
     """The time stamp of the event."""
+    metadata: Optional[Dict] = None
+    """The meta data of the event."""
 
     @model_validator(mode="after")
     def _check_time_stamp(self) -> "TraceEventBase":
@@ -100,6 +102,8 @@ class TraceNode(BaseModel):
     """The end time of the trace node."""
     info: Dict = {}
     """The extra information of the trace node."""
+    metadata: Optional[Dict] = None
+    """The meta data of the trace node."""
 
     @property
     def runtime(self) -> float:
@@ -139,10 +143,15 @@ def traceable(
         func (str): The custom name of the function.
         metadata (Dict): The meta information of the function to be traced.
     """
-    # TODO: record metadata
     name: Optional[str] = None
+    if metadata is None:
+        metadata = {}
 
     def decorator(func: F) -> F:
+        if "source_code" not in metadata:
+            if source_code := get_source_code(func):
+                metadata["source_code"] = source_code
+
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             func_id = name
@@ -151,7 +160,7 @@ def traceable(
             func_run_cnt = inc_global_var(func_id) - 1
             func_id += f"_{func_run_cnt}"
             if configs.getattrs("settings.tracing.display_trace_info", True):
-                logger.info(
+                logger.trace(
                     f"Tracking function {func_id} with parent {global_vars.current_func.get()} in thread {threading.current_thread()}"
                 )
 
@@ -173,6 +182,7 @@ def traceable(
                         args={
                             k: repr(v) for k, v in _get_bind_args().arguments.items()
                         },
+                        metadata=metadata,
                     )
                 )
 
@@ -261,6 +271,8 @@ class TracePrinterBase(ABC):
     """A base class for trace printers."""
 
     @abstractmethod
-    def print(self, trace: TraceEngineBase, meta_data: Optional[Configs] = None) -> Any:
+    def print(
+        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+    ) -> Any:
         """Print the trace."""
         raise NotImplementedError

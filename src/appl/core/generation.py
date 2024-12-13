@@ -204,10 +204,10 @@ class Generation(Generic[M]):
 
             if self._max_relay_rounds > 0:
                 live = None
-                display_mode = configs.getattrs(
-                    "settings.logging.display.display_mode", "live"
+                streaming_mode = configs.getattrs(
+                    "settings.logging.display.streaming_mode", "live"
                 )
-                need_live = self._args.stream and display_mode == "live"
+                need_live = self._args.stream and streaming_mode == "live"
                 if response.type == ResponseType.UNFINISHED:
                     if need_live:
                         live = get_live()

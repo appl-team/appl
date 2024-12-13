@@ -5,6 +5,7 @@ from appl.core.trace import TracePrinterBase
 from appl.tracing import (
     TraceEngine,
     TraceHTMLPrinter,
+    TraceLangfusePrinter,
     TraceLunaryPrinter,
     TraceProfilePrinter,
     TraceYAMLPrinter,
@@ -16,7 +17,14 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("trace", type=str)
-    parser.add_argument("--lunary", "-l", action="store_true")
+    parser.add_argument(
+        "--platform",
+        "-p",
+        type=str,
+        choices=["langfuse", "lunary"],
+        help="The platform to print the trace to",
+        default=None,
+    )
     parser.add_argument(
         "--output",
         "-o",
@@ -25,6 +33,8 @@ if __name__ == "__main__":
         help="mode determined by the file extension, support html, json and yaml",
     )
     args = parser.parse_args()
+    if args.platform and args.platform not in ["langfuse", "lunary"]:
+        raise ValueError(f"Unsupported platform: {args.platform}")
 
     trace_path = args.trace
     if not os.path.exists(trace_path):
@@ -35,8 +45,12 @@ if __name__ == "__main__":
     configs = load_config(meta_file_path)
 
     def _get_printer() -> TracePrinterBase:
-        if args.lunary:
-            return TraceLunaryPrinter()
+        if args.platform in ["langfuse", "lunary"]:
+            return (
+                TraceLangfusePrinter()
+                if args.platform == "langfuse"
+                else TraceLunaryPrinter()
+            )
         else:
             file_ext = args.output.split(".")[-1]
             if file_ext == "html":
@@ -50,7 +64,7 @@ if __name__ == "__main__":
 
     trace = TraceEngine(trace_path, mode="read")
     printer = _get_printer()
-    if args.lunary:
+    if args.platform:
         printer.print(trace, configs)
     else:
         print(f"Outputting to {args.output}")

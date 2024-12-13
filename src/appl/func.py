@@ -41,6 +41,7 @@ from .core.printer import Indexing
 from .core.response import CompletionResponse
 from .core.runtime import appl_execute
 from .core.trace import traceable
+from .core.utils import get_source_code
 from .servers import server_manager
 from .types import (
     CallFuture,
@@ -157,8 +158,12 @@ def ppl(
             func, ctx_method, comp, default_return, docstring_as, new_ctx_func
         )
 
+        metadata = {}
+        if source_code := get_source_code(func):
+            metadata["source_code"] = source_code
+
         @need_ctx
-        @traceable()
+        @traceable(metadata=metadata)
         @_langsmith_traceable(name=func.__qualname__, metadata={"appl": "func"})  # type: ignore
         @wraps(func)
         def wrapper(

@@ -16,7 +16,7 @@ def answer_questions(quotation: str, questions: list[str]):
     "Extract the name of the author from the quotation below and answer questions."
     quotation  # append to the prompt
     with AIRole():  # assistant message
-        f"The name of the author is {gen(stop=NEWLINE)}"  # specify the prefix
+        f"The name of the author is {gen(stop='.')}"  # specify the prefix
     return [get_answer(q) for q in questions]  # parallelize calls
 
 

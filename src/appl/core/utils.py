@@ -1,4 +1,5 @@
 import functools
+import inspect
 import os
 import shutil
 from typing import Any, Callable, Optional, Tuple, TypeVar
@@ -126,3 +127,11 @@ def wraps(func: F) -> Callable[[Callable], F]:
         return new_wrapper  # type: ignore
 
     return decorator
+
+
+def get_source_code(func: Callable) -> Optional[str]:
+    """Get the source code of a function."""
+    try:
+        return inspect.getsource(func)
+    except OSError:
+        return None
