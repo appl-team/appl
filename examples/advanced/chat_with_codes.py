@@ -4,51 +4,76 @@ import glob
 import os
 from argparse import ArgumentParser
 
-import appl
 import seedir as sd
-from appl import AIRole, gen, ppl, records
-from appl.const import EMPTY
-from appl.core import load_file, make_panel
+from loguru import logger
 from prompt_toolkit.shortcuts import prompt
 from rich.console import Console
 
+from appl import AIRole, convo, gen, ppl
+from appl.compositor import Tagged
+from appl.core import load_file, make_panel
+from appl.utils import get_num_tokens
+
 parser = ArgumentParser()
 parser.add_argument("--intro-file", type=str, default="./README.md")
-parser.add_argument("--source", type=str, default="./src/appl")
+parser.add_argument("--source", type=str, default="./examples")
 parser.add_argument("--ext", type=str, default=".py")
 
 args = parser.parse_args()
 
-appl.init()
+
+def read_file(file: str):
+    with open(file, "r", encoding="utf-8") as f:
+        return f.read()
 
 
 @ppl
-def chat(intro: str, source: str, ext: str = ".py"):
-    "===== Introduction ====="
-    intro
-    "===== directory structure ====="
-    "The source code is organized as follows:"
-    sd.seedir(source, style="spaces", printout=False, exclude_folders=["__pycache__"])
-    "===== source ====="
-    "The contents of the source code are as follows:"
-    for name in glob.glob(os.path.join(source, "**", f"*{ext}"), recursive=True):
-        f"===== {name} ====="
-        with open(name, "r", encoding="utf-8") as f:
-            f.read()  # load the file contents and put in the prompt
-    "===== chat ====="
-    "Now begin the chat about the project:"
-    EMPTY
+def chat(intro_file: str, source_folder: str, ext: str = ".py"):
+    with Tagged("introduction"):
+        read_file(intro_file)
+
+    with Tagged("directory", attrs={"name": source_folder}):
+        "The source code is organized as follows:"
+        (
+            tree := sd.seedir(
+                source_folder,
+                style="spaces",
+                printout=False,
+                exclude_folders=["__pycache__"],
+                exclude_files=[".DS_Store"],
+            )
+        )
+        print(f"Chatting with {ext} files in the directory:\n{tree}")
+
+    with Tagged("source"):
+        "The contents of the source code are as follows:"
+
+        for name in glob.glob(
+            os.path.join(source_folder, "**", f"*{ext}"), recursive=True
+        ):
+            with Tagged("file", attrs={"name": name}):
+                "```python"
+                read_file(name)  # load the file contents and put in the prompt
+                "```"
+
+    "Now begin the chat about the project:\n"
+    print(f"num_tokens: {get_num_tokens(str(convo()))}")
+
     console = Console()
     while True:
         (query := prompt("User: "))
         if query.startswith("exit"):
             break
         console.print(make_panel(query, title="User"))
+        logger.info(f"User: {query}")
         with AIRole():
-            str(gen(stream=True).streaming(title="Assistant"))
+            (
+                res := str(
+                    gen(stream=True, max_relay_rounds=10).streaming(title="Assistant")
+                )
+            )
+        logger.info(f"Assistant: {res}")
 
 
 if __name__ == "__main__":
-    with open(args.intro_file, "r", encoding="utf-8") as f:
-        intro = f.read()
-    chat(intro, args.source, args.ext)
+    chat(args.intro_file, args.source, args.ext)

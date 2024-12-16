@@ -57,10 +57,7 @@ For setting up other backends, enabling tracing and recovering from traces, plea
 To begin, let's create a simple function that uses LLM to respond to a greeting.
 
 ```python
-import appl
 from appl import gen, ppl
-
-appl.init()  # initialize APPL
 
 @ppl  # the @ppl decorator marks the function as an `APPL function`
 def greeting(name: str):
@@ -86,12 +83,9 @@ In this example, the `@ppl` decorator (`@` stands for `a` here) marks the `hello
 
 Let's then implement a question-answering system using APPL. In this example, the APPL program answers multiple questions about a quotation by first extracting the author's name (inspired by [this cookbook](https://cookbook.openai.com/articles/how_to_work_with_large_language_models)). [Here](https://colab.research.google.com/drive/1khZcleOrdLOWtUB4EMEQCjGA1vBaARI9) is a runnable Colab notebook of this example.
 
-```python linenums="1" hl_lines="9 14 15 17"
-import appl
+```python linenums="1" hl_lines="6 11 12 14"
 from appl import AIRole, gen, ppl
 from appl.const import NEWLINE
-
-appl.init()
 
 @ppl(ctx="copy")  # copy the context from caller
 def get_answer(question: str):

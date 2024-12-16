@@ -1,7 +1,5 @@
 from typing import Dict, Optional
 
-import appl
-import pytest
 from appl import BracketedDefinition as Def
 from appl import define, define_bracketed, ppl, records
 from appl.compositor import *
@@ -24,7 +22,7 @@ def test_compositor():
 def test_iter():
     @ppl
     def func():
-        for i in iter(range(3), comp=RomanList()):
+        for i in iter(range(3), compositor=RomanList()):
             f"item {i}"
         return records()
 
@@ -93,7 +91,7 @@ def test_definition():
 
 
 def test_compositor_decorator():
-    @ppl(comp=NumberedList())
+    @ppl(compositor=NumberedList())
     def func():
         f"first line"
         f"second line"

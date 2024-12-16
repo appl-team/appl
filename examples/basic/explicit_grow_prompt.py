@@ -1,7 +1,4 @@
-import appl
 from appl import convo, gen, grow, ppl
-
-appl.init()
 
 
 @ppl

@@ -1,9 +1,6 @@
 from typing import Optional
 
-import appl
-from appl import AIRole, PromptContext, SystemMessage, gen, ppl, records
-
-appl.init()
+from appl import AIRole, SystemMessage, gen, ppl, records
 
 
 class Agent(object):

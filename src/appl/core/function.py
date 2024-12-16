@@ -24,7 +24,7 @@ class PromptFunc:
         self,
         func: Callable,
         ctx_method: str = "new",
-        comp: Optional[Compositor] = None,
+        compositor: Optional[Compositor] = None,
         default_return: Optional[Literal["prompt"]] = None,
         docstring_as: Optional[str] = None,
         new_ctx_func: Callable = PromptContext,
@@ -49,7 +49,7 @@ class PromptFunc:
                     resume its own context from the last run.
                     For the first run, it will copy the parent's context.
 
-            comp (Compositor, optional):
+            compositor (Compositor, optional):
                 the default compositor to be used. Defaults to None.
             default_return (str, optional):
                 The default return value, "prompt" means return the prompt within
@@ -66,7 +66,7 @@ class PromptFunc:
         self._name = func.__name__
         self._qualname = func.__qualname__
         self._default_ctx_method = self._process_ctx_method(ctx_method)
-        self._default_compositor = comp
+        self._default_compositor = compositor
         if default_return is not None and default_return != "prompt":
             raise NotImplementedError("Only support default_return='prompt' now.")
         self._default_return = default_return

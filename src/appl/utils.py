@@ -3,13 +3,15 @@ import os
 import subprocess
 import sys
 import time
+from argparse import Namespace
 from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
 import tiktoken
 from dotenv.main import _walk_to_root
 from loguru import logger
 
-from .core.config import configs
+from .core.globals import global_vars
+from .core.types import GitInfo
 
 try:
     from langsmith import traceable as _langsmith_traceable  # type: ignore
@@ -96,7 +98,7 @@ def find_dotenv(
     return ""
 
 
-def get_git_info() -> Dict[str, Any]:
+def get_git_info() -> GitInfo:
     """Get the git info of the current project."""
 
     def _run_git_cmd(cmd: list[str]) -> str:
@@ -107,12 +109,45 @@ def get_git_info() -> Dict[str, Any]:
     git_user_email = _run_git_cmd(["git", "config", "user.email"])
     git_branch = _run_git_cmd(["git", "rev-parse", "--abbrev-ref", "HEAD"])
     git_commit_hash = _run_git_cmd(["git", "rev-parse", "HEAD"])
-    return {
-        "git_user_name": git_user_name,
-        "git_user_email": git_user_email,
-        "git_branch": git_branch,
-        "git_commit_hash": git_commit_hash,
-    }
+    return GitInfo(
+        user=git_user_name,
+        email=git_user_email,
+        branch=git_branch,
+        commit_hash=git_commit_hash,
+    )
+
+
+def namespace_to_dict(namespace: Namespace) -> Dict[str, Any]:
+    """
+    Recursively converts a nested argparse.Namespace object to a nested dictionary.
+
+    Args:
+        namespace: An argparse.Namespace object, potentially containing nested Namespace objects
+
+    Returns:
+        dict: A nested dictionary representing the namespace structure
+
+    Example:
+        args = parser.parse_args()
+        args_dict = namespace_to_dict(args)
+    """
+    result: Dict[str, Any] = {}
+    for key, value in vars(namespace).items():
+        if isinstance(value, tuple):
+            result[key] = tuple(
+                namespace_to_dict(item) if hasattr(item, "__dict__") else item
+                for item in value
+            )
+        elif isinstance(value, list):
+            result[key] = [
+                namespace_to_dict(item) if hasattr(item, "__dict__") else item
+                for item in value
+            ]
+        elif hasattr(value, "__dict__"):
+            result[key] = namespace_to_dict(value)
+        else:
+            result[key] = value
+    return result
 
 
 def get_num_tokens(prompt: str, encoding: str = "cl100k_base") -> int:
@@ -157,7 +192,7 @@ class LoguruFormatter:
             suffix_length: The length of the suffix to keep when truncating.
         """
         if fmt is None:
-            fmt = configs.getattrs("settings.logging.format")
+            fmt = global_vars.configs.settings.logging.format
         self.fmt = fmt.rstrip()
         self.max_length = max_length
         self.suffix_length = suffix_length

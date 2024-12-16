@@ -9,7 +9,6 @@ from rich.panel import Panel
 from rich.style import StyleType
 from rich.syntax import Syntax
 
-from .config import configs
 from .globals import global_vars
 from .types import ParamSpec
 
@@ -44,7 +43,7 @@ def make_panel(
     *,
     title: Optional[str] = None,
     style: StyleType = "none",
-    language: Optional[str] = None,
+    lexer: Optional[str] = None,
     truncate: bool = False,
 ) -> Panel:
     """Display a panel in the terminal with the given title and content."""
@@ -52,15 +51,13 @@ def make_panel(
         terminal_height = shutil.get_terminal_size().lines
         content = os.linesep.join(content.splitlines()[-terminal_height + 2 :])
 
-    rich_configs = configs.getattrs("settings.logging.display.rich")
-    if language is None:
-        language = rich_configs.get("language", "markdown")
-    theme = rich_configs.get("theme", "monokai")
-    line_numbers = rich_configs.get("line_numbers", False)
-    word_wrap = rich_configs.get("word_wrap", True)
-
+    rich_configs = global_vars.configs.settings.logging.display.rich
     syntax = Syntax(
-        content, language, theme=theme, line_numbers=line_numbers, word_wrap=word_wrap
+        content,
+        lexer=lexer or rich_configs.lexer,
+        theme=rich_configs.theme,
+        line_numbers=rich_configs.line_numbers,
+        word_wrap=rich_configs.word_wrap,
     )
     return Panel(syntax, title=title, style=style)
 
@@ -69,8 +66,8 @@ def get_live() -> Live:
     """Get the live object, create one if not exists."""
     with global_vars.live_lock:
         if global_vars.live is None:
-            refresh_per_second = configs.getattrs(
-                "settings.logging.display.rich.refresh_per_second", 4
+            refresh_per_second = (
+                global_vars.configs.settings.logging.display.rich.refresh_per_second
             )
             global_vars.live = Live(
                 make_panel(

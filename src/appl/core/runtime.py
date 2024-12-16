@@ -7,9 +7,9 @@ from typing import Any, Callable, Dict, Iterable
 from loguru import logger
 from PIL.ImageFile import ImageFile
 
-from .config import configs
 from .context import PromptContext
 from .generation import Generation
+from .globals import global_vars
 from .message import BaseMessage, SystemMessage, UserMessage
 from .printer import PromptRecords
 from .promptable import Promptable, promptify
@@ -73,9 +73,7 @@ def appl_execute(
                     # else: user message, treat as a normal string
             elif s == docstring and _ctx._docstring_quote_count != 1:
                 add_str = False
-                if configs.getattrs(
-                    "settings.logging.display.docstring_warning", False
-                ):
+                if global_vars.configs.settings.logging.display.docstring_warning:
                     logger.warning(
                         f'The docstring """{s}""" for `{_ctx._func_name}` is excluded from the prompt. '
                         "To include the docstring, set the message role in `docstring_as` in the @ppl function."

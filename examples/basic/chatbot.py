@@ -1,7 +1,4 @@
-import appl
 from appl import AIRole, SystemMessage, gen, ppl
-
-appl.init()
 
 
 @ppl
@@ -67,7 +64,7 @@ def chat3(name: str):
         print(chat.send(msg))
 
 
-# if __name__ == "__main__":
-#     chat1("Alice")
-#     chat2("Bob")
-#     chat3("Chelsea")
+if __name__ == "__main__":
+    # chat1("Alice")
+    chat2("Bob")
+    # chat3("Chelsea")

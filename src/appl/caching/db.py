@@ -8,12 +8,12 @@ from typing import Any, Dict, Optional
 from litellm import ModelResponse
 from loguru import logger
 
-from ..core.config import configs
 from ..core.globals import global_vars
+from ..core.types.caching import DBCacheBase
 from .utils import dict_to_pydantic, encode_to_uuid_v5, pydantic_to_dict
 
 
-class DBCache:
+class DBCache(DBCacheBase):
     """SQLite-based caching implementation."""
 
     def __init__(
@@ -29,14 +29,12 @@ class DBCache:
             db_path: Path to the SQLite database file
         """
         self.db_path = Path(db_path)
-        self.max_size = max_size or configs.getattrs(
-            "settings.caching.max_size", 100000
+        self.max_size = max_size or global_vars.configs.settings.caching.max_size
+        self.time_to_live = (
+            time_to_live or global_vars.configs.settings.caching.time_to_live
         )
-        self.time_to_live = time_to_live or configs.getattrs(
-            "settings.caching.time_to_live", 43200
-        )
-        self.cleanup_interval = cleanup_interval or configs.getattrs(
-            "settings.caching.cleanup_interval", 1440
+        self.cleanup_interval = (
+            cleanup_interval or global_vars.configs.settings.caching.cleanup_interval
         )
         self._init_db()
         self._init_cleanup_tracker()
@@ -161,8 +159,10 @@ class DBCache:
             except json.JSONDecodeError:
                 return value
 
-    def write(self, key: str, value: Any, timestamp: Optional[datetime] = None) -> None:
-        """Write a value to the cache.
+    def insert(
+        self, key: str, value: Any, timestamp: Optional[datetime] = None
+    ) -> None:
+        """Insert a value to the cache.
 
         Args:
             key: Cache key
@@ -187,7 +187,7 @@ class DBCache:
 
 
 def find_in_cache(
-    args: Dict, cache: Optional[DBCache] = None
+    args: Dict[str, Any], cache: Optional[DBCacheBase] = None
 ) -> Optional[ModelResponse]:
     """Find a value in the LLM cache by key.
 
@@ -198,11 +198,12 @@ def find_in_cache(
     Returns:
         The completion result if found, otherwise None.
     """
-    cache = cache or getattr(global_vars, "llm_cache", None)
+    cache = cache or global_vars.llm_cache
     if cache is None:
         return None
-    if args.get("temperature", 1.0) > 0.0 and not configs.getattrs(
-        "settings.caching.allow_temp_greater_than_0", False
+    if (
+        args.get("temperature", 1.0) > 0.0
+        and not global_vars.configs.settings.caching.allow_temp_greater_than_0
     ):
         return None
     # only cache the completions with temperature == 0
@@ -213,18 +214,19 @@ def find_in_cache(
 
 
 def add_to_cache(
-    args: Dict, value: ModelResponse, cache: Optional[DBCache] = None
+    args: Dict[str, Any], value: ModelResponse, cache: Optional[DBCacheBase] = None
 ) -> None:
     """Add a value to the LLM cache."""
-    cache = cache or getattr(global_vars, "llm_cache", None)
+    cache = cache or global_vars.llm_cache
     if cache is None:
         logger.warning("No cache to add to")
         return
-    if args.get("temperature", 1.0) > 0.0 and not configs.getattrs(
-        "settings.caching.allow_temp_greater_than_0", False
+    if (
+        args.get("temperature", 1.0) > 0.0
+        and not global_vars.configs.settings.caching.allow_temp_greater_than_0
     ):
         return
     args_str = json.dumps(args)
     value_dict = pydantic_to_dict(value)
     logger.info(f"Adding to cache, args: {args_str}, value: {value_dict}")
-    cache.write(args_str, value_dict)
+    cache.insert(args_str, value_dict)

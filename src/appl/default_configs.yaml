@@ -10,8 +10,9 @@ settings:
     log_level: "INFO" # The level of the log messages
     max_length: 800 # The maximum length of the log message in bash
     suffix_length: 200 # The length of the suffix (when truncated)
+    enable_stderr: true  # enable logging to stderr
+    enable_file: true  # enable logging to a file
     log_file:
-      enabled: false # default to not log to a file
       path_format: './logs/{basename}_{time:YYYY_MM_DD__HH_mm_ss}'
       # The path to the log file, ext will be added automatically
       log_level: null # default to use the same log level as stdout
@@ -22,16 +23,16 @@ settings:
       llm_raw_call_args: false # Display the raw args for the llm calls
       llm_raw_response: false # Display the raw response of the llm calls
       llm_raw_usage: false # Display the raw usage of the llm calls
-      llm_call_args: true # Display the args for the llm calls
-      llm_usage: true # Display the usage of the llm calls
+      llm_call_args: false # Display the args for the llm calls
       llm_response: true # Display the response of the llm calls
+      llm_usage: false # Display the usage of the llm calls
       llm_cache: false # Display the cache info
       llm_cost: true # Display the cost of the calls
       tool_calls: true # Display the tool calls
       tool_results: true # Display the results of the tool calls
       streaming_mode: "live" # The mode to display the streaming output, choices are "live", "print", "none"
       rich:
-        language: "markdown" # The language of the rich output
+        lexer: "markdown" # The language of the rich output
         theme: "monokai" # The theme of the rich output
         line_numbers: false # Whether to display the line numbers
         word_wrap: true # Whether to wrap the words
@@ -52,6 +53,7 @@ settings:
     patch_threading: true # whether to patch `threading.Thread`
     strict_match: true # when saving and loading cache, whether need to match the generation id
     display_trace_info: true # whether to display the trace info
+    trace_to_resume: null  # the trace to resume
 
   concurrency:
     llm_max_workers: 10 # The maximum number of workers for the llm executor
@@ -85,13 +87,7 @@ prompts:
 # When using SRT server,
 #   set model to "srt" and api_base to the address of the server.
 servers:
-  default: gpt4o-mini
+  default: null
   # create aliases for the models, you may use the model name as server name directly
-  gpt4-turbo:
-    model: gpt-4-turbo
-  gpt4o:
-    model: gpt-4o
-  gpt4o-mini:
-    model: gpt-4o-mini
   _dummy:
     model: _dummy

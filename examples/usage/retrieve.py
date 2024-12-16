@@ -1,11 +1,9 @@
 import wikipediaapi
 
-import appl
-from appl import call, gen, ppl, records
+from appl import gen, partial, ppl, records
 from appl.const import NEWLINE
 
-appl.init()
-gen = appl.partial(gen, max_tokens=50, temperature=0.7)
+gen = partial(gen, max_tokens=50, temperature=0.7)
 
 
 def wikipedia(topic: str):
@@ -16,7 +14,7 @@ def wikipedia(topic: str):
 
 @ppl
 def query(topic: str):
-    f"According to Wikipedia, {call(wikipedia, topic=topic)}"
+    f"According to Wikipedia, {wikipedia(topic)}"
     f"From my understanding, {topic} is {gen(stop=[NEWLINE])}"
     return records()
 

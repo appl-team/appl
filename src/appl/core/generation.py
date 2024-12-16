@@ -18,11 +18,10 @@ from loguru import logger
 from pydantic import BaseModel
 from rich.live import Live
 
-from .config import configs
 from .context import PromptContext
 from .globals import (
     get_thread_local,
-    inc_global_var,
+    global_vars,
     inc_thread_local,
     set_thread_local,
 )
@@ -114,7 +113,7 @@ class Generation(Generic[M]):
         self._cached_response: Optional[CompletionResponse] = None
 
         add_to_trace(GenerationInitEvent(name=self.id))
-        log_llm_call_args = configs.getattrs("settings.logging.display.llm_call_args")
+        log_llm_call_args = global_vars.configs.settings.logging.display.llm_call_args
         if log_llm_call_args:
             logger.info(
                 f"Call generation [{self.id}] with args: {args} and kwargs: {kwargs}"
@@ -154,8 +153,8 @@ class Generation(Generic[M]):
         assert results.message is not None, "Not support continue for empty message"
 
         cutoff_content = strip_for_continue(results.message)
-        continue_prompt = configs.getattrs("prompts.continue_generation")
-        continue_prompt_alt = configs.getattrs("prompts.continue_generation_alt")
+        continue_prompt = global_vars.configs.prompts.continue_generation
+        continue_prompt_alt = global_vars.configs.prompts.continue_generation_alt
 
         # Choose a proper split marker for the continuation
         for split_marker in ["\n", " ", ","]:
@@ -196,16 +195,19 @@ class Generation(Generic[M]):
         """Wrap the LLM calls to address incomplete completion."""
 
         def inner() -> CompletionResponse:
-            log_llm_usage = configs.getattrs("settings.logging.display.llm_usage")
-            log_llm_response = configs.getattrs("settings.logging.display.llm_response")
-            log_llm_cost = configs.getattrs("settings.logging.display.llm_cost")
+            if self._cached_response is not None:
+                return self._cached_response
+
+            log_llm_usage = global_vars.configs.settings.logging.display.llm_usage
+            log_llm_response = global_vars.configs.settings.logging.display.llm_response
+            log_llm_cost = global_vars.configs.settings.logging.display.llm_cost
 
             results = response = get_response()
 
             if self._max_relay_rounds > 0:
                 live = None
-                streaming_mode = configs.getattrs(
-                    "settings.logging.display.streaming_mode", "live"
+                streaming_mode = (
+                    global_vars.configs.settings.logging.display.streaming_mode
                 )
                 need_live = self._args.stream and streaming_mode == "live"
                 if response.type == ResponseType.UNFINISHED:
@@ -237,7 +239,9 @@ class Generation(Generic[M]):
                 if results.usage and log_llm_usage:
                     logger.info(f"Generation [{self.id}] token usage: {results.usage}")
 
-                num_requests = inc_global_var(f"{self._model_name}_num_requests")
+                num_requests = global_vars.inc(
+                    "num_requests", key=self._model_name, delta=1
+                )
                 if log_llm_cost:
                     currency = getattr(self._server, "_cost_currency", "USD")
                     if self._mock_response is not None:
@@ -250,8 +254,8 @@ class Generation(Generic[M]):
                             f"No cost information for generation [{self.id}]"
                         )
                     else:
-                        total_cost = inc_global_var(
-                            f"{self._model_name}_api_cost", results.cost
+                        total_cost = global_vars.inc(
+                            "api_cost", key=self._model_name, delta=results.cost
                         )
                         logger.info(
                             f"API cost for this request: {results.cost:.4f}, "
@@ -275,6 +279,7 @@ class Generation(Generic[M]):
 
             results.register_post_finish_callback(handle_results)
 
+            self._cached_response = results
             return results
 
         return inner
@@ -288,9 +293,7 @@ class Generation(Generic[M]):
     def response(self) -> CompletionResponse:
         """The response of the generation call."""
         # NOTE: the result of the call should be cached
-        if self._cached_response is None:
-            self._cached_response = self._call()
-        return self._cached_response
+        return self._call()
 
     @property
     def response_type(self) -> ResponseType:
@@ -354,7 +357,7 @@ class Generation(Generic[M]):
         except json.JSONDecodeError as e:
             raise ValueError(f"Error parsing args: {args}") from e
         args_str = ", ".join([f"{k}={v}" for k, v in kwargs.items()])
-        if configs.getattrs("settings.logging.display.tool_calls"):
+        if global_vars.configs.settings.logging.display.tool_calls:
             logger.info(f"Running tool call: {name}({args_str})")
 
         if name not in self._name2tools:
@@ -399,7 +402,7 @@ class Generation(Generic[M]):
         if not self.is_tool_call:
             raise ValueError("Error: The Generation is not a tool call")
         if log_results is None:
-            log_results = configs.getattrs("settings.logging.display.tool_results")
+            log_results = global_vars.configs.settings.logging.display.tool_results
         tool_calls = self.tool_calls
         if filter_fn:
             tool_calls = filter_fn(tool_calls)

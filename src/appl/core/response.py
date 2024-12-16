@@ -28,7 +28,7 @@ from rich.syntax import Syntax
 from termcolor import colored
 from termcolor._types import Color
 
-from .config import configs
+from .globals import global_vars
 from .tool import ToolCall
 from .types import ResponseType
 from .utils import get_live, make_panel, split_last, stop_live, strip_for_continue
@@ -217,8 +217,8 @@ class CompletionResponse(BaseModel):
         else:
             target = self.format_stream()
 
-        streaming_display_mode = display or configs.getattrs(
-            "settings.logging.display.streaming_mode", "live"
+        streaming_display_mode = (
+            display or global_vars.configs.settings.logging.display.streaming_mode
         )
         if streaming_display_mode == "live":
             start_time = time.time()

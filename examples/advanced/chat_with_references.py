@@ -4,14 +4,15 @@ import glob
 import os
 from argparse import ArgumentParser
 
-import appl
 import seedir as sd
-from appl import AIRole, convo, gen, ppl, records
-from appl.compositor import Tagged
-from appl.core import load_file, make_panel
 from prompt_toolkit.shortcuts import prompt
 from rich.console import Console
 from rich.prompt import Prompt
+
+from appl import AIRole, convo, gen, ppl
+from appl.compositor import Tagged
+from appl.core import load_file, make_panel
+from appl.utils import get_num_tokens
 
 parser = ArgumentParser()
 parser.add_argument("--intro-file", type=str, default="./README.md")
@@ -30,8 +31,6 @@ parser.add_argument(
 args = parser.parse_args()
 if len(args.ref_info) != len(args.ref_folders):
     raise ValueError("The number of ref-info and ref-folders should be the same.")
-
-appl.init()
 
 
 def read_file(file: str):
@@ -59,8 +58,9 @@ def chat(intro_file: str, source: str, ext: str = ".py"):
                         read_file(name)
         print(f"Folder: {folder}\n{info}")
 
-    "Now begin the chat about the project along with the references."
-    ""
+    "Now begin the chat about the project along with the references.\n"
+
+    print(f"Total tokens: {get_num_tokens(convo())}")
     console = Console()
     while True:
         (query := prompt("User: "))

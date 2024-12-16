@@ -11,12 +11,13 @@ mod_symbol = '<code class="doc-symbol doc-symbol-nav doc-symbol-module"></code>'
 
 module_name = "appl"
 root = Path(__file__).parent.parent
+target_dir = "docs"
 src = root / "src" / module_name
 
 for path in sorted(src.rglob("*.py")):
     module_path = module_name / path.relative_to(src).with_suffix("")
     doc_path = path.relative_to(src).with_suffix(".md")
-    full_doc_path = Path("reference", doc_path)
+    full_doc_path = Path(target_dir, doc_path)
 
     parts = tuple(module_path.parts)
 
@@ -40,5 +41,5 @@ for path in sorted(src.rglob("*.py")):
 
     mkdocs_gen_files.set_edit_path(full_doc_path, ".." / path.relative_to(root))
 
-with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
+with mkdocs_gen_files.open(Path(target_dir, "SUMMARY.md"), "w") as nav_file:
     nav_file.writelines(nav.build_literate_nav())

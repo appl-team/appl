@@ -1,6 +1,7 @@
 from enum import Enum
+from typing import Any, Dict, Optional, Union
 
-from .basic import *
+from pydantic import BaseModel
 
 
 class MessageRoleType(str, Enum):

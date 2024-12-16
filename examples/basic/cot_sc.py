@@ -1,9 +1,6 @@
 import time
 
-import appl
 from appl import gen, ppl
-
-appl.init()
 
 
 def parse_answer(answer: str):

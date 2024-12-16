@@ -1,15 +1,12 @@
 from .compile import appl_compile
-from .config import configs
+from .config import APPLConfigs
 from .context import PromptContext
 from .function import PromptFunc
 from .generation import Generation, get_gen_name_prefix, set_gen_name_prefix
 from .globals import (
-    get_global_var,
     get_thread_local,
     global_vars,
-    inc_global_var,
     inc_thread_local,
-    set_global_var,
     set_thread_local,
 )
 from .io import *

@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 from litellm import model_list, provider_list
 from loguru import logger
 
-from ..core.config import configs
+from ..core.globals import global_vars
 from ..core.server import BaseServer, DummyServer
 
 
@@ -47,23 +47,33 @@ def _init_server(
     return server
 
 
-def _get_server_configs(name: str) -> dict:
-    server_configs = {}
-    if name not in configs.get("servers", {}):
+def _get_server_configs(name: str) -> Dict[str, Any]:
+    server_configs: Dict[str, Any] = {}
+    if name not in global_vars.configs.servers:
         logger.warning(
             f"Server {name} not found in configs, using the server name as model name"
         )
         server_configs["model"] = name
     else:
-        server_configs = configs.servers[name]
+        cfgs = global_vars.configs.servers[name]
+        if not isinstance(cfgs, dict):
+            raise ValueError(f"The configs of server {name} is not a dictionary")
+        server_configs = cfgs
+    if server_configs is None:
+        raise ValueError(f"The configs of server {name} is None")
+
     for _ in range(100):  # prevent infinite loop (max 100 templates)
         if "template" not in server_configs:
             break
         server_configs = copy.deepcopy(server_configs)
         template_name = server_configs.pop("template")
-        if template_name not in configs.servers:
+        if template_name not in global_vars.configs.servers:
             raise ValueError(f"Server config template {template_name} not found")
-        template_config = configs.servers[template_name]
+        template_config = global_vars.configs.servers[template_name]
+        if not isinstance(template_config, dict):
+            raise ValueError(
+                f"The configs of server {template_name} is not a dictionary"
+            )
         # override template config
         server_configs = {**template_config, **server_configs}
     if "template" in server_configs:
@@ -92,8 +102,12 @@ class ServerManager:
     def get_server(self, name: Optional[str]) -> BaseServer:
         """Get a server by name. If name is None, get the default server."""
         if name is None:
-            name = configs.getattrs("servers.default")
-
+            name = global_vars.configs.servers.get("default", None)  # type: ignore
+        if name is None:
+            raise ValueError(
+                "Default server is not configured. Please set the default server in your config file. "
+                "See https://appl-team.github.io/appl/setup/#setup-appl-configuration for more details."
+            )
         with self._lock:
             if name not in self._servers:
                 server_configs = _get_server_configs(name)

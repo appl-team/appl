@@ -437,7 +437,7 @@ class InlineTagged(Tagged):
 @need_ctx
 def iter(
     lst: Iterable,
-    comp: Optional[Compositor] = None,
+    compositor: Optional[Compositor] = None,
     _ctx: Optional[PromptContext] = None,
 ) -> Iterable:
     """Iterate over the iterable list with the compositor.
@@ -453,23 +453,23 @@ def iter(
         ```
     """
     # support tqdm-like context manager
-    if comp is None:
-        comp = NumberedList(_ctx=_ctx)
+    if compositor is None:
+        compositor = NumberedList(_ctx=_ctx)
 
     entered = False
     try:
         for i in lst:
             if not entered:
                 entered = True
-                comp.__enter__()
+                compositor.__enter__()
             yield i
     except Exception as e:
         # TODO: check the impl here
         if entered:
-            if not comp.__exit__(type(e), e, e.__traceback__):
+            if not compositor.__exit__(type(e), e, e.__traceback__):
                 raise e
         else:
             raise e
     finally:
         if entered:
-            comp.__exit__(None, None, None)
+            compositor.__exit__(None, None, None)

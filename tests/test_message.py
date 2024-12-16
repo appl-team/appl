@@ -1,6 +1,5 @@
 import pytest
 
-import appl
 from appl import AIRole, SystemRole, UserRole, ppl, records
 from appl.core import (
     AIMessage,

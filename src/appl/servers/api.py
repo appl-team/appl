@@ -1,7 +1,6 @@
 import asyncio
 import time
 from functools import wraps
-from importlib.metadata import version
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import litellm
@@ -19,7 +18,7 @@ from openai.types.chat import ChatCompletion, ChatCompletionChunk
 from pydantic import BaseModel
 
 from ..caching import add_to_cache, find_in_cache
-from ..core.config import configs
+from ..core.globals import global_vars
 from ..core.message import Conversation
 from ..core.response import CompletionResponse
 from ..core.server import BaseServer, GenArgs
@@ -32,9 +31,6 @@ from ..core.trace import (
 )
 from ..utils import _langsmith_traceable
 from ..version import __version__
-
-if configs.getattrs("settings.misc.suppress_litellm_debug_info"):
-    litellm.suppress_debug_info = True
 
 
 # wrap the completion function # TODO: wrap the acompletion function?
@@ -49,11 +45,8 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         raw_response_holder = kwargs.pop("_raw_response_holder")
     add_to_trace(CompletionRequestEvent(name=gen_id))
 
-    log_llm_call_args = configs.getattrs("settings.logging.display.llm_raw_call_args")
-    log_llm_response = configs.getattrs("settings.logging.display.llm_raw_response")
-    log_llm_usage = configs.getattrs("settings.logging.display.llm_raw_usage")
-    log_llm_cache = configs.getattrs("settings.logging.display.llm_cache")
-    if log_llm_call_args:
+    display_settings = global_vars.configs.settings.logging.display
+    if display_settings.llm_raw_call_args:
         logger.info(f"Call completion [{gen_id}] with args: {kwargs}")
     cache_hit = None
 
@@ -67,12 +60,12 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         if trace_ret := find_in_trace(gen_id, inner_kwargs):
             cache_hit = "trace"
             raw_response = trace_ret
-            if log_llm_cache:
+            if display_settings.llm_cache:
                 logger.info(f"[{gen_id}] Found in trace, using cached response...")
         elif cache_ret := find_in_cache(inner_kwargs):
             cache_hit = "cache"
             raw_response = cache_ret
-            if log_llm_cache:
+            if display_settings.llm_cache:
                 logger.info(f"[{gen_id}] Found in cache, using cached response...")
         else:
             raw_response = litellm.completion(**inner_kwargs)
@@ -109,9 +102,9 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
                 )
         else:
             add_to_cache(kwargs, raw_response)  # type: ignore
-        if log_llm_response:
+        if display_settings.llm_raw_response:
             logger.info(f"Completion [{gen_id}] response: {response}")
-        if log_llm_usage and response.usage is not None:
+        if display_settings.llm_raw_usage and response.usage is not None:
             logger.info(f"Completion [{gen_id}] usage: {response.usage}")
 
     return CompletionResponse(

@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "applang"
-version = "0.1.5"
+version = "0.2.0-alpha"
 description = "A Prompt Programming Language"
 authors = [
     { name = "Honghua Dong", email = "dhh19951@gmail.com" },
@@ -64,6 +64,10 @@ ext = [
     "instructor>=1.5.2",
     "langfuse>=2.56.1",
 ]
+
+[project.scripts]
+appltrace = "appl.cli.vis_trace:main"
+
 [tool.pdm]
 distribution = true
 

@@ -1,7 +1,4 @@
-import appl
 from appl import SystemMessage, gen, ppl
-
-appl.init()
 
 
 def remove_system_message(args: dict):

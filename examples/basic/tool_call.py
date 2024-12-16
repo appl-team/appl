@@ -1,9 +1,6 @@
 import sympy
 
-import appl
 from appl import AIMessage, Generation, convo, gen, ppl, records
-
-appl.init()
 
 
 def is_lucky(x: int) -> bool:

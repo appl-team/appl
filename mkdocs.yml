@@ -44,8 +44,8 @@ nav:
     - Very Long Prompt: cookbook/long_prompt.md
   - Blog:
     - blogs/index.md
-  - API Reference:
-    - appl: reference/
+  - Documentation:
+    - appl: docs/
   - Development:
     - dev/index.md
     - Management: dev/manage.md

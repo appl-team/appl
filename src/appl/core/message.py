@@ -18,7 +18,7 @@ from loguru import logger
 from pydantic import BaseModel, Field, model_validator
 from termcolor import COLORS, colored
 
-from .config import configs
+from .globals import global_vars
 from .tool import ToolCall
 from .types import (
     ASSISTANT_ROLE,
@@ -38,8 +38,10 @@ from .types import (
 
 def get_role_color(role: MessageRole) -> Optional[str]:
     """Get the color of the message based on the role."""
-    color_dict = configs.getattrs("settings.messages.colors", {})
-    return color_dict.get(role.type, None)
+    colors = global_vars.configs.settings.messages.colors
+    if role.type is None:
+        raise ValueError("Cannot get color for role is None")
+    return getattr(colors, role.type, None)
 
 
 def get_colored_role_text(role: Optional[MessageRole], content: str) -> str:

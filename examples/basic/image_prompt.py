@@ -1,11 +1,9 @@
 from os import PathLike
 from pathlib import Path
 
-import appl
 import PIL.Image
-from appl import Image, gen, ppl
 
-appl.init()
+from appl import Image, gen, ppl
 
 
 @ppl
@@ -27,7 +25,7 @@ def query_image(image_file: PathLike):
     "Which python package is this?"
     Image.from_file(image_file)
     # PIL.Image.open(image_file) # alternative, APPL recognizes an ImageFile
-    return gen("gpt4o-mini", stop="\n")
+    return gen("gpt-4o-mini", stop="\n")
 
 
 image_file = Path(__file__).parent / "pillow-logo-dark-text.webp"

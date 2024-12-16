@@ -1,10 +1,8 @@
 from typing import Literal
 
-import appl
-from appl import gen, ppl
 from pydantic import BaseModel, Field
 
-appl.init()
+from appl import gen, ppl
 
 
 class Answer(BaseModel):

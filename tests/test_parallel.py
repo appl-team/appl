@@ -1,7 +1,6 @@
 import time
 from typing import List
 
-import appl
 from appl import CallFuture, call, ppl, records
 from appl.types import ExecutorType
 

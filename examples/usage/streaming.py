@@ -1,10 +1,7 @@
 from typing import Optional
 
-import appl
 from appl import ppl
 from appl.func import gen
-
-appl.init()
 
 
 @ppl

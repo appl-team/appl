@@ -5,10 +5,7 @@ from typing import Callable
 
 import yaml
 
-import appl
 from appl import SystemMessage, as_func, convo, gen, ppl, wraps
-
-appl.init()
 
 ENV_SETUP = """
 ## Environment Setup

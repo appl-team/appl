@@ -2,7 +2,6 @@ from inspect import signature
 
 import pytest
 
-import appl
 from appl import as_func, need_ctx, partial, ppl, records
 
 GLOBAL_V = 123

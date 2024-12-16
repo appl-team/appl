@@ -9,11 +9,13 @@ temp*
 */*/temp*
 */*/*/temp*
 
+logs/
 *.tmp
 dumps
 
 # docs generated using scripts
 docs/reference
+docs/docs
 
 # appl
 appl.yml

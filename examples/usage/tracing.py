@@ -1,9 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 
-import appl
-from appl import gen, ppl, traceable
-
-appl.init()
+from appl import gen, ppl, print_trace, traceable
 
 
 @ppl
@@ -25,9 +22,14 @@ def calc_with_thread():
 
 @traceable
 def main():
-    print(f"{calc()}")
-    print(f"{calc_with_thread()}")
+    print("with APPL asynchronous generation")
+    for res in calc():
+        print(res)
+    print("With ThreadPoolExecutor")
+    for res in calc_with_thread():
+        print(res)
 
 
 if __name__ == "__main__":
     main()
+    print_trace()  # print the trace, default is to langfuse.

@@ -41,10 +41,7 @@ In this example, the `@ppl` decorator (`@` stands for `a` here) marks the `hello
 Below is a complete code snippet that demonstrates the usage of the `greeting` function:
 
 ```python
-import appl
 from appl import gen, ppl
-
-appl.init()  # initialize APPL
 
 @ppl
 def greeting(name: str):

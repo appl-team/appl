@@ -97,12 +97,9 @@ Similarly, let's try to reimplement the example used in [OpenAI's documentation]
 
 ```python linenums="1"
 import json
-import appl
 from appl import gen, ppl
 
 from typing import Literal
-
-appl.init()
 
 
 def get_current_weather(

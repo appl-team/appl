@@ -12,11 +12,9 @@ import pytest
 from loguru import logger
 from pydantic import BaseModel
 
-import appl
-from appl import AIRole, Audio, Generation, Image, UserRole, as_tool, convo, gen, ppl
+from appl import AIRole, Audio, Image, as_tool, gen, ppl
 from appl.const import NEWLINE
 
-appl.init()
 # NOTE: init here could influence other tests in other files.
 
 TEST_OPENAI_MODEL = "gpt-4o-mini"

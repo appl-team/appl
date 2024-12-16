@@ -41,9 +41,7 @@ from .core.printer import Indexing
 from .core.response import CompletionResponse
 from .core.runtime import appl_execute
 from .core.trace import traceable
-from .core.utils import get_source_code
-from .servers import server_manager
-from .types import (
+from .core.types import (
     CallFuture,
     ExecutorType,
     MaybeOneOrMany,
@@ -51,6 +49,8 @@ from .types import (
     ParamSpec,
     StringFuture,
 )
+from .core.utils import get_source_code
+from .servers import server_manager
 from .utils import _langsmith_traceable
 
 # https://docs.python.org/3/library/typing.html#typing.ParamSpec
@@ -82,7 +82,7 @@ def ppl(ctx: F) -> F: ...
 @overload
 def ppl(
     ctx: str = "new",
-    comp: Optional[Compositor] = None,
+    compositor: Optional[Compositor] = None,
     *,
     default_return: Optional[Literal["prompt"]] = None,
     docstring_as: Optional[str] = None,
@@ -94,7 +94,7 @@ def ppl(
 
 def ppl(
     ctx: Union[str, F] = "new",
-    comp: Optional[Compositor] = None,
+    compositor: Optional[Compositor] = None,
     *,
     default_return: Optional[Literal["prompt"]] = None,
     docstring_as: Optional[str] = None,
@@ -123,7 +123,7 @@ def ppl(
                 resume its own context from the last run.
                 For the first run, it will use the parent's context.
 
-        comp (Compositor, optional):
+        compositor (Compositor, optional):
             the default compositor to be used. Defaults to None.
         default_return (str, optional):
             The default return value, "prompt" means return the prompt within
@@ -155,7 +155,7 @@ def ppl(
         # if not _is_class_method and "<locals>" in qualname and ctx_method == "resume":
         #     raise ValueError("Cannot use 'resume' with local functions.")
         prompt_func = PromptFunc(
-            func, ctx_method, comp, default_return, docstring_as, new_ctx_func
+            func, ctx_method, compositor, default_return, docstring_as, new_ctx_func
         )
 
         metadata = {}
@@ -458,9 +458,6 @@ def gen(
     Returns:
         Generation: a future object representing the generation result
     """
-    if not global_vars.initialized:
-        raise ValueError("APPL is not initialized. Please call appl.init() first.")
-
     backend_server = server_manager.get_server(server)
     if isinstance(messages, list):
         messages = Conversation(messages=messages)

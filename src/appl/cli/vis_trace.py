@@ -1,6 +1,7 @@
 import os
+from typing import Any, Dict, Optional
 
-from appl import dump_file, load_config, load_file
+from appl import dump_file, load_file
 from appl.core.trace import TracePrinterBase
 from appl.tracing import (
     TraceEngine,
@@ -12,7 +13,9 @@ from appl.tracing import (
 )
 from appl.utils import get_meta_file
 
-if __name__ == "__main__":
+
+def main():
+    """Print the trace to the specified platform or file."""
     import argparse
 
     parser = argparse.ArgumentParser()
@@ -29,7 +32,7 @@ if __name__ == "__main__":
         "--output",
         "-o",
         type=str,
-        default="./dumps/trace.html",
+        default=None,
         help="mode determined by the file extension, support html, json and yaml",
     )
     args = parser.parse_args()
@@ -42,7 +45,7 @@ if __name__ == "__main__":
     if not os.path.exists(trace_path):
         raise FileNotFoundError(f"Trace file not found: {args.trace}")
     meta_file_path = get_meta_file(trace_path)
-    configs = load_config(meta_file_path)
+    trace_metadata: Dict[str, Any] = load_file(meta_file_path)
 
     def _get_printer() -> TracePrinterBase:
         if args.platform in ["langfuse", "lunary"]:
@@ -63,9 +66,17 @@ if __name__ == "__main__":
                 raise ValueError(f"Unsupported file extension: {file_ext}")
 
     trace = TraceEngine(trace_path, mode="read")
-    printer = _get_printer()
-    if args.platform:
-        printer.print(trace, configs)
+
+    if args.platform or not args.output:
+        if args.platform is None:
+            args.platform = "langfuse"
+        printer = _get_printer()
+        printer.print(trace, trace_metadata)
     else:
+        printer = _get_printer()
         print(f"Outputting to {args.output}")
-        dump_file(printer.print(trace, configs), args.output)
+        dump_file(printer.print(trace, trace_metadata), args.output)
+
+
+if __name__ == "__main__":
+    main()

@@ -18,7 +18,7 @@ from typing import (
 from pydantic import BaseModel, Field
 from typing_extensions import TypeAlias
 
-from ..globals import ExecutorType, get_executor
+from .executor import ExecutorType, global_executors
 
 R = TypeVar("R")
 
@@ -65,7 +65,7 @@ class CallFuture(FutureValue, Generic[R]):
             **kwargs: The keyword arguments of the function.
         """
         self._executor_type = executor_type
-        self._executor = get_executor(executor_type)
+        self._executor = global_executors.get_executor(executor_type)
         self._submit_fn = lambda: self._executor.submit(func, *args, **kwargs)
         self._submitted = False
         self._info = func.__name__
@@ -105,7 +105,10 @@ class CallFuture(FutureValue, Generic[R]):
         """Cancel the call."""
         # Attempt to cancel the call
         res = self.future.cancel()
-        if res:
+        if res and self._executor_type in [
+            ExecutorType.NEW_THREAD,
+            ExecutorType.NEW_PROCESS,
+        ]:
             self._executor.shutdown()  # the executor is not needed anymore
         return res
 

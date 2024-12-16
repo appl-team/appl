@@ -1,7 +1,12 @@
-import appl
 from appl import BracketedDefinition as Def
 from appl import empty_line, gen, ppl, records
-from appl.compositor import *
+from appl.compositor import (
+    INDENT,
+    DashList,
+    DoubleLineSeparated,
+    LineSeparated,
+    NumberedList,
+)
 from appl.utils import get_num_tokens
 
 
@@ -44,7 +49,7 @@ BRACKET_DEF = "**Attention!** The bracket [REF] is used as a reference to the de
 
 
 # Global Definitions
-@ppl(comp=NumberedList())
+@ppl(compositor=NumberedList())
 def global_defs():
     User(
         desc=f"The user who instructs the {Agent} to complete tasks or answer questions."
@@ -58,7 +63,7 @@ def global_defs():
     return records()
 
 
-@ppl(comp=DashList(indent=INDENT))
+@ppl(compositor=DashList(indent=INDENT))
 def user_info_details():
     Def("Name", "John Doe")
     Def("Email", "john.doe@gmail.com")
@@ -79,7 +84,7 @@ def env_setup():
     return records()
 
 
-@ppl(comp=NumberedList())
+@ppl(compositor=NumberedList())
 def tool_spec_components(include_exception: bool = True):
     ToolArgument(desc="The tool input argument specification")
     ToolReturn(desc="The tool output return specification")
@@ -148,7 +153,7 @@ class FinalAnswer(Def):
 AGENT_SYSTEM_INFO = f"""You are a helpful AI {Agent!r} who can utilize a lot of external tools to answer {User!r}'s questions or help {User!r} accomplish tasks following their instructions."""
 
 
-@ppl(comp=NumberedList())
+@ppl(compositor=NumberedList())
 def agent_provided_info():
     ToolSpecifications(desc="the specifications of the tools that you can utilize.")
     UserInput(
@@ -271,7 +276,7 @@ def agent_task_begin_for_claude(tool_names, inputs, agent_scratchpad):
     return records()
 
 
-@ppl(comp=LineSeparated(indexing="##"))
+@ppl(compositor=LineSeparated(indexing="##"))
 def agent_naive_prompt(
     toolkit_descriptions, tool_names, inputs, agent_scratchpad, is_claude=False
 ):

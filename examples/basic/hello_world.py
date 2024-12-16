@@ -1,7 +1,4 @@
-import appl
 from appl import gen, ppl
-
-appl.init()  # initialize APPL
 
 
 @ppl  # the @ppl decorator marks the function as an `APPL function`

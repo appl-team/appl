@@ -5,15 +5,11 @@ try:
     from instructor import Partial
 
     run_instructor = True
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     run_instructor = False
 from pydantic import BaseModel
 
-import appl
 from appl import gen, ppl
-from appl.core import get_live, make_panel
-
-appl.init()
 
 
 class User(BaseModel):

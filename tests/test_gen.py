@@ -2,10 +2,8 @@ from typing import List
 
 import pytest
 
-import appl
 from appl import (
     AIRole,
-    CompletionResponse,
     PromptRecords,
     SystemMessage,
     gen,
@@ -17,8 +15,6 @@ IMAGE_URL = "https://maproom.wpenginepowered.com/wp-content/uploads/OpenAI_Logo.
 
 
 def test_gen():
-    appl.init()
-
     @ppl
     def func():
         "Hello"
@@ -133,7 +129,6 @@ def test_gen_tool_call_outside_ppl():
 
 
 def test_chat_gen():
-    appl.init()
     name = "Test"
     p: List[PromptRecords] = []
 

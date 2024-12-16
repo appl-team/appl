@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-import appl
-from appl import AIRole, PromptContext, SystemMessage, gen, ppl, records
+from appl import AIRole, PromptContext, SystemMessage, gen, ppl
 from appl.func import wraps
-
-appl.init()
 
 
 class AgentBase(ABC):

@@ -109,10 +109,7 @@ With these context management methods, you can now easily modularize your prompt
 In this example, we illustrate the usage of the first three context management methods and ways to decompose long prompts into smaller pieces using *APPL functions*. For the resume method, please refer to the [multi-agent chat example](../cookbook/multi_agent_chat.md).
 
 ```python linenums="1"
-import appl
 from appl import convo, gen, ppl, records
-
-appl.init()
 
 @ppl # (1)
 def intro():

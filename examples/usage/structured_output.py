@@ -1,8 +1,6 @@
-import appl
-from appl import gen, ppl
 from pydantic import BaseModel
 
-appl.init()
+from appl import gen, ppl
 
 
 # Define your desired output structure
@@ -33,10 +31,15 @@ print(user_info.name)
 print(user_info.age)
 # > 30
 
-print("Using Instructor's response_model:")
-user_info = get_user_info_instructor()
+try:
+    import instructor
 
-print(user_info.name)
-# > John Doe
-print(user_info.age)
-# > 30
+    print("Using Instructor's response_model:")
+    user_info = get_user_info_instructor()
+
+    print(user_info.name)
+    # > John Doe
+    print(user_info.age)
+    # > 30
+except (ImportError, ModuleNotFoundError):
+    print("Instructor is not installed, skipping instructor example.")

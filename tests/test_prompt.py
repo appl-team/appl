@@ -1,6 +1,5 @@
 import pytest
 
-import appl
 from appl import Generation, convo, define, gen, need_ctx, ppl, records
 from appl.compositor import *
 
@@ -350,8 +349,6 @@ def test_class_func():
 
 
 def test_generation_message():
-    appl.init()
-
     @ppl
     def func():
         "Hello World"

@@ -14,8 +14,6 @@ from appl import (
     records,
 )
 
-appl.init()
-
 
 # TowerOfHanoi mostly written by GPT4
 class TowerOfHanoi:

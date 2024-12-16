@@ -5,4 +5,5 @@ from .printer import (
     TraceLunaryPrinter,
     TraceProfilePrinter,
     TraceYAMLPrinter,
+    print_trace,
 )

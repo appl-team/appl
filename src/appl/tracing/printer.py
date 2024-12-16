@@ -5,12 +5,14 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 
+import yaml
 from deprecated import deprecated
 from litellm import ModelResponse
 from loguru import logger
 
 from ..compositor import Tagged as OriginalTagged
-from ..core.config import Configs
+from ..core.config import ConfigsDict
+from ..core.globals import global_vars
 from ..core.io import load_file
 from ..core.printer import PromptRecords
 from ..core.trace import (
@@ -26,6 +28,8 @@ from ..core.trace import (
     TracePrinterBase,
 )
 from ..func import partial, ppl, records
+from ..utils import get_meta_file
+from .engine import TraceEngine
 
 folder = os.path.dirname(__file__)
 
@@ -60,7 +64,7 @@ class TraceHTMLPrinter(TracePrinterBase):
 
     @ppl
     def print(
-        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Dict[str, Any]] = None
     ) -> str:
         """Print the trace in the format of HTML."""
         with Tagged("html"):
@@ -71,10 +75,10 @@ class TraceHTMLPrinter(TracePrinterBase):
                         self._print_node(node, trace.min_timestamp)
         if trace_metadata:
             with Tagged("table", attrs={"class": "table small"}):
-                if start_time := trace_metadata.getattrs("info.start_time"):
+                if start_time := trace_metadata.get("start_time", None):
                     self._make_line("Start Time", start_time)
                 self._make_line(
-                    "Full Configs", f"<pre>{trace_metadata.to_yaml()}</pre>"
+                    "Full Configs", f"<pre>{yaml.dump(trace_metadata)}</pre>"
                 )
         return str(records())
 
@@ -198,7 +202,7 @@ class TraceLunaryPrinter(TracePrinterBase):
     """The printer used to log the trace to lunary."""
 
     def print(
-        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Dict[str, Any]] = None
     ) -> None:
         """Log the trace to lunary."""
         import lunary
@@ -215,8 +219,7 @@ class TraceLunaryPrinter(TracePrinterBase):
 
         user_id = None
         if trace_metadata:
-            metadata = trace_metadata.get("metadata", {})
-            user_id = metadata.get("user_id", None)
+            user_id = trace_metadata.get("user_id", None)
 
         def get_parent_run_id(node: TraceNode) -> Optional[str]:
             if node.parent is None:
@@ -328,7 +331,7 @@ class TraceLangfusePrinter(TracePrinterBase):
     """The printer used to print the trace to langfuse."""
 
     def print(
-        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Dict[str, Any]] = None
     ) -> None:
         """Print the trace to langfuse."""
         from langfuse import Langfuse
@@ -338,20 +341,15 @@ class TraceLangfusePrinter(TracePrinterBase):
         url = os.environ.get("LANGFUSE_HOST", "http://localhost:3000")
         logger.info(f"project_public_key: {project_public_key}, api url: {url}")
 
-        if trace_metadata:
-            metadata: Dict[str, Any] = trace_metadata.to_dict().get("metadata", {})
-            metadata["settings"] = trace_metadata.to_dict().get("settings", {})
-        else:
-            metadata = {}
-
+        metadata = trace_metadata or {}
         user_id = metadata.get("user_id", None)
         if user_id is None:
             git_info: Dict[str, Any] = metadata.get("git_info", {})
             user_id = git_info.get("git_user_email", "unknown")
 
         session_id = metadata.get("start_time", str(uuid.uuid4()))
-        if "caller_basename" in metadata:
-            base_name = metadata["caller_basename"]
+        if "exec_file_basename" in metadata:
+            base_name = metadata["exec_file_basename"]
             # Use basename + start_time as the session_id
             session_id = f"[{base_name}] {session_id}"
         else:
@@ -401,23 +399,34 @@ class TraceLangfusePrinter(TracePrinterBase):
                 inputs = {"messages": messages}
                 if tools := model_parameters.pop("tools", None):
                     inputs["tools"] = tools
+                if tool_choice := model_parameters.get("tool_choice", None):
+                    if isinstance(tool_choice, dict):
+                        name = tool_choice.get("function", {}).get("name", None)
+                        if name:
+                            model_parameters["tool_choice"] = name
+                        else:  # put to the inputs
+                            model_parameters.pop("tool_choice", None)
+                            inputs["tool_choice"] = tool_choice
 
-                if node.type == "gen":
-                    model_name = None
-                    usage = None
+                usage = None
+                if outputs is not None:
+                    if node.type == "gen":
+                        model_name = None
+                    else:
+                        outputs: ModelResponse = outputs  # type: ignore
+                        usage = outputs.usage
+                        message = outputs.choices[0].message  # type: ignore
+                        outputs = message.content
+                        if message.tool_calls:
+                            outputs = {
+                                "content": message.content,
+                                "tool_calls": [
+                                    f"ToolCall(id={tool.id}, name={tool.function.name}, args={tool.function.arguments})"
+                                    for tool in message.tool_calls
+                                ],
+                            }
                 else:
-                    outputs: ModelResponse = outputs  # type: ignore
-                    usage = outputs.usage
-                    message = outputs.choices[0].message  # type: ignore
-                    outputs = message.content
-                    if message.tool_calls:
-                        outputs = {
-                            "content": message.content,
-                            "tool_calls": [
-                                f"ToolCall(id={tool.id}, name={tool.function.name}, args={tool.function.arguments})"
-                                for tool in message.tool_calls
-                            ],
-                        }
+                    outputs = "Not Finished."
 
                 client = trace_node.generation(
                     name=node.name,
@@ -444,7 +453,7 @@ class TraceYAMLPrinter(TracePrinterBase):
     """The printer used to print the trace in the format of YAML."""
 
     def print(
-        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Dict[str, Any]] = None
     ) -> None:
         """Print the trace in the format of YAML."""
         # TODO: implement the YAML printer
@@ -489,7 +498,7 @@ class TraceProfilePrinter(TracePrinterBase):
         return data
 
     def print(
-        self, trace: TraceEngineBase, trace_metadata: Optional[Configs] = None
+        self, trace: TraceEngineBase, trace_metadata: Optional[Dict[str, Any]] = None
     ) -> Dict:
         """Print the trace in the format of Chrome tracing."""
         events = []
@@ -497,3 +506,30 @@ class TraceProfilePrinter(TracePrinterBase):
             if data := self.build_event(event, trace.min_timestamp):
                 events.append(data)
         return {"traceEvents": events}
+
+
+def print_trace(
+    printer: Optional[TracePrinterBase] = None,
+    trace_file: Optional[str] = None,
+) -> None:
+    """Print to visualize the trace.
+
+    Default printer is to the [langfuse](https://langfuse.com/) platform.
+    You can also configured to the local hosted version.
+    """
+    if printer is None:
+        printer = TraceLangfusePrinter()
+    if trace_file is None:
+        trace = global_vars.trace_engine
+        if trace is None:
+            raise ValueError("No trace found")
+        trace_file = global_vars.metadata.trace_file
+    else:
+        trace = TraceEngine(trace_file)
+
+    if trace_file is not None:
+        meta_file = get_meta_file(trace_file)
+        trace_metadata = load_file(meta_file)
+    else:
+        trace_metadata = None
+    printer.print(trace, trace_metadata)

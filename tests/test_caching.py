@@ -48,7 +48,7 @@ def test_write_and_find(cache: DBCache):
 
     # Write test data
     for key, value in test_data.items():
-        cache.write(key, value)
+        cache.insert(key, value)
 
     # Read and verify test data
     for key, value in test_data.items():
@@ -57,14 +57,14 @@ def test_write_and_find(cache: DBCache):
 
 def test_find_nonexistent(cache: DBCache):
     """Test finding a non-existent key returns None."""
-    assert cache.write("key1", "value1") is None
+    assert cache.insert("key1", "value1") is None
     assert cache.find("nonexistent_key") is None
 
 
 def test_overwrite(cache: DBCache):
     """Test overwriting an existing key."""
-    cache.write("key1", "value1")
-    cache.write("key1", "value2")
+    cache.insert("key1", "value1")
+    cache.insert("key1", "value2")
     assert cache.find("key1") == "value2"
 
 
@@ -74,10 +74,10 @@ def test_cleanup_expired_entries(cache: DBCache):
     current_time = datetime(2024, 1, 1, 12, 0)
 
     # Write entries with different timestamps
-    cache.write(
+    cache.insert(
         "key1", "value1", current_time - timedelta(minutes=cache.time_to_live + 10)
     )  # Expired
-    cache.write(
+    cache.insert(
         "key2", "value2", current_time - timedelta(minutes=cache.time_to_live - 10)
     )  # Not expired
 
@@ -100,7 +100,7 @@ def test_cleanup_size_limit(cache: DBCache):
 
     # Write more entries than the limit
     for i in range(11):
-        cache.write(f"key{i}", f"value{i}")
+        cache.insert(f"key{i}", f"value{i}")
 
     # Force cleanup
     cache._cleanup()
@@ -142,7 +142,7 @@ def test_json_serialization(cache: DBCache):
         "bool": True,
     }
 
-    cache.write("complex", test_obj)
+    cache.insert("complex", test_obj)
     retrieved = cache.find("complex")
 
     assert retrieved == test_obj

@@ -10,10 +10,7 @@ The most basic prompt is a string (including `StringFuture`), which can be a str
 An already constructed `Message` object is also considered a prompt, as shown in the following example.
 
 ```python
-import appl
 from appl import ppl, records, AIMessage
-
-appl.init()
 
 @ppl
 def greeting(name: str):
@@ -34,10 +31,7 @@ Note types like `int`, `float` and `bool` are not captured. To capture these val
 For types that subclass `Sequence`, such as `list` and `tuple`, the elements are recursively captured as prompts one by one.
 
 ```python
-import appl
 from appl import ppl, records
-
-appl.init()
 
 @ppl
 def greeting(name: str):
@@ -54,10 +48,7 @@ print(greeting("APPL"))
 You may also define custom types and the ways to convert them to prompts by subclassing `Promptable` and implementing the `__prompt__` method.
 
 ```python
-import appl
 from appl import Promptable, ppl, records
-
-appl.init()
 
 class MyPromptable(Promptable):
     def __init__(self, number: int):

@@ -1,8 +1,5 @@
-import appl
 from appl import AIRole, gen, ppl
 from appl.const import NEWLINE
-
-appl.init()
 
 
 @ppl(ctx="copy")  # copy the context from caller

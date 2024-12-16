@@ -1,7 +1,14 @@
-import appl
-from appl import AIRole, convo, gen, ppl, records
+"""Demonstrate on excluding some intermediate steps from the conversation.
 
-appl.init()
+Steps:
+1. Copy the original context with get_valid_gen with ctx="copy"
+2. Repeat accumulating the conversation in the same (copied) context with get_output with ctx="same"
+3. the get_output function returns the last set of messages
+4. the get_valid_gen function returns the last set of messages when the result is valid
+5. in the main function, only the valid messages are added to the conversation
+"""
+
+from appl import AIRole, convo, gen, ppl, records
 
 
 @ppl(ctx="same")  # repeat in the same context

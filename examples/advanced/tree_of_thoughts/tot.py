@@ -10,10 +10,7 @@ import pandas as pd
 import sympy
 from loguru import logger
 
-import appl
 from appl import gen, ppl, traceable
-
-appl.init()
 
 data_path = Path(__file__).parent / "24.csv"
 parser = argparse.ArgumentParser()

@@ -80,7 +80,7 @@ The following example demonstrates how to use APPL to naturally exploit the inde
 
 The implementation below shows an example of determining if a set of numbers add up to an even number (task introduced in [source](https://www.promptingguide.ai/techniques/cot)).
 
-```python linenums="1" hl_lines="33 41"
+```python linenums="1" hl_lines="30 38"
 --8<-- "examples/basic/cot_sc.py"
 ```
 

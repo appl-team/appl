@@ -10,17 +10,15 @@ import threading
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any, Callable, Dict, Optional
 
-import pendulum
 import toml
 import yaml
 from dotenv import load_dotenv
+from jsonargparse import ArgumentParser
 from loguru import logger
 
-logger.remove()  # Remove default handler
-logger.add(sys.stderr, level="INFO")  # set to INFO
-
-from typing import Any, Callable, Dict, Optional
+logger.remove()
 
 from .caching import DBCache
 from .compositor import ApplStr as Str
@@ -46,7 +44,7 @@ from .core import appl_compile as compile
 from .core import appl_execute as execute
 from .core import appl_format as format
 from .core import appl_with_ctx as with_ctx
-from .core.config import Configs, configs, load_config
+from .core.config import APPLConfigs, ConfigsDict, load_config
 from .core.generation import get_gen_name_prefix, set_gen_name_prefix
 from .core.globals import global_vars
 from .core.io import dump_file, load_file
@@ -78,7 +76,8 @@ from .func import (
 from .func import gen as completion  # create alias
 from .role_changer import AIRole, SystemRole, ToolRole, UserRole
 from .servers import server_manager
-from .tracing import TraceEngine
+from .settings import merge_configs, update_appl_configs
+from .tracing import TraceEngine, TraceLangfusePrinter, TraceLunaryPrinter, print_trace
 from .utils import (
     LoguruFormatter,
     find_dotenv,
@@ -91,196 +90,34 @@ from .utils import (
 from .version import __version__
 
 
-def _get_loguru_format():
-    return LoguruFormatter(
-        max_length=configs.getattrs("settings.logging.max_length"),
-        suffix_length=configs.getattrs("settings.logging.suffix_length"),
-    ).loguru_format
+def get_parser():
+    """Get an argument parser with configurable APPL configs."""
+    parser = ArgumentParser()
+    parser.add_argument("--appl", type=APPLConfigs, default=global_vars.configs)
+    return parser
 
 
-logger.remove()  # Remove default handler
-# update default handler for the loguru logger
-logger.add(sys.stderr, level="INFO", format=_get_loguru_format())  # default
-global_vars.initialized = False
-
-
-def init(
-    resume_trace: Optional[str] = None,
-    enable_tracing: Optional[bool] = None,
-    update_config_hook: Optional[Callable] = None,
-) -> None:
+def init(**kwargs: Any) -> None:
     """Initialize APPL with dotenv and config files.
 
     Args:
-        resume_trace: Path to the trace file used as resume cache. Defaults to None.
-        enable_tracing: Whether to enable tracing. Defaults to None.
-        update_config_hook: A hook to update the configs. Defaults to None.
+        appl_configs: The APPL configs to be updated. Defaults to None.
 
     Examples:
         ```python
         import appl
 
-        # Load environment variables from `.env` and configs from `appl.yaml`.
-        # Initialize logging and tracing systems if enabled.
-        appl.init()
+        appl.init(servers={"default": "gpt-4o"})
         ```
     """
-    with global_vars.lock:
-        # only initialize once
-        if global_vars.initialized:
-            logger.warning("APPL has already been initialized, ignore")
-            return
-        global_vars.initialized = True
-
-    now = pendulum.instance(datetime.datetime.now())
-    # Get the previous frame in the stack, i.e., the one calling this function
-    frame = inspect.currentframe()
-    if frame and frame.f_back:
-        caller_path = frame.f_back.f_code.co_filename  # Get file_path of the caller
-        caller_funcname = frame.f_back.f_code.co_name  # Get function name of the caller
-        caller_basename = os.path.basename(caller_path).split(".")[0]
-        caller_folder = os.path.dirname(caller_path)  # Get folder of the caller
-        caller_folder = get_folder(caller_folder)
-        dotenvs = find_files(caller_folder, [".env"])
-        appl_config_files = find_files(
-            caller_folder, ["appl.yaml", "appl.yml", "appl.json", "appl.toml"]
-        )
-        # load dotenvs and appl configs from outer to inner with override
-        for dotenv in dotenvs[::-1]:
-            load_dotenv(dotenv, override=True)
-            logger.info("Loaded dotenv from {}".format(dotenv))
-        for config_file in appl_config_files[::-1]:
-            override_configs = load_config(config_file)
-            logger.info("Loaded configs from {}".format(config_file))
-            configs.update(override_configs)
-            if configs.getattrs("settings.logging.display.configs_update"):
-                logger.info(f"update configs:\n{yaml.dump(override_configs.to_dict())}")
-    else:
-        caller_basename, caller_funcname = "appl", "<module>"
-        dotenvs, appl_config_files = [], []
-        logger.error(
-            "Cannot find the caller of appl.init(), fail to load .env and appl configs"
-        )
-
-    if update_config_hook:
-        update_config_hook(configs)
-
-    try:
-        git_info = get_git_info()
-    except Exception as e:
-        logger.warning(f"git info not found: {e}")
-        git_info = {}
-    metadata: Dict[str, Any] = {}
-    metadata["appl_version"] = __version__
-    metadata["run_cmd"] = f"{Path(sys.executable).stem} {' '.join(sys.argv)}"
-    metadata["git_info"] = git_info
-    metadata["caller_path"] = caller_path
-    metadata["caller_basename"] = caller_basename
-    metadata["caller_funcname"] = caller_funcname
-    metadata["start_time"] = now.format("YYYY-MM-DD HH:mm:ss")
-
-    # ============================================================
-    # Logging
-    # ============================================================
-    log_format = configs.getattrs("settings.logging.format")
-    log_level = configs.getattrs("settings.logging.log_level")
-    log_file = configs.getattrs("settings.logging.log_file")
-    # set logger level for loguru
-    logger.remove()  # Remove default handler
-    logger.add(sys.stderr, level=log_level, format=_get_loguru_format())
-    if log_file.get("enabled", False):
-        if (log_file_format := log_file.get("path_format", None)) is not None:
-            log_file_path = (
-                log_file_format.format(
-                    basename=caller_basename, funcname=caller_funcname, time=now
-                )
-                + ".log"
-            )
-            log_file.path = log_file_path  # set the top level log file path
-            file_log_level = log_file.get("log_level", None) or log_level
-            logger.info(f"Logging to file: {log_file_path} with level {file_log_level}")
-            # no need to overwrite the default format when writing to file
-            logger.add(log_file_path, level=file_log_level, format=log_format)
-            metadata["log_file"] = os.path.abspath(log_file_path)
-
-    configs["info"] = Configs(
-        {
-            "start_time": now.format("YYYY-MM-DD HH:mm:ss"),
-            "dotenvs": dotenvs,
-            "appl_configs": appl_config_files,
-        }
+    logger.warning(
+        f"appl.init() is not mandatory to initialize APPL for appl>=0.2.0, "
+        "please remove it if you are not changing the configs."
     )
-    if configs.getattrs("settings.logging.display.configs"):
-        logger.info(f"Using configs:\n{yaml.dump(configs.to_dict())}")
-
-    # ============================================================
-    # Concurrency
-    # ============================================================
-    concurrency = configs.getattrs("settings.concurrency")
-    llm_max_workers = concurrency.get("llm_max_workers", 10)
-    thread_max_workers = concurrency.get("thread_max_workers", 20)
-    process_max_workers = concurrency.get("process_max_workers", 10)
-    global_vars.llm_thread_executor = ThreadPoolExecutor(
-        max_workers=llm_max_workers, thread_name_prefix="llm"
-    )
-    global_vars.thread_executor = ThreadPoolExecutor(
-        max_workers=thread_max_workers, thread_name_prefix="general"
-    )
-    global_vars.process_executor = ProcessPoolExecutor(max_workers=process_max_workers)
-
-    # ============================================================
-    # Caching
-    # ============================================================
-    caching = configs.getattrs("settings.caching")
-    if caching.get("enabled", False):
-        global_vars.cache_folder = os.path.expanduser(
-            caching.get("folder", "~/.appl/caches")
-        )
-        db_file = os.path.join(global_vars.cache_folder, "cache.db")
-        logger.info(f"Using cache folder: {global_vars.cache_folder}")
-        global_vars.llm_cache = DBCache(db_file)
-    else:
-        global_vars.llm_cache = None
-
-    # ============================================================
-    # Tracing
-    # ============================================================
-    tracing = configs.getattrs("settings.tracing")
-    strict_match = tracing.get("strict_match", True)
-    if enable_tracing is None:
-        enable_tracing = tracing.get("enabled", False)
-    if enable_tracing:
-        if tracing.get("patch_threading", True):
-            patch_threading()
-        if (trace_file_format := tracing.get("path_format", None)) is not None:
-            prefix = trace_file_format.format(
-                basename=caller_basename, funcname=caller_funcname, time=now
-            )
-            trace_file_path = f"{prefix}.pkl"
-            meta_file = f"{prefix}_meta.json"
-            tracing.trace_file = trace_file_path
-            logger.info(f"Tracing file: {trace_file_path}")
-            metadata["tracing_file"] = os.path.abspath(trace_file_path)
-
-            meta_file_contents = configs.to_dict()
-            static_metadata = meta_file_contents.get("metadata", {})
-            meta_file_contents["metadata"] = {**static_metadata, **metadata}
-            dump_file(meta_file_contents, meta_file)
-            global_vars.trace_engine = TraceEngine(
-                trace_file_path, mode="write", strict=strict_match
-            )
-        else:
-            logger.warning("Tracing is enabled but no trace file is specified")
-
-    resume_trace = resume_trace or os.environ.get("APPL_RESUME_TRACE", None)
-    if resume_trace:
-        global_vars.resume_trace = resume_trace
-        logger.info(f"Using resume cache: {resume_trace}")
-        global_vars.resume_trace = TraceEngine(
-            resume_trace, mode="read", strict=strict_match
-        )
-    else:
-        global_vars.resume_trace = None
+    if kwargs:
+        logger.info(f"Updating APPL configs with: \n{yaml.dump(kwargs)}")
+        new_configs = merge_configs(global_vars.configs, **kwargs)
+        update_appl_configs(new_configs)
 
 
 @contextmanager
@@ -304,8 +141,7 @@ def init_within_thread(
 
     try:
         thread_name = threading.current_thread().name
-        log_format = configs.getattrs("settings.logging.format")
-        log_file = configs.getattrs("settings.logging.log_file")
+        logging_settings = global_vars.configs.settings.logging
 
         def filter_thread_record(record: Dict) -> bool:
             assert hasattr(record["thread"], "name")
@@ -313,25 +149,26 @@ def init_within_thread(
             name = record["thread"].name
             return name == thread_name or name.startswith(thread_name + "_")
 
-        if log_file.get("enabled", False):
+        if logging_settings.enable_file:
             if log_file_prefix is None:
-                if "path" not in log_file:
-                    raise ValueError(
-                        "main log file is not set, did you forget to call appl.init()?"
-                    )
+                assert (
+                    global_vars.metadata.log_file is not None
+                ), "should have log file set"
                 thread_log_path = os.path.join(
-                    log_file.path[: -len(".log")] + "_logs", f"{thread_name}.log"
+                    global_vars.metadata.log_file[: -len(".log")] + "_logs",
+                    f"{thread_name}.log",
                 )
             else:
                 thread_log_path = f"{log_file_prefix}_{thread_name}.log"
 
-            log_level = log_file.get("log_level", None)
-            log_level = log_level or configs.getattrs("settings.logging.log_level")
+            log_level = (
+                logging_settings.log_file.log_level or logging_settings.log_level
+            )
             # The logger append to the file by default, not overwrite.
             handler_id = logger.add(
                 thread_log_path,
                 level=log_level,
-                format=log_format,
+                format=logging_settings.format,
                 filter=filter_thread_record,  # type: ignore
             )
         if gen_name_prefix:

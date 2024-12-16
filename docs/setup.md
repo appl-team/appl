@@ -107,7 +107,7 @@ LANGCHAIN_API_KEY=<your api key>
 ```
 
 ## Priority of Configurations
-Let's say you are running a script (`main.py`) in the `project` directory which calls `appl.init`, and you have the following directory structure:
+Let's say you are running a script (`python main.py`) in the `project` directory, and you have the following directory structure:
 
 ```plaintext
 .env
@@ -118,7 +118,7 @@ project/
 └── main.py
 ```
 
-Starting from the directory containing the file calling `appl.init` (in this case, `main.py`), APPL will walk up the directory tree to find custom configurations. The configurations in the files closer to the file calling `appl.init` will have higher priority.
+Starting from the directory containing the file to be executed (in this case, `main.py`), APPL will walk up the directory tree to find custom configurations. The configurations in the files closer to the file will have higher priority. For the `.env` file, the search starts from the current working directory (`project` directory in this case).
 
 In this case, the configurations in `appl.yaml` will be loaded first, followed by the ones in `project/appl.yaml` with overriding the previous ones. The environment variables in `.env` will be loaded first, followed by the ones in `project/.env` with overriding the previous ones.
 

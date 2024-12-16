@@ -22,10 +22,7 @@ def get_author_name(quotation: str):
 The `@ppl` decorator marks the `get_author_name` function as an *APPL function*. Within the function, the string literal `"Extract the name of the author from the quotation below."` and variable `quotation` are added to the prompt. The `gen()` function is then called to generate responses using the current prompt. Finally, the generated response is returned as the answer to the question. This *APPL function* can be called like a normal Python function, as shown in the complete code snippet below.
 
 ```python linenums="1"
-import appl
 from appl import gen, ppl
-
-appl.init()
 
 @ppl
 def get_author_name(quotation: str):
@@ -89,12 +86,9 @@ Let's extend the previous example to answer multiple independent follow-up quest
 
 <!-- [Here](https://colab.research.google.com/drive/1khZcleOrdLOWtUB4EMEQCjGA1vBaARI9) is a runnable Colab notebook of this example.  -->
 
-```python linenums="1" hl_lines="7 19"
-import appl
+```python linenums="1" hl_lines="4 16"
 from appl import AIRole, gen, ppl
 from appl.const import NEWLINE
-
-appl.init()
 
 @ppl(ctx="copy")  # copy the context from caller
 def get_answer(question: str):

@@ -1,7 +1,4 @@
-import appl
 from appl import convo, gen, ppl, records
-
-appl.init()
 
 
 @ppl  # use empty context

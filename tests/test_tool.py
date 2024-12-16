@@ -3,7 +3,6 @@ from typing import Any
 
 from pydantic import BaseModel, Field, create_model
 
-import appl
 from appl import Generation, as_tool, gen, ppl
 from appl.core import CompletionResponse, ToolCall
 
@@ -131,7 +130,6 @@ def test_args_schema():
 
 
 def test_tool_call_sequential():
-    appl.init()
     response = CompletionResponse(
         tool_calls=[
             ToolCall(id="1", name="add", args='{"x": 1, "y": 2, "t": 0.1}'),
@@ -163,7 +161,6 @@ def test_tool_call_sequential():
 
 
 def test_tool_call_parallel():
-    appl.init()
     response = CompletionResponse(
         tool_calls=[
             ToolCall(id="1", name="add", args='{"x": 1, "y": 2}'),
