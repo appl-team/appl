@@ -85,6 +85,20 @@ export LANGFUSE_HOST=http://localhost:3000
 ```
 You can find your Langfuse public and private API keys in the project settings page.
 
+Then you can visualize the traces by:
+
+```bash
+$ appltrace <path to the trace file>
+```
+
+Then you will see conversation like:
+
+![Langfuse Conversation](../_assets/tracing/langfuse_convo.png)
+
+and the timeline like:
+
+![Langfuse Timeline](../_assets/tracing/langfuse_timeline.png)
+
 ### Lunary 
 
 Lunary is another open-source web-based tool for visualizing traces and LLM calls.
@@ -114,21 +128,19 @@ export LUNARY_API_URL=<the url of the Lunary server>
 Then you can visualize the traces by:
 
 ```bash
-$ python -m appl.cli.vis_trace <path to the trace file> --platform lunary
+$ appltrace <path to the trace file> --platform lunary
 ```
 
 Then you will see:
 
 ![Lunary](../_assets/tracing/lunary.png)
 
-We have forked the Lunary project and we plan to add some features including displaying the codes of the functions, you can find the [source code](https://github.com/appl-team/lunary) here.
-
 ### Simple HTML and Chrome Tracing
 
 You can then visualize the traces using the script:
 
 ```bash
-$ python -m appl.cli.vis_trace <path to the trace file> -o <output file>
+$ appltrace <path to the trace file> -o <output file>
 ```
 
 The default output file is a HTML file, which can be viewed in a browser. We provide a sample trace file [here](../_assets/tracing/example_trace.html).
@@ -137,6 +149,7 @@ If you specify the output file to be a `.json` file, the script will generate a 
 
 ![Chrome Trace Viewer](../_assets/tracing/chrome_viewer.png)
 
+This way is going to be deprecated where Langfuse provides much better visualization.
 
 ### LangSmith
 

@@ -30,7 +30,7 @@ settings:
       llm_cost: true # Display the cost of the calls
       tool_calls: true # Display the tool calls
       tool_results: true # Display the results of the tool calls
-      streaming_mode: "live" # The mode to display the streaming output, choices are "live", "print", "none"
+      streaming_mode: "print" # The mode to display the streaming output, choices are "live", "print", "none"
       rich:
         lexer: "markdown" # The language of the rich output
         theme: "monokai" # The theme of the rich output

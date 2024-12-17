@@ -10,7 +10,7 @@
 [![Discord](https://img.shields.io/badge/discord-orange)](https://discord.gg/q3x4Qwgj29)
 [![arXiv](http://img.shields.io/badge/cs.AI-arXiv%3A2406.13161-B31B1B.svg?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2406.13161)
 
-**APPL** is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program.
+**APPL** is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program. We believe Language Model will be an essential part of future software that help achieves more than what we can do today, and APPL is a step towards this future that seamlessly integrates programs and LLMs.
 
 <video style="width: 100%" src="https://github.com/appl-team/appl/assets/12556773/5d75d3db-1b1c-48c9-97ec-e9d72a387e49" type="video/mp4" controls></video>
 
@@ -18,11 +18,13 @@
 - **Readability and maintainability via seamless integration with Python.**  APPL seamlessly embeds natural language prompts into Python programs, maintaining prompts' readability while inheriting modularity, reusability, dynamism and the ecosystem from the host programming language.
 - **Flexible prompt engineering.**  Except for allowing the utilization of Python control flows and the modularized decomposition of prompts, APPL offers prompt coding helpers to facilitate programming prompts in a modularized and maintainable way.
 - **Automatic parallelization via asynchronous computation.**  APPL schedules LLM calls asynchronously, leveraging potential independence among them to facilitate efficient parallelization. This offloads the burden of users to manage synchronization manually, with almost no extra work.
-- **Smooth tool calling integration.**  APPL provides intuitive ways to transform Python functions into tools that can be called by LLMs, making it easy for users to integrate existing Python libraries and functions with LLMs.
+- **Smooth tool calling integration.**  APPL provides intuitive ways to transform Python functions into tools that can be called by LLMs, making it easier for users to integrate existing Python libraries and functions with LLMs.
 - **Tracing and Failure Recovery.** APPL traces the execution of LLM calls and supports recovery from failures, which is essential for debugging and error handling in the LLM programming paradigm.
-- **More Features.** APPL also provides a unified interface for multiple LLM backends using [`litellm`](https://docs.litellm.ai/docs/), structured generations using [`instructor`](https://python.useinstructor.com/), and many other features.
+- **More Features.** APPL has many more other features, such as an auto-continuation mechanism to continue the generation when the output token limit is exceeded.
+- **Integrations.** APPL also provides a unified interface for multiple LLM backends using [`litellm`](https://docs.litellm.ai/docs/), [llm observability](https://appl-team.github.io/appl/tutorials/7_tracing/#visualizing-the-trace) using [`langfuse`](https://github.com/langfuse/langfuse) and [`lunary`](https://github.com/lunary-ai/lunary), and many other features.
 
 ## News
+* **[2024-12-16]**: APPL 0.2.0 is released with many new features! Please check the [release note](https://github.com/appl-team/appl/releases/tag/v0.2.0) for more details.
 * **[2024-07-12]**: We have improved our [tutorial](https://appl-team.github.io/appl/tutorials/). Please check them out for more detailed usage and examples.
 <!-- and [cookbook](https://appl-team.github.io/appl/tutorials/) -->
 
@@ -77,15 +79,25 @@ The output will look like
 Nice to meet you, APPL!
 ```
 
-In this example, the `@ppl` decorator (`@` stands for `a` here) marks the `hello_world` function as an *APPL function*. Within such a function, the standalone string `f"Hello World! My name is {name}."` is added to the prompt, and the `gen()` function calls LLM to generate responses using the current prompt.
+In this example, the `@ppl` decorator (`@` stands for `a` here) marks the `hello_world` function as an *APPL function*. Within such a function, the standalone string `f"Hello World! My name is {name}."` is added to the prompt, and the `gen()` function calls LLM to generate responses using the current prompt. Moreover, explcitly appending the prompt is also supported using `grow`:
+
+```python
+from appl import gen, grow, ppl
+
+@ppl  # the @ppl decorator marks the function as an `APPL function`
+def greeting(name: str):
+    grow(f"Hello World! My name is {name}.")  # grow the prompt
+    return gen()  # call the default LLM with the current prompt
+
+print(greeting("APPL"))  # call `greeting` as a normal Python function
+```
 
 ### Question Answering
 
 Let's then implement a question-answering system using APPL. In this example, the APPL program answers multiple questions about a quotation by first extracting the author's name (inspired by [this cookbook](https://cookbook.openai.com/articles/how_to_work_with_large_language_models)). [Here](https://colab.research.google.com/drive/1khZcleOrdLOWtUB4EMEQCjGA1vBaARI9) is a runnable Colab notebook of this example.
 
-```python linenums="1" hl_lines="6 11 12 14"
+```python linenums="1" hl_lines="5 10 11 13"
 from appl import AIRole, gen, ppl
-from appl.const import NEWLINE
 
 @ppl(ctx="copy")  # copy the context from caller
 def get_answer(question: str):
@@ -97,7 +109,7 @@ def answer_questions(quotation: str, questions: list[str]):
     "Extract the name of the author from the quotation below and answer questions."
     quotation  # append to the prompt
     with AIRole():  # assistant message
-        f"The name of the author is {gen(stop=NEWLINE)}"  # specify the prefix
+        f"The name of the author is {gen(stop='.')}"  # specify the prefix
     return [get_answer(q) for q in questions]  # parallelize calls
 
 quotation = '"Simplicity is the ultimate sophistication." -- Leonardo da Vinci'
@@ -122,10 +134,67 @@ In *APPL functions*, [expression statements](https://docs.python.org/3/reference
 
 After the author's name is extracted, the `get_answer` function is called multiple times in parallel to answer the questions, with the context being copied (detailed in [context-management](#context-management)), demonstrating the automatic parallelization feature of APPL.
 
+On the other hand, this is a pretty long Langchain code that implements the same functionality, where you can feel the inflexibility of using prompt templates:
+```python linenums="1" 
+from concurrent.futures import ThreadPoolExecutor
+from typing import List
+
+from dotenv import load_dotenv
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+
+load_dotenv()
+
+llm = ChatOpenAI()
+
+messages = [
+    (
+        "user",
+        "Extract the name of the author from the quotation below:\n{quotation}",
+    ),
+    ("assistant", "The name of the author is "),
+]
+author_prompt = ChatPromptTemplate.from_messages(messages)
+
+messages = messages[:1] + [
+    ("assistant", "The name of the author is {author}"),
+    ("user", "{question}"),
+]
+question_prompt = ChatPromptTemplate.from_messages(messages)
+
+
+def answer_questions(quotation: str, questions: List[str]):
+    # First extract the author
+    author_chain = author_prompt | llm | StrOutputParser()
+    author = author_chain.invoke({"quotation": quotation})
+
+    # Create question answering chain
+    qa_chain = question_prompt | llm | StrOutputParser()
+
+    def answer_single_question(question):
+        return qa_chain.invoke(
+            {"quotation": quotation, "author": author, "question": question}
+        )
+
+    # Answer each question in parallel using map
+    with ThreadPoolExecutor() as executor:
+        return list(executor.map(answer_single_question, questions))
+
+
+quotation = '"Simplicity is the ultimate sophistication." -- Leonardo da Vinci'
+questions = [
+    "In what era did the author live?",
+    "What is the most famous painting of the author?",
+]
+print(answer_questions(quotation, questions))
+```
+
 ## RoadMap
 - [x] Default to exclude """docstring""" from the prompt formation.
 - [x] Add supports for LLM logging and tracing platforms to inspect the traces.
-  - [x] Supported Lunary (open-source)
+  - [x] Supported Lunary and Langfuse (open-source)
+- [ ] Allow directly working with prompts without `ppl` decorator.
 - [ ] Add more ... (contributions are welcome!)
   - [ ] Examples and tutorials to demonstrate the usage
   - [ ] Test cases to increase the coverage
@@ -150,6 +219,13 @@ APPL can be used to reproduce some popular LM-based applications easily, such as
 * [Tree of Thoughts](https://github.com/princeton-nlp/tree-of-thought-llm)[[APPL implementation](examples/advanced/tree_of_thoughts/)]: deliberate problem solving with Large Language Models.
 * [Wordware's TwitterPersonality](https://twitter.wordware.ai/)[[APPL implementation](https://github.com/appl-team/TwitterPersonality)]: analyzes your tweets to determine your Twitter personality.
 
+We also use APPL to build small LLM-powered libraries, such as:
+* [AutoNaming](https://github.com/appl-team/AutoNaming): automatically generate names for experiments based on argparse arguments.
+* [ExplErr](https://github.com/appl-team/ExplErr): a library for error explanation with LLMs.
+
+## Working with Cursor (Experimental)
+We provide [.cursorrules](https://github.com/appl-team/appl/blob/main/.cursorrules) to help you write APPL code with [Cursor](https://www.cursor.com/). You also setup the [Docs Symbol](https://docs.cursor.com/context/@-symbols/@-docs) with [APPL Docs](https://appl-team.github.io/appl/docs/). Thanks @xiumaoprompt for suggestion!
+
 ## Citation and Acknowledgment
 If you find APPL helpful, please consider citing our paper:
 ```bibtex
@@ -168,6 +244,8 @@ We would like to thank the open-source community for their contributions, where 
 [Guidance](https://github.com/guidance-ai/guidance),
 [SGLang](https://github.com/sgl-project/sglang) and
 [autogen](https://github.com/microsoft/autogen).
+
+We also notice that there are more projects coming out to push the boundaries of prompt programming, such as [ell](https://github.com/MadcowD/ell) and [mirascope](https://github.com/Mirascope/mirascope/).
 
 ## License
 This project is licensed under the terms of the MIT License.

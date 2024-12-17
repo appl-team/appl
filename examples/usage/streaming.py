@@ -1,7 +1,6 @@
 from typing import Optional
 
-from appl import ppl
-from appl.func import gen
+from appl import gen, ppl
 
 
 @ppl

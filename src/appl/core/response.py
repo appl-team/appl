@@ -264,11 +264,9 @@ class CompletionResponse(BaseModel):
                 print(colored(content, color) if color else content, end="")
                 sys.stdout.flush()
 
-            eprint("\n===== START OF APPL STREAMING =====\n", color="magenta")
+            eprint("\n===== START APPL STREAMING =====\n", color="magenta")
             self.register_post_finish_callback(
-                lambda _: eprint(
-                    "\n===== END OF APPL STREAMING =====\n", color="magenta"
-                ),
+                lambda _: eprint("\n===== END APPL STREAMING =====\n", color="magenta"),
                 order="first",
             )
             eprint(display_prefix_content, color="grey")
@@ -276,12 +274,14 @@ class CompletionResponse(BaseModel):
                 if isinstance(chunk, BaseModel):
                     content = json.dumps(chunk.model_dump(), indent=2)
                     if last_content in content:
-                        eprint(content[content.index(last_content) :])
+                        eprint(
+                            content[content.index(last_content) :], color="dark_grey"
+                        )
                     else:
-                        eprint(content)
+                        eprint(content, color="dark_grey")
                     last_content = content
                 else:
-                    eprint(str(chunk))
+                    eprint(str(chunk), color="dark_grey")
 
         elif streaming_display_mode == "none":
             for chunk in iter(target):

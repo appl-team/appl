@@ -43,7 +43,7 @@ The composed prompt is:
 </div>
 ```
 
-Check the list of available compositors in the [API Reference](../reference/compositor.md). 
+Check the list of available compositors in the [API Reference](../docs/compositor.md). 
 
 ## Prompt Definitions
 To make the prompt more structured and clear, it is often helpful to define concepts in prompts and refer to them in different parts of the prompt.

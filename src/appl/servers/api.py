@@ -1,4 +1,5 @@
 import asyncio
+import json
 import time
 from functools import wraps
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -219,7 +220,17 @@ class APIServer(BaseServer):
                 ), "response_obj should not be set yet."
                 # retrieve the response message and convert it to the response model
                 # fetching the results will stream the response if it is a streaming
-                response_obj = response_format.model_validate_json(response.results)
+                results = response.results
+                try:
+                    response_obj = response_format.model_validate_json(results)
+                except Exception as e:
+                    data = json.loads(results)
+                    # ad-hoc fix for claude models, which might return keys in "values"
+                    if "values" in data:
+                        response_obj = response_format.model_validate(data["values"])
+                    else:
+                        raise e
+
                 if wrapped_attribute:
                     assert hasattr(
                         response_obj, wrapped_attribute

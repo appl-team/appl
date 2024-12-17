@@ -182,7 +182,7 @@ def _appl_init():
     # update default handler for the loguru logger
     logger.add(sys.stderr, level="INFO", format=_get_loguru_format())  # default
 
-    cwd = os.getcwd()
+    cwd = os.path.expanduser(os.path.abspath(os.getcwd()))
     exec_file_path = os.path.expanduser(os.path.abspath(sys.argv[0]))
 
     try:
@@ -193,10 +193,14 @@ def _appl_init():
 
     # ===== Load and Update Configs ======
     # find and load dotenvs and appl configs (from outer to inner)
-    # find dotenvs starting from the current working directory
-    dotenvs = find_files(cwd, [".env"])[::-1]
-    # find appl configs starting from the file being executed
-    appl_config_files = find_files(exec_file_path, APPL_CONFIG_FILES)[::-1]
+    start_path = cwd
+    # find dotenvs starting from current working directory
+    dotenvs = find_files(start_path, [".env"])[::-1]
+    # find appl configs starting from current working directory
+    # if the file being executed is inside current working directory, start from the file being executed
+    if os.path.commonpath([cwd, exec_file_path]) == cwd:
+        start_path = exec_file_path
+    appl_config_files = find_files(start_path, APPL_CONFIG_FILES)[::-1]
 
     for dotenv in dotenvs:
         load_dotenv(dotenv, override=True)

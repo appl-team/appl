@@ -98,10 +98,9 @@ def get_parser():
 
 
 def init(**kwargs: Any) -> None:
-    """Initialize APPL with dotenv and config files.
+    """Overwrite APPL configs.
 
-    Args:
-        appl_configs: The APPL configs to be updated. Defaults to None.
+    see [default configs](../setup/#default-configs) for more details.
 
     Examples:
         ```python

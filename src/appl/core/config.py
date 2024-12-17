@@ -71,7 +71,10 @@ class LoggingDisplaySettings(BaseAPPLConfigs):
         default=True, description="Display results of tool calls"
     )
     streaming_mode: str = Field(
-        default="live", description="Mode to display streaming output"
+        default="print",
+        description=(
+            "Mode to display streaming output. choices are 'live', 'print', 'none'"
+        ),
     )
     rich: DisplayRichSettings = Field(default_factory=DisplayRichSettings)
 

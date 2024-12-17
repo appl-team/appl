@@ -177,6 +177,8 @@ plugins:
       - scripts/gen_ref_nav.py
   - literate-nav:
       nav_file: SUMMARY.md
+  - mike:
+      version_selector: true
   - mkdocs-jupyter
   - coverage
 
