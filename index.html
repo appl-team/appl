@@ -3072,6 +3072,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#working-with-cursor-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      Working with Cursor (Experimental)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#citation-and-acknowledgment" class="md-nav__link">
     <span class="md-ellipsis">
       Citation and Acknowledgment
@@ -3130,7 +3139,7 @@
 <a href="https://mit-license.org/"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" /></a>
 <a href="https://discord.gg/q3x4Qwgj29"><img alt="Discord" src="https://img.shields.io/badge/discord-orange" /></a>
 <a href="https://arxiv.org/abs/2406.13161"><img alt="arXiv" src="http://img.shields.io/badge/cs.AI-arXiv%3A2406.13161-B31B1B.svg?logo=arxiv&amp;logoColor=red" /></a></p>
-<p><strong>APPL</strong> is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program.</p>
+<p><strong>APPL</strong> is A Prompt Programming Language that extends Python to provide a Natural, Intuitive, Convenient, and Efficient (NICE) way to utilize Large Language Models (LLMs) such as GPT in your program. We believe Language Model will be an essential part of future software that help achieves more than what we can do today, and APPL is a step towards this future that seamlessly integrates programs and LLMs.</p>
 <video style="width: 100%" src="https://github.com/appl-team/appl/assets/12556773/5d75d3db-1b1c-48c9-97ec-e9d72a387e49" type="video/mp4" controls></video>
 
 <h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
@@ -3138,12 +3147,14 @@
 <li><strong>Readability and maintainability via seamless integration with Python.</strong>  APPL seamlessly embeds natural language prompts into Python programs, maintaining prompts' readability while inheriting modularity, reusability, dynamism and the ecosystem from the host programming language.</li>
 <li><strong>Flexible prompt engineering.</strong>  Except for allowing the utilization of Python control flows and the modularized decomposition of prompts, APPL offers prompt coding helpers to facilitate programming prompts in a modularized and maintainable way.</li>
 <li><strong>Automatic parallelization via asynchronous computation.</strong>  APPL schedules LLM calls asynchronously, leveraging potential independence among them to facilitate efficient parallelization. This offloads the burden of users to manage synchronization manually, with almost no extra work.</li>
-<li><strong>Smooth tool calling integration.</strong>  APPL provides intuitive ways to transform Python functions into tools that can be called by LLMs, making it easy for users to integrate existing Python libraries and functions with LLMs.</li>
+<li><strong>Smooth tool calling integration.</strong>  APPL provides intuitive ways to transform Python functions into tools that can be called by LLMs, making it easier for users to integrate existing Python libraries and functions with LLMs.</li>
 <li><strong>Tracing and Failure Recovery.</strong> APPL traces the execution of LLM calls and supports recovery from failures, which is essential for debugging and error handling in the LLM programming paradigm.</li>
-<li><strong>More Features.</strong> APPL also provides a unified interface for multiple LLM backends using <a href="https://docs.litellm.ai/docs/"><code class="language-python highlight"><span class="n">litellm</span></code></a>, structured generations using <a href="https://python.useinstructor.com/"><code class="language-python highlight"><span class="n">instructor</span></code></a>, and many other features.</li>
+<li><strong>More Features.</strong> APPL has many more other features, such as an auto-continuation mechanism to continue the generation when the output token limit is exceeded.</li>
+<li><strong>Integrations.</strong> APPL also provides a unified interface for multiple LLM backends using <a href="https://docs.litellm.ai/docs/"><code class="language-python highlight"><span class="n">litellm</span></code></a>, <a href="https://appl-team.github.io/appl/tutorials/7_tracing/#visualizing-the-trace">llm observability</a> using <a href="https://github.com/langfuse/langfuse"><code class="language-python highlight"><span class="n">langfuse</span></code></a> and <a href="https://github.com/lunary-ai/lunary"><code class="language-python highlight"><span class="n">lunary</span></code></a>, and many other features.</li>
 </ul>
 <h2 id="news">News<a class="headerlink" href="#news" title="Permanent link">&para;</a></h2>
 <ul>
+<li><strong>[2024-12-16]</strong>: APPL 0.2.0 is released with many new features! Please check the <a href="https://github.com/appl-team/appl/releases/tag/v0.2.0">release note</a> for more details.</li>
 <li><strong>[2024-07-12]</strong>: We have improved our <a href="https://appl-team.github.io/appl/tutorials/">tutorial</a>. Please check them out for more detailed usage and examples.</li>
 </ul>
 <!-- and [cookbook](https://appl-team.github.io/appl/tutorials/) -->
@@ -3181,54 +3192,61 @@ You can set your OpenAI API key in the <code class="language-python highlight"><
 <p>The output will look like
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Nice to meet you, APPL!
 </span></code></pre></div></p>
-<p>In this example, the <code class="language-python highlight"><span class="nd">@ppl</span></code> decorator (<code class="language-python highlight"><span class="o">@</span></code> stands for <code class="language-python highlight"><span class="n">a</span></code> here) marks the <code class="language-python highlight"><span class="n">hello_world</span></code> function as an <em>APPL function</em>. Within such a function, the standalone string <code class="language-python highlight"><span class="sa">f</span><span class="s2">&quot;Hello World! My name is </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span></code> is added to the prompt, and the <code class="language-python highlight"><span class="n">gen</span><span class="p">()</span></code> function calls LLM to generate responses using the current prompt.</p>
+<p>In this example, the <code class="language-python highlight"><span class="nd">@ppl</span></code> decorator (<code class="language-python highlight"><span class="o">@</span></code> stands for <code class="language-python highlight"><span class="n">a</span></code> here) marks the <code class="language-python highlight"><span class="n">hello_world</span></code> function as an <em>APPL function</em>. Within such a function, the standalone string <code class="language-python highlight"><span class="sa">f</span><span class="s2">&quot;Hello World! My name is </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span></code> is added to the prompt, and the <code class="language-python highlight"><span class="n">gen</span><span class="p">()</span></code> function calls LLM to generate responses using the current prompt. Moreover, explcitly appending the prompt is also supported using <code class="language-python highlight"><span class="n">grow</span></code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">gen</span><span class="p">,</span> <span class="n">grow</span><span class="p">,</span> <span class="n">ppl</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nd">@ppl</span>  <span class="c1"># the @ppl decorator marks the function as an `APPL function`</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">def</span> <span class="nf">greeting</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">grow</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hello World! My name is </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>  <span class="c1"># grow the prompt</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">()</span>  <span class="c1"># call the default LLM with the current prompt</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">greeting</span><span class="p">(</span><span class="s2">&quot;APPL&quot;</span><span class="p">))</span>  <span class="c1"># call `greeting` as a normal Python function</span>
+</span></code></pre></div>
 <h3 id="question-answering">Question Answering<a class="headerlink" href="#question-answering" title="Permanent link">&para;</a></h3>
 <p>Let's then implement a question-answering system using APPL. In this example, the APPL program answers multiple questions about a quotation by first extracting the author's name (inspired by <a href="https://cookbook.openai.com/articles/how_to_work_with_large_language_models">this cookbook</a>). <a href="https://colab.research.google.com/drive/1khZcleOrdLOWtUB4EMEQCjGA1vBaARI9">Here</a> is a runnable Colab notebook of this example.</p>
-<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-6-10">10</a></span>
-<span class="normal"><a href="#__codelineno-6-11">11</a></span>
-<span class="normal"><a href="#__codelineno-6-12">12</a></span>
-<span class="normal"><a href="#__codelineno-6-13">13</a></span>
-<span class="normal"><a href="#__codelineno-6-14">14</a></span>
-<span class="normal"><a href="#__codelineno-6-15">15</a></span>
-<span class="normal"><a href="#__codelineno-6-16">16</a></span>
-<span class="normal"><a href="#__codelineno-6-17">17</a></span>
-<span class="normal"><a href="#__codelineno-6-18">18</a></span>
-<span class="normal"><a href="#__codelineno-6-19">19</a></span>
-<span class="normal"><a href="#__codelineno-6-20">20</a></span>
-<span class="normal"><a href="#__codelineno-6-21">21</a></span>
-<span class="normal"><a href="#__codelineno-6-22">22</a></span>
-<span class="normal"><a href="#__codelineno-6-23">23</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">AIRole</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="kn">from</span> <span class="nn">appl.const</span> <span class="kn">import</span> <span class="n">NEWLINE</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">)</span>  <span class="c1"># copy the context from caller</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="k">def</span> <span class="nf">get_answer</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="hll">    <span class="n">question</span>  <span class="c1"># append to the prompt</span>
-</span></span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">()</span>  <span class="c1"># return as a future object</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="nd">@ppl</span>  <span class="c1"># marks APPL function</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="k">def</span> <span class="nf">answer_questions</span><span class="p">(</span><span class="n">quotation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">questions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11"></a><span class="hll">    <span class="s2">&quot;Extract the name of the author from the quotation below and answer questions.&quot;</span>
-</span></span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="hll">    <span class="n">quotation</span>  <span class="c1"># append to the prompt</span>
-</span></span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13"></a>    <span class="k">with</span> <span class="n">AIRole</span><span class="p">():</span>  <span class="c1"># assistant message</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14"></a><span class="hll">        <span class="sa">f</span><span class="s2">&quot;The name of the author is </span><span class="si">{</span><span class="n">gen</span><span class="p">(</span><span class="n">stop</span><span class="o">=</span><span class="n">NEWLINE</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># specify the prefix</span>
-</span></span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">get_answer</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">questions</span><span class="p">]</span>  <span class="c1"># parallelize calls</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16"></a>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17"></a><span class="n">quotation</span> <span class="o">=</span> <span class="s1">&#39;&quot;Simplicity is the ultimate sophistication.&quot; -- Leonardo da Vinci&#39;</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18"></a><span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19"></a>    <span class="s2">&quot;In what era did the author live?&quot;</span><span class="p">,</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20"></a>    <span class="c1"># more questions can be added here</span>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21"></a><span class="p">]</span>
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22"></a><span class="k">for</span> <span class="n">ans</span> <span class="ow">in</span> <span class="n">answer_questions</span><span class="p">(</span><span class="n">quotation</span><span class="p">,</span> <span class="n">questions</span><span class="p">):</span>
-</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">ans</span><span class="p">)</span>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span>
+<span class="normal"><a href="#__codelineno-7-12">12</a></span>
+<span class="normal"><a href="#__codelineno-7-13">13</a></span>
+<span class="normal"><a href="#__codelineno-7-14">14</a></span>
+<span class="normal"><a href="#__codelineno-7-15">15</a></span>
+<span class="normal"><a href="#__codelineno-7-16">16</a></span>
+<span class="normal"><a href="#__codelineno-7-17">17</a></span>
+<span class="normal"><a href="#__codelineno-7-18">18</a></span>
+<span class="normal"><a href="#__codelineno-7-19">19</a></span>
+<span class="normal"><a href="#__codelineno-7-20">20</a></span>
+<span class="normal"><a href="#__codelineno-7-21">21</a></span>
+<span class="normal"><a href="#__codelineno-7-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">AIRole</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">)</span>  <span class="c1"># copy the context from caller</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="k">def</span> <span class="nf">get_answer</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="hll">    <span class="n">question</span>  <span class="c1"># append to the prompt</span>
+</span></span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">()</span>  <span class="c1"># return as a future object</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="nd">@ppl</span>  <span class="c1"># marks APPL function</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="k">def</span> <span class="nf">answer_questions</span><span class="p">(</span><span class="n">quotation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">questions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="hll">    <span class="s2">&quot;Extract the name of the author from the quotation below and answer questions.&quot;</span>
+</span></span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="hll">    <span class="n">quotation</span>  <span class="c1"># append to the prompt</span>
+</span></span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a>    <span class="k">with</span> <span class="n">AIRole</span><span class="p">():</span>  <span class="c1"># assistant message</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="hll">        <span class="sa">f</span><span class="s2">&quot;The name of the author is </span><span class="si">{</span><span class="n">gen</span><span class="p">(</span><span class="n">stop</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># specify the prefix</span>
+</span></span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">get_answer</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">questions</span><span class="p">]</span>  <span class="c1"># parallelize calls</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15"></a>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16"></a><span class="n">quotation</span> <span class="o">=</span> <span class="s1">&#39;&quot;Simplicity is the ultimate sophistication.&quot; -- Leonardo da Vinci&#39;</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17"></a><span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18"></a>    <span class="s2">&quot;In what era did the author live?&quot;</span><span class="p">,</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19"></a>    <span class="c1"># more questions can be added here</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20"></a><span class="p">]</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21"></a><span class="k">for</span> <span class="n">ans</span> <span class="ow">in</span> <span class="n">answer_questions</span><span class="p">(</span><span class="n">quotation</span><span class="p">,</span> <span class="n">questions</span><span class="p">):</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">ans</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
 <p>The resulting conversation for the first question would look like (generated responses are in <strong>bold</strong>):</p>
 <table>
@@ -3259,11 +3277,117 @@ You can set your OpenAI API key in the <code class="language-python highlight"><
 </table>
 <p>In <em>APPL functions</em>, <a href="https://docs.python.org/3/reference/simple_stmts.html#expression-statements">expression statements</a> are captured as prompts <a href="https://appl-team.github.io/appl/tutorials/appendix/prompt_capture/">based on the type of its value</a>. Notably, the f-string is processed part by part, so the <code class="language-python highlight"><span class="n">gen</span></code> function inside the f-string intuitively uses the contents before that. In this example, <code class="language-python highlight"><span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">author</span> <span class="ow">is</span></code> serves as a prefix to guide the completion of the author's name.</p>
 <p>After the author's name is extracted, the <code class="language-python highlight"><span class="n">get_answer</span></code> function is called multiple times in parallel to answer the questions, with the context being copied (detailed in <a href="#context-management">context-management</a>), demonstrating the automatic parallelization feature of APPL.</p>
+<p>On the other hand, this is a pretty long Langchain code that implements the same functionality, where you can feel the inflexibility of using prompt templates:
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-8-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-8-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-8-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-8-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-8-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-8-10">10</a></span>
+<span class="normal"><a href="#__codelineno-8-11">11</a></span>
+<span class="normal"><a href="#__codelineno-8-12">12</a></span>
+<span class="normal"><a href="#__codelineno-8-13">13</a></span>
+<span class="normal"><a href="#__codelineno-8-14">14</a></span>
+<span class="normal"><a href="#__codelineno-8-15">15</a></span>
+<span class="normal"><a href="#__codelineno-8-16">16</a></span>
+<span class="normal"><a href="#__codelineno-8-17">17</a></span>
+<span class="normal"><a href="#__codelineno-8-18">18</a></span>
+<span class="normal"><a href="#__codelineno-8-19">19</a></span>
+<span class="normal"><a href="#__codelineno-8-20">20</a></span>
+<span class="normal"><a href="#__codelineno-8-21">21</a></span>
+<span class="normal"><a href="#__codelineno-8-22">22</a></span>
+<span class="normal"><a href="#__codelineno-8-23">23</a></span>
+<span class="normal"><a href="#__codelineno-8-24">24</a></span>
+<span class="normal"><a href="#__codelineno-8-25">25</a></span>
+<span class="normal"><a href="#__codelineno-8-26">26</a></span>
+<span class="normal"><a href="#__codelineno-8-27">27</a></span>
+<span class="normal"><a href="#__codelineno-8-28">28</a></span>
+<span class="normal"><a href="#__codelineno-8-29">29</a></span>
+<span class="normal"><a href="#__codelineno-8-30">30</a></span>
+<span class="normal"><a href="#__codelineno-8-31">31</a></span>
+<span class="normal"><a href="#__codelineno-8-32">32</a></span>
+<span class="normal"><a href="#__codelineno-8-33">33</a></span>
+<span class="normal"><a href="#__codelineno-8-34">34</a></span>
+<span class="normal"><a href="#__codelineno-8-35">35</a></span>
+<span class="normal"><a href="#__codelineno-8-36">36</a></span>
+<span class="normal"><a href="#__codelineno-8-37">37</a></span>
+<span class="normal"><a href="#__codelineno-8-38">38</a></span>
+<span class="normal"><a href="#__codelineno-8-39">39</a></span>
+<span class="normal"><a href="#__codelineno-8-40">40</a></span>
+<span class="normal"><a href="#__codelineno-8-41">41</a></span>
+<span class="normal"><a href="#__codelineno-8-42">42</a></span>
+<span class="normal"><a href="#__codelineno-8-43">43</a></span>
+<span class="normal"><a href="#__codelineno-8-44">44</a></span>
+<span class="normal"><a href="#__codelineno-8-45">45</a></span>
+<span class="normal"><a href="#__codelineno-8-46">46</a></span>
+<span class="normal"><a href="#__codelineno-8-47">47</a></span>
+<span class="normal"><a href="#__codelineno-8-48">48</a></span>
+<span class="normal"><a href="#__codelineno-8-49">49</a></span>
+<span class="normal"><a href="#__codelineno-8-50">50</a></span>
+<span class="normal"><a href="#__codelineno-8-51">51</a></span>
+<span class="normal"><a href="#__codelineno-8-52">52</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="kn">from</span> <span class="nn">langchain_core.output_parsers</span> <span class="kn">import</span> <span class="n">StrOutputParser</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="kn">from</span> <span class="nn">langchain_core.prompts</span> <span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="kn">from</span> <span class="nn">langchain_openai</span> <span class="kn">import</span> <span class="n">ChatOpenAI</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="n">load_dotenv</span><span class="p">()</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">()</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14"></a>    <span class="p">(</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15"></a>        <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16"></a>        <span class="s2">&quot;Extract the name of the author from the quotation below:</span><span class="se">\n</span><span class="si">{quotation}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17"></a>    <span class="p">),</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18"></a>    <span class="p">(</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;The name of the author is &quot;</span><span class="p">),</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19"></a><span class="p">]</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20"></a><span class="n">author_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21"></a>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22"></a><span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23"></a>    <span class="p">(</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;The name of the author is </span><span class="si">{author}</span><span class="s2">&quot;</span><span class="p">),</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24"></a>    <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{question}</span><span class="s2">&quot;</span><span class="p">),</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25"></a><span class="p">]</span>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26"></a><span class="n">question_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27"></a>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28"></a>
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29"></a><span class="k">def</span> <span class="nf">answer_questions</span><span class="p">(</span><span class="n">quotation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">questions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30"></a>    <span class="c1"># First extract the author</span>
+</span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31"></a>    <span class="n">author_chain</span> <span class="o">=</span> <span class="n">author_prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32"></a>    <span class="n">author</span> <span class="o">=</span> <span class="n">author_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;quotation&quot;</span><span class="p">:</span> <span class="n">quotation</span><span class="p">})</span>
+</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33"></a>
+</span><span id="__span-8-34"><a id="__codelineno-8-34" name="__codelineno-8-34"></a>    <span class="c1"># Create question answering chain</span>
+</span><span id="__span-8-35"><a id="__codelineno-8-35" name="__codelineno-8-35"></a>    <span class="n">qa_chain</span> <span class="o">=</span> <span class="n">question_prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+</span><span id="__span-8-36"><a id="__codelineno-8-36" name="__codelineno-8-36"></a>
+</span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37"></a>    <span class="k">def</span> <span class="nf">answer_single_question</span><span class="p">(</span><span class="n">question</span><span class="p">):</span>
+</span><span id="__span-8-38"><a id="__codelineno-8-38" name="__codelineno-8-38"></a>        <span class="k">return</span> <span class="n">qa_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+</span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39"></a>            <span class="p">{</span><span class="s2">&quot;quotation&quot;</span><span class="p">:</span> <span class="n">quotation</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="n">author</span><span class="p">,</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}</span>
+</span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40"></a>        <span class="p">)</span>
+</span><span id="__span-8-41"><a id="__codelineno-8-41" name="__codelineno-8-41"></a>
+</span><span id="__span-8-42"><a id="__codelineno-8-42" name="__codelineno-8-42"></a>    <span class="c1"># Answer each question in parallel using map</span>
+</span><span id="__span-8-43"><a id="__codelineno-8-43" name="__codelineno-8-43"></a>    <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span><span id="__span-8-44"><a id="__codelineno-8-44" name="__codelineno-8-44"></a>        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">answer_single_question</span><span class="p">,</span> <span class="n">questions</span><span class="p">))</span>
+</span><span id="__span-8-45"><a id="__codelineno-8-45" name="__codelineno-8-45"></a>
+</span><span id="__span-8-46"><a id="__codelineno-8-46" name="__codelineno-8-46"></a>
+</span><span id="__span-8-47"><a id="__codelineno-8-47" name="__codelineno-8-47"></a><span class="n">quotation</span> <span class="o">=</span> <span class="s1">&#39;&quot;Simplicity is the ultimate sophistication.&quot; -- Leonardo da Vinci&#39;</span>
+</span><span id="__span-8-48"><a id="__codelineno-8-48" name="__codelineno-8-48"></a><span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-8-49"><a id="__codelineno-8-49" name="__codelineno-8-49"></a>    <span class="s2">&quot;In what era did the author live?&quot;</span><span class="p">,</span>
+</span><span id="__span-8-50"><a id="__codelineno-8-50" name="__codelineno-8-50"></a>    <span class="s2">&quot;What is the most famous painting of the author?&quot;</span><span class="p">,</span>
+</span><span id="__span-8-51"><a id="__codelineno-8-51" name="__codelineno-8-51"></a><span class="p">]</span>
+</span><span id="__span-8-52"><a id="__codelineno-8-52" name="__codelineno-8-52"></a><span class="nb">print</span><span class="p">(</span><span class="n">answer_questions</span><span class="p">(</span><span class="n">quotation</span><span class="p">,</span> <span class="n">questions</span><span class="p">))</span>
+</span></code></pre></div></td></tr></table></div></p>
 <h2 id="roadmap">RoadMap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Default to exclude """docstring""" from the prompt formation.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Add supports for LLM logging and tracing platforms to inspect the traces.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Supported Lunary (open-source)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Supported Lunary and Langfuse (open-source)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Allow directly working with prompts without <code class="language-python highlight"><span class="n">ppl</span></code> decorator.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Add more ... (contributions are welcome!)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Examples and tutorials to demonstrate the usage</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Test cases to increase the coverage</li>
@@ -3286,14 +3410,19 @@ You can set your OpenAI API key in the <code class="language-python highlight"><
 <p>APPL can be used to reproduce some popular LM-based applications easily, such as:
 * <a href="https://github.com/princeton-nlp/tree-of-thought-llm">Tree of Thoughts</a>[<a href="examples/advanced/tree_of_thoughts/">APPL implementation</a>]: deliberate problem solving with Large Language Models.
 * <a href="https://twitter.wordware.ai/">Wordware's TwitterPersonality</a>[<a href="https://github.com/appl-team/TwitterPersonality">APPL implementation</a>]: analyzes your tweets to determine your Twitter personality.</p>
+<p>We also use APPL to build small LLM-powered libraries, such as:
+* <a href="https://github.com/appl-team/AutoNaming">AutoNaming</a>: automatically generate names for experiments based on argparse arguments.
+* <a href="https://github.com/appl-team/ExplErr">ExplErr</a>: a library for error explanation with LLMs.</p>
+<h2 id="working-with-cursor-experimental">Working with Cursor (Experimental)<a class="headerlink" href="#working-with-cursor-experimental" title="Permanent link">&para;</a></h2>
+<p>We provide <a href="https://github.com/appl-team/appl/blob/main/.cursorrules">.cursorrules</a> to help you write APPL code with <a href="https://www.cursor.com/">Cursor</a>. You also setup the <a href="https://docs.cursor.com/context/@-symbols/@-docs">Docs Symbol</a> with <a href="https://appl-team.github.io/appl/docs/">APPL Docs</a>. Thanks @xiumaoprompt for suggestion!</p>
 <h2 id="citation-and-acknowledgment">Citation and Acknowledgment<a class="headerlink" href="#citation-and-acknowledgment" title="Permanent link">&para;</a></h2>
 <p>If you find APPL helpful, please consider citing our paper:
-<div class="language-bibtex highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">dong2024appl</span><span class="p">,</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{APPL: A Prompt Programming Language for Harmonious Integration of Programs and Large Language Model Prompts}</span><span class="p">,</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Dong, Honghua and Su, Qidong and Gao, Yubo and Li, Zhaoyu and Ruan, Yangjun and Pekhimenko, Gennady and Maddison, Chris J and Si, Xujie}</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="na">journal</span><span class="p">=</span><span class="s">{arXiv preprint arXiv:2406.13161}</span><span class="p">,</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2024}</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
+<div class="language-bibtex highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">dong2024appl</span><span class="p">,</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{APPL: A Prompt Programming Language for Harmonious Integration of Programs and Large Language Model Prompts}</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Dong, Honghua and Su, Qidong and Gao, Yubo and Li, Zhaoyu and Ruan, Yangjun and Pekhimenko, Gennady and Maddison, Chris J and Si, Xujie}</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="na">journal</span><span class="p">=</span><span class="s">{arXiv preprint arXiv:2406.13161}</span><span class="p">,</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2024}</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
 </span></code></pre></div></p>
 <p>We would like to thank the open-source community for their contributions, where we learned from or used these libraries in our project, including
 <a href="https://github.com/jxnl/instructor">instructor</a>,
@@ -3302,6 +3431,7 @@ You can set your OpenAI API key in the <code class="language-python highlight"><
 <a href="https://github.com/guidance-ai/guidance">Guidance</a>,
 <a href="https://github.com/sgl-project/sglang">SGLang</a> and
 <a href="https://github.com/microsoft/autogen">autogen</a>.</p>
+<p>We also notice that there are more projects coming out to push the boundaries of prompt programming, such as <a href="https://github.com/MadcowD/ell">ell</a> and <a href="https://github.com/Mirascope/mirascope/">mirascope</a>.</p>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>This project is licensed under the terms of the MIT License.</p>
 

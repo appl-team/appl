@@ -3335,43 +3335,50 @@ You can <a href="#visualizing-the-trace">visualize</a> the trace file using the 
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANGFUSE_HOST</span><span class="o">=</span>http://localhost:3000
 </span></code></pre></div>
 You can find your Langfuse public and private API keys in the project settings page.</p>
+<p>Then you can visualize the traces by:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>appltrace<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>trace<span class="w"> </span>file&gt;
+</span></code></pre></div>
+<p>Then you will see conversation like:</p>
+<p><img alt="Langfuse Conversation" src="../../_assets/tracing/langfuse_convo.png" /></p>
+<p>and the timeline like:</p>
+<p><img alt="Langfuse Timeline" src="../../_assets/tracing/langfuse_timeline.png" /></p>
 <h3 id="lunary">Lunary<a class="headerlink" href="#lunary" title="Permanent link">&para;</a></h3>
 <p>Lunary is another open-source web-based tool for visualizing traces and LLM calls.</p>
 <p>You can host Lunary <a href="https://github.com/lunary-ai/lunary?tab=readme-ov-file#running-locally">locally</a> or use <a href="https://lunary.ai/">their hosted version</a>.</p>
 <p>You can follow <a href="https://github.com/lunary-ai/lunary?tab=readme-ov-file#running-locally">the steps</a> to start a local Lunary server.
 After installing the Postgres, you may create a database for Lunary:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>createuser<span class="w"> </span>postgres<span class="w"> </span>--createdb
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>createdb<span class="w"> </span>lunary<span class="w"> </span>-U<span class="w"> </span>postgres
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Your postgres url is: &quot;postgresql://postgres:@localhost:5432/lunary&quot;</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># you can verify the database by:</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>psql<span class="w"> </span>postgresql://postgres:@localhost:5432/lunary
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>createuser<span class="w"> </span>postgres<span class="w"> </span>--createdb
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>createdb<span class="w"> </span>lunary<span class="w"> </span>-U<span class="w"> </span>postgres
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Your postgres url is: &quot;postgresql://postgres:@localhost:5432/lunary&quot;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># you can verify the database by:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>psql<span class="w"> </span>postgresql://postgres:@localhost:5432/lunary
 </span></code></pre></div></p>
 <p>Then you can use this url to set the DATABASE_URL in "packages/backend/.env". You may also change other environment variables in the ".env" file according to your needs.
 Then you can set the environment variables for the Lunary server by:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># `1c1975c5-13b9-4977-8003-89fff5c71c27` is the project ID of the default project, you can get the project ID from the website.</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LUNARY_API_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>project<span class="w"> </span>ID&gt;
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># `http://localhost:3333` is the default url</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LUNARY_API_URL</span><span class="o">=</span>&lt;the<span class="w"> </span>url<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>Lunary<span class="w"> </span>server&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># `1c1975c5-13b9-4977-8003-89fff5c71c27` is the project ID of the default project, you can get the project ID from the website.</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LUNARY_API_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>project<span class="w"> </span>ID&gt;
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># `http://localhost:3333` is the default url</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LUNARY_API_URL</span><span class="o">=</span>&lt;the<span class="w"> </span>url<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>Lunary<span class="w"> </span>server&gt;
 </span></code></pre></div>
 <p>Then you can visualize the traces by:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>appl.cli.vis_trace<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>trace<span class="w"> </span>file&gt;<span class="w"> </span>--platform<span class="w"> </span>lunary
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>appltrace<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>trace<span class="w"> </span>file&gt;<span class="w"> </span>--platform<span class="w"> </span>lunary
 </span></code></pre></div>
 <p>Then you will see:</p>
 <p><img alt="Lunary" src="../../_assets/tracing/lunary.png" /></p>
-<p>We have forked the Lunary project and we plan to add some features including displaying the codes of the functions, you can find the <a href="https://github.com/appl-team/lunary">source code</a> here.</p>
 <h3 id="simple-html-and-chrome-tracing">Simple HTML and Chrome Tracing<a class="headerlink" href="#simple-html-and-chrome-tracing" title="Permanent link">&para;</a></h3>
 <p>You can then visualize the traces using the script:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>appl.cli.vis_trace<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>trace<span class="w"> </span>file&gt;<span class="w"> </span>-o<span class="w"> </span>&lt;output<span class="w"> </span>file&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>$<span class="w"> </span>appltrace<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>trace<span class="w"> </span>file&gt;<span class="w"> </span>-o<span class="w"> </span>&lt;output<span class="w"> </span>file&gt;
 </span></code></pre></div>
 <p>The default output file is a HTML file, which can be viewed in a browser. We provide a sample trace file <a href="../../_assets/tracing/example_trace.html">here</a>.</p>
 <p>If you specify the output file to be a <code class="language-python highlight"><span class="o">.</span><span class="n">json</span></code> file, the script will generate a JSON file that is loadable by Chrome's tracing viewer (with address: chrome://tracing/). The loaded trace will look like this:</p>
 <p><img alt="Chrome Trace Viewer" src="../../_assets/tracing/chrome_viewer.png" /></p>
+<p>This way is going to be deprecated where Langfuse provides much better visualization.</p>
 <h3 id="langsmith">LangSmith<a class="headerlink" href="#langsmith" title="Permanent link">&para;</a></h3>
 <p>Optionally, you can use LangSmith to inspect the LM calls and responses in the trace files. You need to <a href="https://smith.langchain.com/settings">obtain your API key</a> from LangSmith and add the following environment variables to your <code class="language-python highlight"><span class="o">.</span><span class="n">env</span></code> file:</p>
-<div class="language-bash highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">LANGCHAIN_TRACING_V2</span><span class="o">=</span><span class="nb">true</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">LANGCHAIN_API_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>api<span class="w"> </span>key&gt;
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># [Optional] specify the project name</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># LANGCHAIN_PROJECT=&lt;your project name&gt;</span>
+<div class="language-bash highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nv">LANGCHAIN_TRACING_V2</span><span class="o">=</span><span class="nb">true</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">LANGCHAIN_API_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>api<span class="w"> </span>key&gt;
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># [Optional] specify the project name</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># LANGCHAIN_PROJECT=&lt;your project name&gt;</span>
 </span></code></pre></div>
 <details class="warning">
 <summary>LangSmith may contain inaccurate statistics for asynchronous LM calls</summary>

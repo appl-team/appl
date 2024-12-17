@@ -3152,27 +3152,27 @@
 
             <details class="quote">
               <summary>Source code in <code>src/appl/settings.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-281">281</a></span>
-<span class="normal"><a href="#__codelineno-0-282">282</a></span>
-<span class="normal"><a href="#__codelineno-0-283">283</a></span>
-<span class="normal"><a href="#__codelineno-0-284">284</a></span>
-<span class="normal"><a href="#__codelineno-0-285">285</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-285">285</a></span>
 <span class="normal"><a href="#__codelineno-0-286">286</a></span>
 <span class="normal"><a href="#__codelineno-0-287">287</a></span>
 <span class="normal"><a href="#__codelineno-0-288">288</a></span>
 <span class="normal"><a href="#__codelineno-0-289">289</a></span>
 <span class="normal"><a href="#__codelineno-0-290">290</a></span>
-<span class="normal"><a href="#__codelineno-0-291">291</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="k">def</span> <span class="nf">update_appl_configs</span><span class="p">(</span><span class="n">new_configs</span><span class="p">:</span> <span class="n">APPLConfigs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the global configs.</span>
-</span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a>
-</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    Note: Update in the middle might cause unexpected behavior.</span>
-</span><span id="__span-0-285"><a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-286"><a id="__codelineno-0-286" name="__codelineno-0-286"></a>    <span class="n">_setup_logging</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">logging</span><span class="p">)</span>
-</span><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a>    <span class="n">_setup_concurrency</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">concurrency</span><span class="p">)</span>
-</span><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288"></a>    <span class="n">_setup_caching</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">caching</span><span class="p">,</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">caching</span><span class="p">)</span>
-</span><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a>    <span class="n">_setup_tracing</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">tracing</span><span class="p">)</span>
-</span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="n">_setup_misc</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">misc</span><span class="p">)</span>
-</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a>    <span class="n">global_vars</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="n">new_configs</span>
+<span class="normal"><a href="#__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#__codelineno-0-294">294</a></span>
+<span class="normal"><a href="#__codelineno-0-295">295</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-285"><a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="k">def</span> <span class="nf">update_appl_configs</span><span class="p">(</span><span class="n">new_configs</span><span class="p">:</span> <span class="n">APPLConfigs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-286"><a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the global configs.</span>
+</span><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a>
+</span><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="sd">    Note: Update in the middle might cause unexpected behavior.</span>
+</span><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="n">_setup_logging</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">logging</span><span class="p">)</span>
+</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a>    <span class="n">_setup_concurrency</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">concurrency</span><span class="p">)</span>
+</span><span id="__span-0-292"><a id="__codelineno-0-292" name="__codelineno-0-292"></a>    <span class="n">_setup_caching</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">caching</span><span class="p">,</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">caching</span><span class="p">)</span>
+</span><span id="__span-0-293"><a id="__codelineno-0-293" name="__codelineno-0-293"></a>    <span class="n">_setup_tracing</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">tracing</span><span class="p">)</span>
+</span><span id="__span-0-294"><a id="__codelineno-0-294" name="__codelineno-0-294"></a>    <span class="n">_setup_misc</span><span class="p">(</span><span class="n">new_configs</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">misc</span><span class="p">)</span>
+</span><span id="__span-0-295"><a id="__codelineno-0-295" name="__codelineno-0-295"></a>    <span class="n">global_vars</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="n">new_configs</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
