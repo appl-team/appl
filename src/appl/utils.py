@@ -150,9 +150,28 @@ def namespace_to_dict(namespace: Namespace) -> Dict[str, Any]:
     return result
 
 
-def get_num_tokens(prompt: str, encoding: str = "cl100k_base") -> int:
-    """Get the number of tokens in the prompt for the given encoding."""
-    return len(tiktoken.get_encoding(encoding).encode(prompt))
+def get_num_tokens(
+    prompt: str, model_name: Optional[str] = None, encoding_name: Optional[str] = None
+) -> int:
+    """Get the number of tokens in the prompt for the given model or encoding."""
+    if encoding_name is None:
+        if model_name is None:
+            default = global_vars.configs.default_servers.default
+            try:
+                servers = global_vars.configs.servers or {}
+                model_name = servers.get(default, {}).get("model", default)  # type: ignore
+                encoding = tiktoken.encoding_for_model(model_name)
+            except Exception:
+                logger.warning(
+                    f"Cannot find tokenizer for the default server {default}, "
+                    "using gpt-4o's tokenizer to count tokens."
+                )
+                encoding = tiktoken.encoding_for_model("gpt-4o")
+        else:
+            encoding = tiktoken.encoding_for_model(model_name)
+    else:
+        encoding = tiktoken.get_encoding(encoding_name)
+    return len(encoding.encode(prompt))
 
 
 def get_meta_file(trace_file: str) -> str:

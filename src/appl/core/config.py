@@ -213,6 +213,18 @@ class PromptsConfigs(BaseAPPLConfigs):
     )
 
 
+class DefaultServersConfigs(BaseAPPLConfigs):
+    """Settings for the default servers."""
+
+    default: Optional[str] = Field(default=None, description="Default server")
+    small: Optional[str] = Field(
+        default=None, description="Small-sized server, fallback to default"
+    )
+    large: Optional[str] = Field(
+        default=None, description="Large-sized server, fallback to default"
+    )
+
+
 class APPLConfigs(BaseAPPLConfigs):
     """Settings for the APPL."""
 
@@ -220,11 +232,12 @@ class APPLConfigs(BaseAPPLConfigs):
     metadata: Dict[str, Any] = Field(default_factory=lambda: {}, description="metadata")
     settings: SettingsConfigs = Field(default_factory=SettingsConfigs)
     prompts: PromptsConfigs = Field(default_factory=PromptsConfigs)
-    servers: Dict[str, Union[Dict[str, Any], str, None]] = Field(
-        default_factory=lambda: {
-            "default": None,
-            "_dummy": {"model": "_dummy"},
-        },
+    default_servers: DefaultServersConfigs = Field(
+        default_factory=DefaultServersConfigs
+    )
+    # TODO: backward-compatible for now, change to Dict[str, Dict[str, Any]]
+    servers: Optional[Dict[str, Union[Dict[str, Any], str, None]]] = Field(
+        default=None,
         description=(
             "set the default server and create aliases for models with default "
             "arguments"

@@ -1,10 +1,11 @@
 import datetime
 import os
 import sys
+from argparse import Namespace
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import litellm
 import pendulum
@@ -19,6 +20,7 @@ from .core.config import (
     CachingSettings,
     ConcurrencySettings,
     ConfigsDict,
+    DefaultServersConfigs,
     LoggingSettings,
     MiscSettings,
     TracingSettings,
@@ -36,7 +38,7 @@ from .core.types import (
     is_thread_executor,
 )
 from .tracing import TraceEngine
-from .utils import LoguruFormatter, find_files, get_git_info
+from .utils import LoguruFormatter, find_files, get_git_info, namespace_to_dict
 from .version import __version__
 
 APPL_CONFIG_FILES = ["appl.yaml", "appl.yml", "appl.json", "appl.toml"]
@@ -162,6 +164,57 @@ def _setup_misc(configs: MiscSettings) -> None:
     litellm.suppress_debug_info = configs.suppress_litellm_debug_info
 
 
+def _write_metafile():
+    """Write the metafile."""
+    meta_file = f"{_get_trace_file_prefix()}_meta.json"
+    static_metadata = global_vars.configs.metadata
+    dump_file(
+        {
+            **static_metadata,
+            **asdict(global_vars.metadata),
+            "configs": global_vars.configs.model_dump(),
+        },
+        meta_file,
+    )
+
+
+def _log_servers_info(
+    old_default_servers: Optional[DefaultServersConfigs] = None,
+) -> None:
+    """Log the servers info."""
+    default_server = global_vars.configs.default_servers.default
+    if default_server:
+        if old_default_servers is None or default_server != old_default_servers.default:
+            logger.info(f"Default server is now configured to {default_server}")
+        if small := global_vars.configs.default_servers.small:
+            if old_default_servers is None or small != old_default_servers.small:
+                logger.info(f"Small server is now configured to {small}")
+        if large := global_vars.configs.default_servers.large:
+            if old_default_servers is None or large != old_default_servers.large:
+                logger.info(f"Large server is now configured to {large}")
+    else:
+        servers = global_vars.configs.servers or {}
+        if default := servers.get("default", None):
+            if old_default_servers is None or default != old_default_servers.default:
+                logger.info(f"Default server is now configured to {default}")
+            logger.warning(
+                "Default server is moved to default_servers.default, "
+                "please update your config file to set the default server."
+                "The current way will be deprecated in the future."
+            )
+        else:
+            logger.warning(
+                "Default server (default_servers.default) is not configured with appl config files, "
+                "You need to configure it with environment variables or command line arguments."
+                # TODO: add env var and cmd args name.
+            )
+
+
+def _log_configs():
+    if global_vars.configs.settings.logging.display.configs:
+        logger.info(f"Using configs:\n{yaml.dump(global_vars.configs.model_dump())}")
+
+
 def _get_loguru_format():
     return LoguruFormatter(
         max_length=global_vars.configs.settings.logging.max_length,
@@ -197,9 +250,13 @@ def _appl_init():
     # find dotenvs starting from current working directory
     dotenvs = find_files(start_path, [".env"])[::-1]
     # find appl configs starting from current working directory
-    # if the file being executed is inside current working directory, start from the file being executed
-    if os.path.commonpath([cwd, exec_file_path]) == cwd:
-        start_path = exec_file_path
+    try:
+        # if the file being executed is inside current working directory, start from the file being executed
+        if os.path.commonpath([cwd, exec_file_path]) == cwd:
+            start_path = exec_file_path
+    except Exception:
+        # Just use the working directory
+        pass
     appl_config_files = find_files(start_path, APPL_CONFIG_FILES)[::-1]
 
     for dotenv in dotenvs:
@@ -241,16 +298,6 @@ def _appl_init():
         if display_configs_update:
             logger.info(f"Update configs:\n{yaml.dump(override_configs.to_dict())}")
 
-    default_server = global_vars.configs.servers.get("default", None)
-    if default_server:
-        logger.info(f"Default server is now configured to {default_server}")
-    else:
-        logger.warning(
-            "Default server is not configured with appl config files, "
-            "You need to configure it with environment variables or command line arguments."
-            # TODO: add env var and cmd args name.
-        )
-
     # ===== Setup Logging ======
     _setup_logging(global_vars.configs.settings.logging)
 
@@ -267,32 +314,35 @@ def _appl_init():
     _setup_misc(global_vars.configs.settings.misc)
 
     # ===== Setup Metadata ======
-    meta_file = f"{_get_trace_file_prefix()}_meta.json"
-    static_metadata = global_vars.configs.metadata
-    dump_file(
-        {
-            **static_metadata,
-            **asdict(global_vars.metadata),
-            "configs": global_vars.configs.model_dump(),
-        },
-        meta_file,
-    )
+    _write_metafile()
 
-    if global_vars.configs.settings.logging.display.configs:
-        logger.info(f"Using configs:\n{yaml.dump(global_vars.configs.model_dump())}")
+    # ===== Log Servers Info ======
+    _log_servers_info()
+
+    # ===== Log Configs ======
+    _log_configs()
 
 
-def update_appl_configs(new_configs: APPLConfigs) -> None:
+def update_appl_configs(new_configs: Union[APPLConfigs, Namespace]) -> None:
     """Update the global configs.
 
     Note: Update in the middle might cause unexpected behavior.
     """
+    if isinstance(new_configs, Namespace):
+        new_configs = APPLConfigs(**namespace_to_dict(new_configs))
+    elif not isinstance(new_configs, APPLConfigs):
+        raise ValueError("new_configs must be an instance of APPLConfigs or Namespace")
+
     _setup_logging(new_configs.settings.logging)
     _setup_concurrency(new_configs.settings.concurrency)
     _setup_caching(new_configs.settings.caching, global_vars.configs.settings.caching)
     _setup_tracing(new_configs.settings.tracing)
     _setup_misc(new_configs.settings.misc)
+    default_servers = global_vars.configs.default_servers
     global_vars.configs = new_configs
+    _write_metafile()
+    _log_servers_info(default_servers)
+    _log_configs()
 
 
 # init when imported

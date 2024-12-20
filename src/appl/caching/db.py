@@ -7,6 +7,7 @@ from typing import Any, Dict, Optional
 
 from litellm import ModelResponse
 from loguru import logger
+from pydantic import BaseModel
 
 from ..core.globals import global_vars
 from ..core.types.caching import DBCacheBase
@@ -186,6 +187,20 @@ class DBCache(DBCacheBase):
             )
 
 
+def _serialize_args(args: Dict[str, Any]) -> str:
+    args = args.copy()
+    for k, v in args.items():
+        # dump as schema if it is a pydantic model
+        if isinstance(v, type):
+            if issubclass(v, BaseModel):
+                args[k] = v.model_json_schema()
+            else:
+                # TODO: convert to a schema
+                logger.warning(f"Unknown type during serialization: {type(v)}")
+                args[k] = str(v)
+    return json.dumps(args)
+
+
 def find_in_cache(
     args: Dict[str, Any], cache: Optional[DBCacheBase] = None
 ) -> Optional[ModelResponse]:
@@ -207,7 +222,7 @@ def find_in_cache(
     ):
         return None
     # only cache the completions with temperature == 0
-    value = cache.find(json.dumps(args))
+    value = cache.find(_serialize_args(args))
     if value is None:
         return None
     return dict_to_pydantic(value, ModelResponse)
@@ -226,7 +241,7 @@ def add_to_cache(
         and not global_vars.configs.settings.caching.allow_temp_greater_than_0
     ):
         return
-    args_str = json.dumps(args)
+    args_str = _serialize_args(args)
     value_dict = pydantic_to_dict(value)
     logger.info(f"Adding to cache, args: {args_str}, value: {value_dict}")
     cache.insert(args_str, value_dict)

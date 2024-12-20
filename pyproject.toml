@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "applang"
-version = "0.2.0"
+version = "0.2.1"
 description = "A Prompt Programming Language"
 authors = [
     { name = "Honghua Dong", email = "dhh19951@gmail.com" },
@@ -30,6 +30,7 @@ dependencies = [
     "rich>=13.8.1",
     "pillow>=11.0.0",
     "deprecated>=1.2.15",
+    "jsonargparse>=4.35.0",
 ]
 requires-python = ">=3.9"
 readme = "README.md"

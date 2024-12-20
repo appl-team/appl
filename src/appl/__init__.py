@@ -90,9 +90,11 @@ from .utils import (
 from .version import __version__
 
 
-def get_parser():
+def get_parser(
+    env_prefix: str = "", default_env: bool = True, **kwargs: Any
+) -> ArgumentParser:
     """Get an argument parser with configurable APPL configs."""
-    parser = ArgumentParser()
+    parser = ArgumentParser(env_prefix=env_prefix, default_env=default_env, **kwargs)
     parser.add_argument("--appl", type=APPLConfigs, default=global_vars.configs)
     return parser
 

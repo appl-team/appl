@@ -78,12 +78,13 @@ docker compose up
 
 Then you can set the environment variables for the Langfuse server by:
 
-```bash
-export LANGFUSE_PUBLIC_KEY=<your public key>
-export LANGFUSE_SECRET_KEY=<your secret key>
-export LANGFUSE_HOST=http://localhost:3000
+```bash title=".env"
+LANGFUSE_PUBLIC_KEY=<your-langfuse-public-key>
+LANGFUSE_SECRET_KEY=<your-langfuse-secret-key>
+LANGFUSE_HOST=<your-langfuse-host>
+# Set to http://localhost:3000 if you are hosting Langfuse locally
 ```
-You can find your Langfuse public and private API keys in the project settings page.
+You can find your Langfuse public and private API keys in the project settings page (Project Dashboard -> Configure Tracing).
 
 Then you can visualize the traces by:
 
@@ -98,6 +99,9 @@ Then you will see conversation like:
 and the timeline like:
 
 ![Langfuse Timeline](../_assets/tracing/langfuse_timeline.png)
+
+??? question "Troubleshooting: Incomplete traces on Langfuse"
+    You may see incomplete traces (function calls tree) in Langfuse when you click from the `Traces` page. This might because langfuse apply a filter based on the timestamp. Try to remove the `?timestamp=<timestamp>` in the url and refresh the page.
 
 ### Lunary 
 

@@ -11,9 +11,11 @@ settings:
   tracing:
     enabled: true
 
+# default_servers:
+#   default: azure-gpt35 # override the default server according to your needs
+
 # example for setting up servers
 servers:
-  # default: azure-gpt35 # override the default server according to your needs
   azure-gpt35: # the name of the server
     model: azure/gpt35t # the model name
     # temperature: 1.0 # set the default temperature for the calls to this server

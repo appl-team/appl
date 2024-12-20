@@ -84,10 +84,17 @@ prompts:
 
 # When using APIs through litellm,
 #   see the list of available models at https://docs.litellm.ai/docs/providers
+# You can directly use the model name as server name.
+default_servers:
+  default: null
+  small: null
+  large: null
+
 # When using SRT server,
 #   set model to "srt" and api_base to the address of the server.
 servers:
-  default: null
   # create aliases for the models, you may use the model name as server name directly
-  _dummy:
-    model: _dummy
+  # You can also set the default args for the server, for example:
+  # gpt-4o-t07:
+  #   model: gpt-4o
+  #   temperature: 0.7

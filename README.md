@@ -212,14 +212,16 @@ For a more comprehensive tutorial, please refer to the [tutorial](https://appl-t
 - [Prompt Coding Helpers](https://appl-team.github.io/appl/tutorials/6_prompt_coding)
 - [Using Tracing](https://appl-team.github.io/appl/tutorials/7_tracing)
 
-### Cookbook
+### Cookbook and Applications
 For more detailed usage and examples, please refer to the [cookbook](https://appl-team.github.io/appl/cookbook).
 
-APPL can be used to reproduce some popular LM-based applications easily, such as:
-* [Tree of Thoughts](https://github.com/princeton-nlp/tree-of-thought-llm)[[APPL implementation](examples/advanced/tree_of_thoughts/)]: deliberate problem solving with Large Language Models.
+We use APPL to reimplement popular LLM and prompting algorithms in [Reppl](https://github.com/appl-team/reppl), such as:
+* [Tree of Thoughts](https://github.com/princeton-nlp/tree-of-thought-llm) [[Re-implementation](https://github.com/appl-team/reppl/tree/main/tree-of-thoughts/)] [[APPL Example](examples/advanced/tree_of_thoughts/)]: deliberate problem solving with Large Language Models.
+
+We use APPL to build popular LM-based applications, such as:
 * [Wordware's TwitterPersonality](https://twitter.wordware.ai/)[[APPL implementation](https://github.com/appl-team/TwitterPersonality)]: analyzes your tweets to determine your Twitter personality.
 
-We also use APPL to build small LLM-powered libraries, such as:
+We use APPL to build small LLM-powered libraries, such as:
 * [AutoNaming](https://github.com/appl-team/AutoNaming): automatically generate names for experiments based on argparse arguments.
 * [ExplErr](https://github.com/appl-team/ExplErr): a library for error explanation with LLMs.
 

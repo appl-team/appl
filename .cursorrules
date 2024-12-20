@@ -7,7 +7,7 @@ Best Practices for writing code:
 </general_rules>
 
 <working_with_llms>
-When calling Large Language Models (LLMs), you should use the package `appl` to build the application.
+When calling Large Language Models (LLMs), you should use the package `appl` to build the application (The name on `pypi` is `applang`, so it should be installed with `pip install -U applang`).
 
 When working with LLMs, you should have clear format instructions to guide the LLMs to generate the desired output, and have appropriate parser to parse the output into the desired format. The format should be designed clear and easy to parse, consider using format like markdown's code block.
 
@@ -16,13 +16,14 @@ You should add `stream=True` for tasks that require LLMs to generate a large amo
 
 <explain_appl>
 APPL is a package that integrates prompts of LLMs into the code.
+- `@ppl` is a decorator that marks a function as a prompt function, the function cannot be a coroutine (async function).
 - Grow your prompt by calling `grow()`, a implicit newline is added between each component. When being asked to be implicit, you can remove the `grow()` function and leave the content inside `grow` as it is, APPL will automatically add the `grow()` function for you during runtime.
 - The docstring of the `@ppl` function will not be counted as a part of the prompt by default. If that part is meant to be the system prompt, you can specified that using `@ppl(docstring_as="system")`.
 - The `gen` function is a wrapper around `litellm.completion`, it returns a future object, it will automatically takes the prompt captured so far as the prompt for the LLM. See the example below for more details. Note that you do not need to wrap `gen` in AIRole() scope to call it for generation.
 - You can use `with role:` to specify the role of the message, for example `with AIRole():` to specify the prompt growed in the scope as the assistant message. The default scope is `user`.
 - To get the result of `gen` immediately, use `str()` to convert it to a string. Otherwise, it is a `Generation` object where you can take the `result` attribute to get the result.
-- Try to delay the time you get the result of `gen` as much as possible, so that the code can be more parallelized.
-- You should avoid using multi-line string in `@ppl` function as much as possible. But when needed, write them with indentation aligning with the code, it will be dedented similar to docstring before being used in the code.
+- Try to delay the time you get the result of `gen` as much as possible, so that the code can be more parallelized. See the example below for more details.
+- When writing multi-line prompt, it is recommended to `grow` the prompt multiple times to utilize the implicit compositor that adds a newline between each component. This way provides a better control over the prompt where you can easily comment out parts of the prompt. But you can also use multi-line string with indentation aligning with the code (it will be dedented similar to docstring before being used in the code).
 
 <example>
 
@@ -94,6 +95,7 @@ Prompt:
 ```
 Output: Mona Lisa.
 
+The two questions are answered in parallel, since the generation are future objects until being evaluated by `str` or printing, so the main process is not blocked by the LLM.
 </example>
 
 <example>
@@ -158,6 +160,8 @@ The prompt for both `gen` calls in `hello1` and `hello2` will looks like:
 
 <example>
 You can use compositors to build the prompt, which specify the indexing, indentation, and separation between different parts of the prompt (growed by `grow()`) inside its scope. Some useful compositors include: Tagged, NumberedList.
+The Tagged wraps the content inside with opening and closing tag, and NumberedList indexes each single prompt part.
+You are encouraged to use Tagged to wrap contents to make the prompt more readable.
 
 ```python
 from appl import ppl, gen, grow
@@ -169,6 +173,7 @@ def guess_output(hints: list[str], inputs: str):
     grow("Guess the output of the input.")
     with Tagged("hints"):
         with NumberedList():
+            grow("First hint")
             grow(hints)  # list will be captured one by one
 
     with Tagged("inputs"):
@@ -178,7 +183,7 @@ def guess_output(hints: list[str], inputs: str):
 
     return gen()
 
-print(guess_output(["The output is the sum of the numbers"], "1, 2, 3"))
+print(guess_output(["The output involves addition", "The output is a single number"], "1, 2, 3"))
 ```
 
 The prompt will looks like:
@@ -186,7 +191,9 @@ The prompt will looks like:
 - User:
     Guess the output of the input.
     <hints>
-    1. The output is the sum of the numbers
+    1. First hint
+    2. The output involves addition
+    3. The output is a single number
     </hints>
     <inputs>
     1, 2, 3
@@ -197,7 +204,7 @@ The prompt will looks like:
 </example>
 
 <best_practices>
-Though you can call LLMs with simple tasks sharing the same context multiple times, you are encouraged to combine them into a single call with proper formatting and parsing (or using pydantic model) to reduce cost. For example, when being asked to generate a person's name and age:
+Though you can call LLMs to generate one thing at a time, you are encouraged to combine them into a single call with proper formatting and parsing (or using pydantic model as `response_format`) to reduce cost. For example, when being asked to generate a person's name and age:
 ```python
 class Person(BaseModel):
     name: str
@@ -226,7 +233,7 @@ def parse_to_get_name_and_age() -> Person:
     person: Person = parse_response(response)
     return person
 
-# or this (generally more recommended)
+# or this (generally more recommended, you do not need to include format instructions in the prompt)
 @ppl
 def pydantic_to_get_name_and_age() -> Person:
     grow("Generate a person's name and age.")

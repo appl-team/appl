@@ -207,9 +207,9 @@ class TraceLunaryPrinter(TracePrinterBase):
         """Log the trace to lunary."""
         import lunary
 
-        project_id = os.environ.get(
-            "LUNARY_PUBLIC_KEY", "1c1975c5-13b9-4977-8003-89fff5c71c27"
-        )
+        project_id = os.environ.get("LUNARY_PUBLIC_KEY", None)
+        if project_id is None:
+            raise ValueError("LUNARY_PUBLIC_KEY is not set")
         url = os.environ.get("LUNARY_API_URL", "http://localhost:3333")
         logger.info(f"project_id: {project_id}, api url: {url}")
         lunary.config(app_id=project_id, api_url=url)
@@ -337,7 +337,9 @@ class TraceLangfusePrinter(TracePrinterBase):
         from langfuse import Langfuse
         from langfuse.client import StatefulTraceClient
 
-        project_public_key = os.environ.get("LANGFUSE_PUBLIC_KEY", "")
+        project_public_key = os.environ.get("LANGFUSE_PUBLIC_KEY", None)
+        if project_public_key is None:
+            raise ValueError("LANGFUSE_PUBLIC_KEY is not set")
         url = os.environ.get("LANGFUSE_HOST", "http://localhost:3000")
         logger.info(f"project_public_key: {project_public_key}, api url: {url}")
 
@@ -394,25 +396,41 @@ class TraceLangfusePrinter(TracePrinterBase):
                 model_name = inputs.pop("model", None)
                 metadata = inputs.pop("metadata", {})
                 metadata = (node.metadata or {}) | metadata
-                model_parameters = inputs
-                messages = model_parameters.pop("messages", [])
-                inputs = {"messages": messages}
-                if tools := model_parameters.pop("tools", None):
-                    inputs["tools"] = tools
-                if tool_choice := model_parameters.get("tool_choice", None):
-                    if isinstance(tool_choice, dict):
-                        name = tool_choice.get("function", {}).get("name", None)
+
+                def extra_supported_model_parameters(inputs: Dict) -> Dict:
+                    parameters = {}
+                    for k, v in inputs.items():
+                        if k not in [
+                            "messages",
+                            "tools",
+                            "response_format",
+                            "tool_choice",
+                        ]:
+                            parameters[k] = v
+
+                    if tool_choice := inputs.get("tool_choice", None):
+                        if isinstance(tool_choice, str):
+                            name = tool_choice
+                        elif isinstance(tool_choice, dict):
+                            name = tool_choice.get("function", {}).get("name", None)
+                        else:
+                            logger.warning(f"unknown tool_choice: {tool_choice}")
+
                         if name:
-                            model_parameters["tool_choice"] = name
-                        else:  # put to the inputs
-                            model_parameters.pop("tool_choice", None)
-                            inputs["tool_choice"] = tool_choice
+                            parameters["tool_choice"] = name
+
+                    for k in parameters.keys():
+                        inputs.pop(k, None)
+
+                    return parameters
+
+                model_parameters = extra_supported_model_parameters(inputs)
 
                 usage = None
                 if outputs is not None:
                     if node.type == "gen":
                         model_name = None
-                    else:
+                    elif not isinstance(outputs, str):
                         outputs: ModelResponse = outputs  # type: ignore
                         usage = outputs.usage
                         message = outputs.choices[0].message  # type: ignore

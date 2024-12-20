@@ -48,6 +48,7 @@ class TraceEngine(TraceEngineBase):
         if mode == "write":
             if os.path.exists(filename):
                 logger.warning(f"Trace file {filename} already exists, overwriting")
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
             self._file = open(filename, "wb+")
         elif mode == "read":
             if not os.path.exists(filename):
@@ -115,7 +116,11 @@ class TraceEngine(TraceEngineBase):
                 if match:
                     event.parent_func = match.group(1)
                 else:
-                    assert False, f"Invalid completion request name: {event.name}"
+                    event.parent_func = self._last_func
+                    logger.warning(
+                        f"Unusual completion request name: {event.name}. "
+                        "Using last function as parent event"
+                    )
 
             with self._lock:
                 logger.debug(f"add to trace {event}")

@@ -48,14 +48,16 @@ def _init_server(
 
 
 def _get_server_configs(name: str) -> Dict[str, Any]:
+    servers = global_vars.configs.servers or {}
     server_configs: Dict[str, Any] = {}
-    if name not in global_vars.configs.servers:
-        logger.warning(
-            f"Server {name} not found in configs, using the server name as model name"
-        )
+    if name not in servers:
+        if name != "_dummy":
+            logger.info(
+                f"Server {name} not found in configs, using the server name as model name"
+            )
         server_configs["model"] = name
     else:
-        cfgs = global_vars.configs.servers[name]
+        cfgs = servers[name]
         if not isinstance(cfgs, dict):
             raise ValueError(f"The configs of server {name} is not a dictionary")
         server_configs = cfgs
@@ -67,9 +69,9 @@ def _get_server_configs(name: str) -> Dict[str, Any]:
             break
         server_configs = copy.deepcopy(server_configs)
         template_name = server_configs.pop("template")
-        if template_name not in global_vars.configs.servers:
+        if template_name not in servers:
             raise ValueError(f"Server config template {template_name} not found")
-        template_config = global_vars.configs.servers[template_name]
+        template_config = servers[template_name]
         if not isinstance(template_config, dict):
             raise ValueError(
                 f"The configs of server {template_name} is not a dictionary"
@@ -101,8 +103,19 @@ class ServerManager:
 
     def get_server(self, name: Optional[str]) -> BaseServer:
         """Get a server by name. If name is None, get the default server."""
-        if name is None:
-            name = global_vars.configs.servers.get("default", None)  # type: ignore
+        if name == "small":
+            name = global_vars.configs.default_servers.small
+        elif name == "large":
+            name = global_vars.configs.default_servers.large
+        if name is None:  # if still None, fall back to default server
+            name = global_vars.configs.default_servers.default
+            if name is None:  # backward-compatible for now
+                name = global_vars.configs.servers.get("default", None)  # type: ignore
+                # logger.warning(
+                #     "Default server is moved to default_servers.default, "
+                #     "please update your config file to set the default server. "
+                #     "The current way will be deprecated in the future."
+                # )
         if name is None:
             raise ValueError(
                 "Default server is not configured. Please set the default server in your config file. "
@@ -114,13 +127,6 @@ class ServerManager:
                 server = _init_server(**server_configs)
                 self.register_server(name, server)
         return self._servers[name]
-
-    @property
-    def default_server(self) -> BaseServer:
-        """The default server."""
-        if "default" not in self._servers:
-            raise ValueError("Default server not found")
-        return self._servers["default"]
 
 
 # Singleton server manager

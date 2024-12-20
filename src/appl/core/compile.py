@@ -312,7 +312,7 @@ class DedentTripleQuotedString(cst.CSTTransformer):
             for line in lines:
                 n = get_num_leading_whitespace(line)
                 # try to fix a bug in `libcst.code_for_node``
-                # the leading whitespace of '}' is not resumed correctly
+                # the leading whitespace of '}' is not recovered correctly
                 # as well as the contents within `{` and `}` (TODO)
                 if len(line) > n and line[n] != "}":
                     if margin is None:
@@ -338,10 +338,15 @@ class DedentTripleQuotedString(cst.CSTTransformer):
             )
             return cleaned
 
+        # example: f"""    foo\n    bar
         original_code = self.module.code_for_node(original_node)
+        # example: start = f""", end = """
         simple_str = original_code[len(original_node.start) : -len(original_node.end)]
+        # example: simple_str = foo\n    bar
         format_str = f"{original_node.start}{dedent_str(simple_str)}{original_node.end}"
+        # example: format_str = f"""foo\nbar"""
         parsed_cst = cst.parse_expression(format_str)
+        # replace the original node with the parsed cst
         if isinstance(parsed_cst, cst.FormattedString):
             return parsed_cst
         raise RuntimeError(

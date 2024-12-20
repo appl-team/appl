@@ -16,6 +16,11 @@ For example, you can create a `.env` file with the following content to specify 
 OPENAI_API_KEY=<your openai api key>
 ```
 
+We provide an example of `.env.example` file in the root directory, you can copy it to your project directory and modify it.
+```bash title=".env.example"
+--8<-- ".env.example"
+```
+
 ### Export or Shell Configuration
 Alterantively, you can export the environment variables directly in your terminal, or add them to your shell configuration file (e.g., `.bashrc`, `.zshrc`). For example:
 ```bash
@@ -30,8 +35,15 @@ export OPENAI_API_KEY=<your openai api key>
 --8<-- "src/appl/default_configs.yaml"
 ```
 
-??? note "You should setup your own default server."
-    The default server (currently `gpt-4o-mini`) set in APPL could be outdated and changed in the future. We recommend you to specify your own default model in the `appl.yaml` file.
+??? note "Setup your default models"
+    You should specify your own default model in the `appl.yaml` file. You may also specify the default "small" and "large" models, which will fallback to the default model if not specified.
+    The name can be a server name in your configuration (`servers` section), or a model name that is supported by litellm.
+    ```yaml title="appl.yaml (example)"
+    settings:
+      model:
+        default: gpt-4o-mini # small model fallback to this
+        large: gpt-4o
+    ```
 
 ### Override Configs
 You can override these configurations by creating a `appl.yaml` file in the root directory of your project (or other directories, see [Priority of Configurations](#priority-of-configurations) for more details). A typical usage is to override the `servers` configuration to specify the LLM servers you want to use, as shown in the following example `appl.yaml` file.
@@ -95,6 +107,43 @@ settings:
 ```
 
 To resume from a previous trace, you can specify the `APPL_RESUME_TRACE` environment variable with the path to the trace file. See more details in the [tutorial](./tutorials/7_tracing.md).
+
+## Visualize Traces
+
+### Langfuse (Recommended)
+
+Langfuse is an open-source web-based tool for visualizing traces and LLM calls.
+
+You can host Langfuse [locally](https://langfuse.com/self-hosting) or use [public version](https://langfuse.com/).
+
+```bash
+git clone https://github.com/langfuse/langfuse.git
+cd langfuse
+docker compose up
+```
+
+Then you can set the environment variables for the Langfuse server by:
+
+```bash title=".env"
+LANGFUSE_PUBLIC_KEY=<your-langfuse-public-key>
+LANGFUSE_SECRET_KEY=<your-langfuse-secret-key>
+LANGFUSE_HOST=<your-langfuse-host>
+# Set to http://localhost:3000 if you are hosting Langfuse locally
+```
+You can find your Langfuse public and private API keys in the project settings page (Project Dashboard -> Configure Tracing).
+
+Please see [the tutorial](./tutorials/7_tracing.md#langfuse-recommended) for more details.
+
+You can see conversation like:
+
+![Langfuse Conversation](./_assets/tracing/langfuse_convo.png)
+
+and the timeline like:
+
+![Langfuse Timeline](./_assets/tracing/langfuse_timeline.png)
+
+### Lunary
+Please see [the tutorial](./tutorials/7_tracing.md#lunary) for more details.
 
 ### LangSmith
 To enable [LangSmith](https://docs.smith.langchain.com/) tracing, you need to to [obtain your API key](https://smith.langchain.com/settings) from LangSmith and add the following environment variables to your `.env` file:

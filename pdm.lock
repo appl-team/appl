@@ -5,7 +5,7 @@
 groups = ["default", "dev", "docs", "ext", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:f7d290fc577886c7af7be09cb56488f7ff6445e38cb8f381220324111be8bd57"
+content_hash = "sha256:5d35598985c554219905bcab95305dbd0ed2d30aa688c8530c20fc3ce13f3b25"
 
 [[metadata.targets]]
 requires_python = ">=3.9"
@@ -1061,6 +1061,20 @@ files = [
     {file = "jiter-0.5.0-cp39-none-win32.whl", hash = "sha256:368084d8d5c4fc40ff7c3cc513c4f73e02c85f6009217922d0823a48ee7adf61"},
     {file = "jiter-0.5.0-cp39-none-win_amd64.whl", hash = "sha256:ce03f7b4129eb72f1687fa11300fbf677b02990618428934662406d2a76742a1"},
     {file = "jiter-0.5.0.tar.gz", hash = "sha256:1d916ba875bcab5c5f7d927df998c4cb694d27dceddf3392e58beaf10563368a"},
+]
+
+[[package]]
+name = "jsonargparse"
+version = "4.35.0"
+requires_python = ">=3.8"
+summary = "Implement minimal boilerplate CLIs derived from type hints and parse from command line, config files and environment variables."
+groups = ["default"]
+dependencies = [
+    "PyYAML>=3.13",
+]
+files = [
+    {file = "jsonargparse-4.35.0-py3-none-any.whl", hash = "sha256:8298ea953987fb41ed074e8802c77bb19166d632d972b23383cad63da7d7486b"},
+    {file = "jsonargparse-4.35.0.tar.gz", hash = "sha256:815ecd190e4004d2ce69b184fe16915f8f81fd32ae3e479fa37fbb9b89130446"},
 ]
 
 [[package]]

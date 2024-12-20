@@ -455,6 +455,7 @@ class Conversation(BaseModel):
         self, default_role: Optional[MessageRole] = USER_ROLE
     ) -> List[Dict[str, str]]:
         """Return a list of dict representation of the conversation."""
+        # TODO: rename to `to_list`
         self.collapse()
         res = [m.get_dict() for m in self.system_messages]
         res += [m.get_dict(default_role) for m in self.messages]
