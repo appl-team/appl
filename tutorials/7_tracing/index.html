@@ -3330,11 +3330,12 @@ You can <a href="#visualizing-the-trace">visualize</a> the trace file using the 
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>docker<span class="w"> </span>compose<span class="w"> </span>up
 </span></code></pre></div>
 <p>Then you can set the environment variables for the Langfuse server by:</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANGFUSE_PUBLIC_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>public<span class="w"> </span>key&gt;
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANGFUSE_SECRET_KEY</span><span class="o">=</span>&lt;your<span class="w"> </span>secret<span class="w"> </span>key&gt;
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANGFUSE_HOST</span><span class="o">=</span>http://localhost:3000
+<p><div class="language-bash highlight"><span class="filename">.env</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">LANGFUSE_PUBLIC_KEY</span><span class="o">=</span>&lt;your-langfuse-public-key&gt;
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">LANGFUSE_SECRET_KEY</span><span class="o">=</span>&lt;your-langfuse-secret-key&gt;
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">LANGFUSE_HOST</span><span class="o">=</span>&lt;your-langfuse-host&gt;
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set to http://localhost:3000 if you are hosting Langfuse locally</span>
 </span></code></pre></div>
-You can find your Langfuse public and private API keys in the project settings page.</p>
+You can find your Langfuse public and private API keys in the project settings page (Project Dashboard -&gt; Configure Tracing).</p>
 <p>Then you can visualize the traces by:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>appltrace<span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>trace<span class="w"> </span>file&gt;
 </span></code></pre></div>
@@ -3342,6 +3343,10 @@ You can find your Langfuse public and private API keys in the project settings p
 <p><img alt="Langfuse Conversation" src="../../_assets/tracing/langfuse_convo.png" /></p>
 <p>and the timeline like:</p>
 <p><img alt="Langfuse Timeline" src="../../_assets/tracing/langfuse_timeline.png" /></p>
+<details class="question">
+<summary>Troubleshooting: Incomplete traces on Langfuse</summary>
+<p>You may see incomplete traces (function calls tree) in Langfuse when you click from the <code class="language-python highlight"><span class="n">Traces</span></code> page. This might because langfuse apply a filter based on the timestamp. Try to remove the <code class="language-python highlight"><span class="err">?</span><span class="n">timestamp</span><span class="o">=&lt;</span><span class="n">timestamp</span><span class="o">&gt;</span></code> in the url and refresh the page.</p>
+</details>
 <h3 id="lunary">Lunary<a class="headerlink" href="#lunary" title="Permanent link">&para;</a></h3>
 <p>Lunary is another open-source web-based tool for visualizing traces and LLM calls.</p>
 <p>You can host Lunary <a href="https://github.com/lunary-ai/lunary?tab=readme-ov-file#running-locally">locally</a> or use <a href="https://lunary.ai/">their hosted version</a>.</p>
