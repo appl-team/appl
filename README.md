@@ -79,7 +79,7 @@ The output will look like
 Nice to meet you, APPL!
 ```
 
-In this example, the `@ppl` decorator (`@` stands for `a` here) marks the `hello_world` function as an *APPL function*. Within such a function, the standalone string `f"Hello World! My name is {name}."` is added to the prompt, and the `gen()` function calls LLM to generate responses using the current prompt. Moreover, explcitly appending the prompt is also supported using `grow`:
+In this example, the `@ppl` decorator (`@` stands for `a` here) marks the `hello_world` function as an *APPL function*. Within such a function, the standalone string `f"Hello World! My name is {name}."` is added to the prompt, and the `gen()` function calls LLM to generate responses using the current prompt. Moreover, explicitly appending the prompt is also supported using `grow`:
 
 ```python
 from appl import gen, grow, ppl
