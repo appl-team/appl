@@ -258,9 +258,9 @@ class Generation(Generic[M]):
                             "api_cost", key=self._model_name, delta=results.cost
                         )
                         logger.info(
-                            f"API cost for this request: {results.cost:.4f}, "
-                            f"in total: {total_cost:.4f} {currency}. "
-                            f"Total number of requests: {num_requests}."
+                            f"API cost for request [{self.id}]: {results.cost:.4f}, "
+                            f"Total cost on {self._model_name}: {total_cost:.4f} {currency}. "
+                            f"Total requests on {self._model_name}: {num_requests}."
                         )
                 create_args = self._server._get_create_args(
                     self._args, **self._extra_args

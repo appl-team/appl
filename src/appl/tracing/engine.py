@@ -123,7 +123,7 @@ class TraceEngine(TraceEngineBase):
                     )
 
             with self._lock:
-                logger.debug(f"add to trace {event}")
+                logger.trace(f"add to trace {event}")
                 pickle.dump(event, self._file)
                 self._file.flush()
 
@@ -175,6 +175,7 @@ class TraceEngine(TraceEngineBase):
 
             # cached for raw completion response
             key = self._cache_key(name, event.args)
+            # logger.debug(f"add to cache with key: {key}")
             if key not in self._gen_cache:
                 self._gen_cache[key] = []
             self._gen_cache[key].append(event.ret)
@@ -188,7 +189,9 @@ class TraceEngine(TraceEngineBase):
         """
         args = self.args_to_json(args)
         with self._lock:
-            entry_list = self._gen_cache.get(self._cache_key(name, args), None)
+            key = self._cache_key(name, args)
+            # logger.debug(f"try to find cache with key: {key}")
+            entry_list = self._gen_cache.get(key, None)
             if not entry_list or len(entry_list) == 0:
                 return None
             entry = entry_list.pop(0)

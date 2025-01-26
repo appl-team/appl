@@ -1,6 +1,8 @@
 import os
 from typing import Any, Dict, Optional
 
+from loguru import logger
+
 from appl import dump_file, load_file
 from appl.core.trace import TracePrinterBase
 from appl.tracing import (
@@ -45,7 +47,11 @@ def main():
     if not os.path.exists(trace_path):
         raise FileNotFoundError(f"Trace file not found: {args.trace}")
     meta_file_path = get_meta_file(trace_path)
-    trace_metadata: Dict[str, Any] = load_file(meta_file_path)
+    try:
+        trace_metadata: Dict[str, Any] = load_file(meta_file_path)
+    except Exception as e:
+        logger.warning(f"Failed to load metadata: {e}")
+        trace_metadata = {}
 
     def _get_printer() -> TracePrinterBase:
         if args.platform in ["langfuse", "lunary"]:
