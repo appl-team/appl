@@ -84,7 +84,7 @@ def chat_completion(**kwargs: Any) -> CompletionResponse:
         raw_response_holder.append(raw_response)
 
     def post_completion(response: CompletionResponse) -> None:
-        raw_response = response.complete_response
+        raw_response = response.finished_raw_response
         cost = 0.0 if cache_hit else response.cost
         response.cost = cost  # update the cost
         event = CompletionResponseEvent(

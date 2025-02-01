@@ -3,11 +3,12 @@ import os
 import shutil
 import sys
 import time
-from typing import Any, Callable, List, Literal, Optional, Union
+from typing import Any, Callable, Generator, List, Literal, Optional, Union
 
 from litellm import CustomStreamWrapper, completion_cost, stream_chunk_builder
 from litellm.exceptions import NotFoundError
 from litellm.types.utils import Delta, Function, ModelResponse
+from litellm.types.utils import Message as LiteLLMMessage
 from loguru import logger
 from openai import Stream
 from openai.types import CompletionUsage
@@ -32,6 +33,15 @@ from .globals import global_vars
 from .tool import ToolCall
 from .types import ResponseType
 from .utils import get_live, make_panel, split_last, stop_live, strip_for_continue
+
+
+class ReasoningContent(BaseModel):
+    """The content of the reasoning."""
+
+    content: str = Field(..., description="The content of the reasoning")
+
+    def __str__(self) -> str:
+        return self.content
 
 
 class CompletionResponse(BaseModel):
@@ -81,12 +91,16 @@ class CompletionResponse(BaseModel):
         None, description="The top-choice message from the completion"
     )
     """The top-choice message from the completion."""
+    reasoning_content: Optional[str] = Field(
+        None, description="The reasoning content from the completion if exists"
+    )
+    """The reasoning content from the completion if exists."""
     tool_calls: List[ToolCall] = Field([], description="The tool calls")
     """The tool calls."""
 
     @model_validator(mode="after")
     def _post_init(self) -> "CompletionResponse":
-        self._complete_response = None
+        self._finished_raw_response = None
 
         if isinstance(self.raw_response, (CustomStreamWrapper, Stream)):
             # ? supports for Async Steam?
@@ -100,13 +114,21 @@ class CompletionResponse(BaseModel):
         self.response_obj = response_obj
 
     @property
-    def complete_response(self) -> Union[ModelResponse, ChatCompletion]:
-        """The complete response from the model. This will block until the response is finished."""
+    def ensure_finished(self) -> "CompletionResponse":
+        """Ensure the response is finished."""
         if self.is_finished:
-            return self._complete_response  # type: ignore
+            return self
+        self.streaming()
+        return self
+
+    @property
+    def finished_raw_response(self) -> Union[ModelResponse, ChatCompletion]:
+        """The completed raw response from the model. This will block until the response is finished."""
+        if self.is_finished:
+            return self._finished_raw_response  # type: ignore
         self.streaming()  # ? when we should set display to False?
         assert self.is_finished, "Response should be finished after streaming"
-        return self._complete_response  # type: ignore
+        return self._finished_raw_response  # type: ignore
 
     @property
     def results(self) -> Any:
@@ -216,6 +238,7 @@ class CompletionResponse(BaseModel):
             target = self.response_obj
         else:
             target = self.format_stream()
+        # print(target)
 
         streaming_display_mode = (
             display or global_vars.configs.settings.logging.display.streaming_mode
@@ -245,10 +268,19 @@ class CompletionResponse(BaseModel):
             else:
                 need_stop = False
             content = display_prefix_content
+            is_reasoning = False
             for i, chunk in enumerate(iter(target)):
-                if isinstance(chunk, BaseModel):
+                if isinstance(chunk, ReasoningContent):
+                    if not is_reasoning:
+                        content += "\n===== START REASONING =====\n"
+                        is_reasoning = True
+                    content += chunk.content
+                elif isinstance(chunk, BaseModel):
                     content = json.dumps(chunk.model_dump(), indent=2)
                 else:
+                    if is_reasoning:
+                        content += "\n===== END REASONING =====\n"
+                        is_reasoning = False
                     content += str(chunk)
                 live.update(panel(content, i, truncate=True))
                 # live.refresh()  # might be too frequent
@@ -259,6 +291,7 @@ class CompletionResponse(BaseModel):
                 stop_live()
         elif streaming_display_mode == "print":
             last_content = ""
+            is_reasoning = False
 
             def eprint(content: str, color: Optional[Color] = None) -> None:
                 print(colored(content, color) if color else content, end="")
@@ -271,7 +304,12 @@ class CompletionResponse(BaseModel):
             )
             eprint(display_prefix_content, color="grey")
             for chunk in iter(target):
-                if isinstance(chunk, BaseModel):
+                if isinstance(chunk, ReasoningContent):
+                    if not is_reasoning:
+                        eprint("\n===== START REASONING =====\n", color="yellow")
+                        is_reasoning = True
+                    eprint(chunk.content, color="dark_grey")
+                elif isinstance(chunk, BaseModel):
                     content = json.dumps(chunk.model_dump(), indent=2)
                     if last_content in content:
                         eprint(
@@ -281,6 +319,9 @@ class CompletionResponse(BaseModel):
                         eprint(content, color="dark_grey")
                     last_content = content
                 else:
+                    if is_reasoning:
+                        eprint("\n===== END REASONING =====\n", color="yellow")
+                        is_reasoning = False
                     eprint(str(chunk), color="dark_grey")
 
         elif streaming_display_mode == "none":
@@ -315,14 +356,26 @@ class CompletionResponse(BaseModel):
             else:
                 self.post_finish_callbacks.insert(0, callback)
 
-    def format_stream(self):
+    def format_stream(self) -> Generator[Union[str, ReasoningContent], None, None]:
         """Format the stream response as a text generator."""
         suffix = ""
         for chunk in iter(self):
             # chunk: Union[ModelResponse, ChatCompletionChunk]
             delta: Union[Delta, ChoiceDelta] = chunk.choices[0].delta  # type: ignore
 
-            if delta is not None:
+            if delta is not None and isinstance(delta, Delta):
+                if provider_specific_fields := delta.get(
+                    "provider_specific_fields", None
+                ):
+                    if reasoning_content := provider_specific_fields.get(
+                        "reasoning_content", None
+                    ):
+                        if delta.content:
+                            raise ValueError(
+                                "Reasoning content should not be provided when content is also provided"
+                            )
+                        yield ReasoningContent(content=reasoning_content)
+
                 if delta.content is not None:
                     yield delta.content
                 elif getattr(delta, "tool_calls", None):
@@ -343,7 +396,7 @@ class CompletionResponse(BaseModel):
             logger.warning("Response already finished. Ignoring finish call.")
             return
         self.is_finished = True
-        self._complete_response = response
+        self._finished_raw_response = response
         self.usage = getattr(response, "usage", None)
         self.cost = 0.0
         try:
@@ -359,6 +412,13 @@ class CompletionResponse(BaseModel):
                     self.tool_calls.append(ToolCall.from_openai_tool_call(call))
             elif message.content is not None:
                 self.message = message.content
+                if isinstance(message, LiteLLMMessage):
+                    if provider_specific_fields := message.get(
+                        "provider_specific_fields", None
+                    ):
+                        self.reasoning_content = provider_specific_fields.get(
+                            "reasoning_content", None
+                        )
             else:
                 raise ValueError(f"Invalid response: {response}")
         elif response is None:
@@ -412,4 +472,4 @@ class CompletionResponse(BaseModel):
                 "Returning None."
             )
             return None
-        return getattr(self.complete_response, name)
+        return getattr(self.finished_raw_response, name)

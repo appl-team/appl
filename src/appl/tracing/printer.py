@@ -430,12 +430,24 @@ class TraceLangfusePrinter(TracePrinterBase):
                 if outputs is not None:
                     if node.type == "gen":
                         model_name = None
-                    elif not isinstance(outputs, str):
+                    elif not isinstance(outputs, str):  # for raw completion requests
                         outputs: ModelResponse = outputs  # type: ignore
                         usage = outputs.usage
                         message = outputs.choices[0].message  # type: ignore
-                        outputs = message.content
+                        outputs = message.content or ""
+                        # Add reasoning content if exists
+                        if provider_specific_fields := message.get(
+                            "provider_specific_fields", None
+                        ):
+                            if reasoning_content := provider_specific_fields.get(
+                                "reasoning_content", None
+                            ):
+                                outputs = (
+                                    f"```reasoning\n{reasoning_content}\n```\n"
+                                    + outputs
+                                )
                         if message.tool_calls:
+                            # replace the content with the tool calls
                             outputs = {
                                 "content": message.content,
                                 "tool_calls": [

@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "applang"
-version = "0.2.1"
+version = "0.2.2"
 description = "A Prompt Programming Language"
 authors = [
     { name = "Honghua Dong", email = "dhh19951@gmail.com" },
@@ -22,7 +22,7 @@ dependencies = [
     "PyYAML>=6.0.1",
     "toml>=0.10.2",
     "termcolor>=2.4.0",
-    "litellm>=1.41.0",
+    "litellm>=1.59.8",
     "tiktoken>=0.6.0",
     "addict>=2.4.0",
     "pendulum>=3.0.0",

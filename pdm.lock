@@ -5,7 +5,7 @@
 groups = ["default", "dev", "docs", "ext", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:5d35598985c554219905bcab95305dbd0ed2d30aa688c8530c20fc3ce13f3b25"
+content_hash = "sha256:bfbd3712d3d67cd3c77b891424408c254a7dba1520f4b5bb44cfb82ae6a3c7e0"
 
 [[metadata.targets]]
 requires_python = ">=3.9"
@@ -1247,26 +1247,26 @@ files = [
 
 [[package]]
 name = "litellm"
-version = "1.47.2"
+version = "1.59.12"
 requires_python = "!=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,!=3.7.*,>=3.8"
 summary = "Library to easily interface with LLM API providers"
 groups = ["default"]
 dependencies = [
     "aiohttp",
     "click",
+    "httpx<0.28.0,>=0.23.0",
     "importlib-metadata>=6.8.0",
     "jinja2<4.0.0,>=3.1.2",
     "jsonschema<5.0.0,>=4.22.0",
-    "openai>=1.45.0",
+    "openai>=1.55.3",
     "pydantic<3.0.0,>=2.0.0",
     "python-dotenv>=0.2.0",
-    "requests<3.0.0,>=2.31.0",
     "tiktoken>=0.7.0",
     "tokenizers",
 ]
 files = [
-    {file = "litellm-1.47.2-py3-none-any.whl", hash = "sha256:85d510f3e367effc835a323dba10f22ba30d88b0aa5a690aba076b19addd9888"},
-    {file = "litellm-1.47.2.tar.gz", hash = "sha256:60e0e7e2c3be2d16ea8895d9147ade2f18ba19939f6a8483f150c04403648e60"},
+    {file = "litellm-1.59.12-py3-none-any.whl", hash = "sha256:72c19a7612ec4684c98b451762ef04b6edeaf0aae540e1f5108698ee812023b9"},
+    {file = "litellm-1.59.12.tar.gz", hash = "sha256:8d9aa62dc8e8b03c6e74536b9e2639a9355527a4e9c9e76af05ad03dd8a46c34"},
 ]
 
 [[package]]
@@ -1871,13 +1871,12 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.47.1"
-requires_python = ">=3.7.1"
+version = "1.61.0"
+requires_python = ">=3.8"
 summary = "The official Python library for the openai API"
 groups = ["default", "ext"]
 dependencies = [
     "anyio<5,>=3.5.0",
-    "cached-property; python_version < \"3.8\"",
     "distro<2,>=1.7.0",
     "httpx<1,>=0.23.0",
     "jiter<1,>=0.4.0",
@@ -1887,8 +1886,8 @@ dependencies = [
     "typing-extensions<5,>=4.11",
 ]
 files = [
-    {file = "openai-1.47.1-py3-none-any.whl", hash = "sha256:34277583bf268bb2494bc03f48ac123788c5e2a914db1d5a23d5edc29d35c825"},
-    {file = "openai-1.47.1.tar.gz", hash = "sha256:62c8f5f478f82ffafc93b33040f8bb16a45948306198bd0cba2da2ecd9cf7323"},
+    {file = "openai-1.61.0-py3-none-any.whl", hash = "sha256:e8c512c0743accbdbe77f3429a1490d862f8352045de8dc81969301eb4a4f666"},
+    {file = "openai-1.61.0.tar.gz", hash = "sha256:216f325a24ed8578e929b0f1b3fb2052165f3b04b0461818adaa51aa29c71f8a"},
 ]
 
 [[package]]

@@ -22,7 +22,7 @@ from .printer import (
     PromptRecords,
 )
 from .promptable import BracketedDefinition, Definition, Promptable, define, promptify
-from .response import CompletionResponse
+from .response import CompletionResponse, ReasoningContent
 from .runtime import appl_execute, appl_format, appl_with_ctx
 from .server import BaseServer, GenArgs
 from .tool import BaseTool, SchemaTool, Tool

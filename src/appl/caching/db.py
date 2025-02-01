@@ -103,7 +103,7 @@ class DBCache(DBCacheBase):
             # Remove expired entries
             now = now or datetime.now()
             expiry_time = now - timedelta(minutes=self.time_to_live)
-            print("exp", expiry_time)
+            logger.info(f"Cleaning up expired caching entries before {expiry_time}")
             conn.execute(
                 "DELETE FROM cache WHERE timestamp < ?", (expiry_time.isoformat(),)
             )

@@ -5,6 +5,7 @@ import threading
 from typing import (
     Any,
     Callable,
+    Generator,
     Generic,
     List,
     Optional,
@@ -27,7 +28,7 @@ from .globals import (
 )
 from .message import AIMessage, BaseMessage, ToolMessage, UserMessage
 from .promptable import Promptable
-from .response import CompletionResponse
+from .response import CompletionResponse, ReasoningContent
 from .server import BaseServer, GenArgs
 from .tool import BaseTool, ToolCall
 from .trace import GenerationInitEvent, GenerationResponseEvent, add_to_trace
@@ -296,6 +297,11 @@ class Generation(Generic[M]):
         return self._call()
 
     @property
+    def finished_response(self) -> CompletionResponse:
+        """The finished completion response of the generation call."""
+        return self.response.ensure_finished
+
+    @property
     def response_type(self) -> ResponseType:
         """The type of the response."""
         return self.response.type
@@ -318,22 +324,22 @@ class Generation(Generic[M]):
     @property
     def message(self) -> Optional[str]:
         """The message of the response."""
-        return self.response.message
+        return self.finished_response.message
 
     @property
     def tool_calls(self) -> List[ToolCall]:
         """The tool calls of the response."""
-        return self.response.tool_calls
+        return self.finished_response.tool_calls
 
     @property
     def response_obj(self) -> M:
         """The object of the response."""
-        return self.response.response_obj
+        return self.finished_response.response_obj
 
     @property
     def results(self) -> Union[M, str, List[ToolCall]]:
         """The results of the response."""
-        return self.response.results
+        return self.finished_response.results
 
     @property
     def str_future(self) -> StringFuture:
@@ -341,7 +347,9 @@ class Generation(Generic[M]):
         return StringFuture(self)
 
     @property
-    def text_stream(self):
+    def text_stream(
+        self,
+    ) -> Generator[Union[str, ReasoningContent, BaseModel], None, None]:
         """Get the response of the generation as a text stream."""
         return self.response.format_stream()
 
