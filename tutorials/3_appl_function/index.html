@@ -3184,7 +3184,7 @@
 <ol>
 <li>If the docstring is triple-quoted, it will <strong>NOT</strong> be captured as a prompt by default. To also include the docstring as a part of the prompt (as a system message or user message), you may specify <code class="language-python highlight"><span class="n">docstring_as</span></code> to be "system" or "user" in the <code class="language-python highlight"><span class="nd">@ppl</span></code> decorator, like
     <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">docstring_as</span><span class="o">=</span><span class="s2">&quot;system&quot;</span><span class="p">)</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Docstring as system message.</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="sd">    Details.&quot;&quot;&quot;</span>
@@ -3201,7 +3201,7 @@
 </span></code></pre></div></li>
 <li>Otherwise, it will be captured as a prompt. But if the content is not meant to be the docstring of the function, it is recommended to use f-string instead.
     <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@ppl</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="sa">f</span><span class="s2">&quot;First prompt.&quot;</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;Second prompt.&quot;</span>
 </span></code></pre></div></li>
@@ -3212,7 +3212,7 @@
 <p>The multiline strings will be cleaned using <code class="language-python highlight"><span class="n">inspect</span><span class="o">.</span><span class="n">cleandoc</span></code> before being captured as prompts.
 It is recommend that you follows the indentation of the function.
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@ppl</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Docstring&quot;&quot;&quot;</span> <span class="c1"># not in the prompt</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;First line.</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="sd">    Second line.</span>
@@ -3230,16 +3230,16 @@ Outputs:
 <details class="info">
 <summary>Add image prompt</summary>
 <p>It's easy to add image prompts in <em>APPL functions</em> by using the <code class="language-python highlight"><span class="n">Image</span></code> class. The following example demonstrates how to add this <a href="https://maproom.wpenginepowered.com/wp-content/uploads/OpenAI_Logo.svg_-500x123.png">example image</a> as part of prompt in an <em>APPL function</em>.
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">PathLike</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathLike</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="kn">import</span> <span class="nn">PIL.Image</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">PIL.Image</span>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">appl</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nd">@ppl</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">def</span> <span class="nf">query_text</span><span class="p">(</span><span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">query_text</span><span class="p">(</span><span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="s2">&quot;Look, it&#39;s a commercial logo.&quot;</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">Image</span><span class="p">(</span><span class="n">image_url</span><span class="p">)</span>
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="s2">&quot;What&#39;s the text on the image? &quot;</span>
@@ -3253,7 +3253,7 @@ Outputs:
 </span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
 </span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
 </span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="nd">@ppl</span>
-</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="k">def</span> <span class="nf">query_image</span><span class="p">(</span><span class="n">image_file</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="k">def</span><span class="w"> </span><span class="nf">query_image</span><span class="p">(</span><span class="n">image_file</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
 </span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    <span class="s2">&quot;Which python package is this?&quot;</span>
 </span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    <span class="n">Image</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">image_file</span><span class="p">)</span>
 </span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    <span class="c1"># PIL.Image.open(image_file) # alternative, APPL recognizes an ImageFile</span>
@@ -3268,10 +3268,10 @@ Outputs:
 <details class="info">
 <summary>Explicitly capture prompts</summary>
 <p>If you want to capture prompts explicitly, simply use the <code class="language-python highlight"><span class="n">grow</span></code> function to append the content to the prompt.
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">gen</span><span class="p">,</span> <span class="n">grow</span><span class="p">,</span> <span class="n">ppl</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">appl</span><span class="w"> </span><span class="kn">import</span> <span class="n">gen</span><span class="p">,</span> <span class="n">grow</span><span class="p">,</span> <span class="n">ppl</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nd">@ppl</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">grow</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;How many </span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s2">s are there in </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">?&quot;</span><span class="p">)</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">()</span>
 </span></code></pre></div></p>
@@ -3332,26 +3332,26 @@ Outputs:
 <span class="normal"><a href="#__codelineno-7-34">34</a></span>
 <span class="normal"><a href="#__codelineno-7-35">35</a></span>
 <span class="normal"><a href="#__codelineno-7-36">36</a></span>
-<span class="normal"><a href="#__codelineno-7-37">37</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">convo</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span><span class="p">,</span> <span class="n">records</span>
+<span class="normal"><a href="#__codelineno-7-37">37</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">appl</span><span class="w"> </span><span class="kn">import</span> <span class="n">convo</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span><span class="p">,</span> <span class="n">records</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="nd">@ppl</span> <span class="c1"># (1)</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="k">def</span> <span class="nf">intro</span><span class="p">():</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">intro</span><span class="p">():</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a>    <span class="sa">f</span><span class="s2">&quot;Today is 2024/02/29.&quot;</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a>    <span class="k">return</span> <span class="n">records</span><span class="p">()</span> <span class="c1"># (2)</span>
 </span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a>
 </span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span> <span class="c1"># (3)</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="k">def</span> <span class="nf">addon</span><span class="p">():</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">addon</span><span class="p">():</span>
 </span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a>    <span class="sa">f</span><span class="s2">&quot;Dates should be in the format of YYYY/MM/DD.&quot;</span> <span class="c1"># (4)</span>
 </span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a>
 </span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">)</span>  <span class="c1"># (5)</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 </span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14"></a>    <span class="sa">f</span><span class="s2">&quot;Q: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&quot;</span>
 </span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15"></a>    <span class="sa">f</span><span class="s2">&quot;A: &quot;</span>
 </span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16"></a>    <span class="c1"># print(convo())  # (6)</span>
 </span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17"></a>    <span class="k">return</span> <span class="n">gen</span><span class="p">()</span>
 </span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18"></a>
 </span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19"></a><span class="nd">@ppl</span>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20"></a><span class="k">def</span> <span class="nf">answer_questions</span><span class="p">(</span><span class="n">questions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20"></a><span class="k">def</span><span class="w"> </span><span class="nf">answer_questions</span><span class="p">(</span><span class="n">questions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 </span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21"></a>    <span class="c1"># long prompt can be decomposed into several smaller `appl functions`</span>
 </span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22"></a>
 </span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23"></a>    <span class="c1"># method 1 (recommended): build the sub-prompts in an empty context</span>

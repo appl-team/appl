@@ -3391,7 +3391,7 @@
 <span class="normal"><a href="#__codelineno-0-60">60</a></span>
 <span class="normal"><a href="#__codelineno-0-61">61</a></span>
 <span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the printer.&quot;&quot;&quot;</span>
 </span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 </span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_generation_style</span> <span class="o">=</span> <span class="s2">&quot;text-success-emphasis bg-Success-subtle list-group-item d-flex justify-content-between align-items-center&quot;</span>
@@ -3459,7 +3459,7 @@
 <span class="normal"><a href="#__codelineno-0-81">81</a></span>
 <span class="normal"><a href="#__codelineno-0-82">82</a></span>
 <span class="normal"><a href="#__codelineno-0-83">83</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="k">def</span> <span class="nf">print</span><span class="p">(</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span>
 </span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">TraceEngineBase</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the trace in the format of HTML.&quot;&quot;&quot;</span>
@@ -3676,12 +3676,24 @@
 <span class="normal"><a href="#__codelineno-0-464">464</a></span>
 <span class="normal"><a href="#__codelineno-0-465">465</a></span>
 <span class="normal"><a href="#__codelineno-0-466">466</a></span>
-<span class="normal"><a href="#__codelineno-0-467">467</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="k">def</span> <span class="nf">print</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-467">467</a></span>
+<span class="normal"><a href="#__codelineno-0-468">468</a></span>
+<span class="normal"><a href="#__codelineno-0-469">469</a></span>
+<span class="normal"><a href="#__codelineno-0-470">470</a></span>
+<span class="normal"><a href="#__codelineno-0-471">471</a></span>
+<span class="normal"><a href="#__codelineno-0-472">472</a></span>
+<span class="normal"><a href="#__codelineno-0-473">473</a></span>
+<span class="normal"><a href="#__codelineno-0-474">474</a></span>
+<span class="normal"><a href="#__codelineno-0-475">475</a></span>
+<span class="normal"><a href="#__codelineno-0-476">476</a></span>
+<span class="normal"><a href="#__codelineno-0-477">477</a></span>
+<span class="normal"><a href="#__codelineno-0-478">478</a></span>
+<span class="normal"><a href="#__codelineno-0-479">479</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span>
 </span><span id="__span-0-334"><a id="__codelineno-0-334" name="__codelineno-0-334"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">TraceEngineBase</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="__span-0-335"><a id="__codelineno-0-335" name="__codelineno-0-335"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-336"><a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the trace to langfuse.&quot;&quot;&quot;</span>
-</span><span id="__span-0-337"><a id="__codelineno-0-337" name="__codelineno-0-337"></a>    <span class="kn">from</span> <span class="nn">langfuse</span> <span class="kn">import</span> <span class="n">Langfuse</span>
-</span><span id="__span-0-338"><a id="__codelineno-0-338" name="__codelineno-0-338"></a>    <span class="kn">from</span> <span class="nn">langfuse.client</span> <span class="kn">import</span> <span class="n">StatefulTraceClient</span>
+</span><span id="__span-0-337"><a id="__codelineno-0-337" name="__codelineno-0-337"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">langfuse</span><span class="w"> </span><span class="kn">import</span> <span class="n">Langfuse</span>
+</span><span id="__span-0-338"><a id="__codelineno-0-338" name="__codelineno-0-338"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">langfuse.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatefulTraceClient</span>
 </span><span id="__span-0-339"><a id="__codelineno-0-339" name="__codelineno-0-339"></a>
 </span><span id="__span-0-340"><a id="__codelineno-0-340" name="__codelineno-0-340"></a>    <span class="n">project_public_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LANGFUSE_PUBLIC_KEY&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </span><span id="__span-0-341"><a id="__codelineno-0-341" name="__codelineno-0-341"></a>    <span class="k">if</span> <span class="n">project_public_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -3710,7 +3722,7 @@
 </span><span id="__span-0-364"><a id="__codelineno-0-364" name="__codelineno-0-364"></a>        <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
 </span><span id="__span-0-365"><a id="__codelineno-0-365" name="__codelineno-0-365"></a>    <span class="p">)</span>
 </span><span id="__span-0-366"><a id="__codelineno-0-366" name="__codelineno-0-366"></a>
-</span><span id="__span-0-367"><a id="__codelineno-0-367" name="__codelineno-0-367"></a>    <span class="k">def</span> <span class="nf">visit_tree</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">TraceNode</span><span class="p">,</span> <span class="n">trace_node</span><span class="p">:</span> <span class="n">StatefulTraceClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-367"><a id="__codelineno-0-367" name="__codelineno-0-367"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">visit_tree</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">TraceNode</span><span class="p">,</span> <span class="n">trace_node</span><span class="p">:</span> <span class="n">StatefulTraceClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-368"><a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Visit the trace node tree and send the trace event to langfuse.&quot;&quot;&quot;</span>
 </span><span id="__span-0-369"><a id="__codelineno-0-369" name="__codelineno-0-369"></a>        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
 </span><span id="__span-0-370"><a id="__codelineno-0-370" name="__codelineno-0-370"></a>        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">end_time</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
@@ -3743,7 +3755,7 @@
 </span><span id="__span-0-397"><a id="__codelineno-0-397" name="__codelineno-0-397"></a>            <span class="n">metadata</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{})</span>
 </span><span id="__span-0-398"><a id="__codelineno-0-398" name="__codelineno-0-398"></a>            <span class="n">metadata</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">metadata</span> <span class="ow">or</span> <span class="p">{})</span> <span class="o">|</span> <span class="n">metadata</span>
 </span><span id="__span-0-399"><a id="__codelineno-0-399" name="__codelineno-0-399"></a>
-</span><span id="__span-0-400"><a id="__codelineno-0-400" name="__codelineno-0-400"></a>            <span class="k">def</span> <span class="nf">extra_supported_model_parameters</span><span class="p">(</span><span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+</span><span id="__span-0-400"><a id="__codelineno-0-400" name="__codelineno-0-400"></a>            <span class="k">def</span><span class="w"> </span><span class="nf">extra_supported_model_parameters</span><span class="p">(</span><span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 </span><span id="__span-0-401"><a id="__codelineno-0-401" name="__codelineno-0-401"></a>                <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="__span-0-402"><a id="__codelineno-0-402" name="__codelineno-0-402"></a>                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 </span><span id="__span-0-403"><a id="__codelineno-0-403" name="__codelineno-0-403"></a>                    <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
@@ -3776,41 +3788,53 @@
 </span><span id="__span-0-430"><a id="__codelineno-0-430" name="__codelineno-0-430"></a>            <span class="k">if</span> <span class="n">outputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-431"><a id="__codelineno-0-431" name="__codelineno-0-431"></a>                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;gen&quot;</span><span class="p">:</span>
 </span><span id="__span-0-432"><a id="__codelineno-0-432" name="__codelineno-0-432"></a>                    <span class="n">model_name</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-433"><a id="__codelineno-0-433" name="__codelineno-0-433"></a>                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-0-433"><a id="__codelineno-0-433" name="__codelineno-0-433"></a>                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># for raw completion requests</span>
 </span><span id="__span-0-434"><a id="__codelineno-0-434" name="__codelineno-0-434"></a>                    <span class="n">outputs</span><span class="p">:</span> <span class="n">ModelResponse</span> <span class="o">=</span> <span class="n">outputs</span>  <span class="c1"># type: ignore</span>
 </span><span id="__span-0-435"><a id="__codelineno-0-435" name="__codelineno-0-435"></a>                    <span class="n">usage</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">usage</span>
 </span><span id="__span-0-436"><a id="__codelineno-0-436" name="__codelineno-0-436"></a>                    <span class="n">message</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>  <span class="c1"># type: ignore</span>
-</span><span id="__span-0-437"><a id="__codelineno-0-437" name="__codelineno-0-437"></a>                    <span class="n">outputs</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span>
-</span><span id="__span-0-438"><a id="__codelineno-0-438" name="__codelineno-0-438"></a>                    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
-</span><span id="__span-0-439"><a id="__codelineno-0-439" name="__codelineno-0-439"></a>                        <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-0-440"><a id="__codelineno-0-440" name="__codelineno-0-440"></a>                            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
-</span><span id="__span-0-441"><a id="__codelineno-0-441" name="__codelineno-0-441"></a>                            <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span id="__span-0-442"><a id="__codelineno-0-442" name="__codelineno-0-442"></a>                                <span class="sa">f</span><span class="s2">&quot;ToolCall(id=</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, name=</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, args=</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span><span class="si">}</span><span class="s2">)&quot;</span>
-</span><span id="__span-0-443"><a id="__codelineno-0-443" name="__codelineno-0-443"></a>                                <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span>
-</span><span id="__span-0-444"><a id="__codelineno-0-444" name="__codelineno-0-444"></a>                            <span class="p">],</span>
-</span><span id="__span-0-445"><a id="__codelineno-0-445" name="__codelineno-0-445"></a>                        <span class="p">}</span>
-</span><span id="__span-0-446"><a id="__codelineno-0-446" name="__codelineno-0-446"></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-447"><a id="__codelineno-0-447" name="__codelineno-0-447"></a>                <span class="n">outputs</span> <span class="o">=</span> <span class="s2">&quot;Not Finished.&quot;</span>
-</span><span id="__span-0-448"><a id="__codelineno-0-448" name="__codelineno-0-448"></a>
-</span><span id="__span-0-449"><a id="__codelineno-0-449" name="__codelineno-0-449"></a>            <span class="n">client</span> <span class="o">=</span> <span class="n">trace_node</span><span class="o">.</span><span class="n">generation</span><span class="p">(</span>
-</span><span id="__span-0-450"><a id="__codelineno-0-450" name="__codelineno-0-450"></a>                <span class="n">name</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span id="__span-0-451"><a id="__codelineno-0-451" name="__codelineno-0-451"></a>                <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span>
-</span><span id="__span-0-452"><a id="__codelineno-0-452" name="__codelineno-0-452"></a>                <span class="n">end_time</span><span class="o">=</span><span class="n">end_time</span><span class="p">,</span>
-</span><span id="__span-0-453"><a id="__codelineno-0-453" name="__codelineno-0-453"></a>                <span class="nb">input</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
-</span><span id="__span-0-454"><a id="__codelineno-0-454" name="__codelineno-0-454"></a>                <span class="n">output</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
-</span><span id="__span-0-455"><a id="__codelineno-0-455" name="__codelineno-0-455"></a>                <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
-</span><span id="__span-0-456"><a id="__codelineno-0-456" name="__codelineno-0-456"></a>                <span class="n">model_parameters</span><span class="o">=</span><span class="n">model_parameters</span><span class="p">,</span>
-</span><span id="__span-0-457"><a id="__codelineno-0-457" name="__codelineno-0-457"></a>                <span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span>
-</span><span id="__span-0-458"><a id="__codelineno-0-458" name="__codelineno-0-458"></a>                <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
-</span><span id="__span-0-459"><a id="__codelineno-0-459" name="__codelineno-0-459"></a>            <span class="p">)</span>
-</span><span id="__span-0-460"><a id="__codelineno-0-460" name="__codelineno-0-460"></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-461"><a id="__codelineno-0-461" name="__codelineno-0-461"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown node type: </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-462"><a id="__codelineno-0-462" name="__codelineno-0-462"></a>        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-</span><span id="__span-0-463"><a id="__codelineno-0-463" name="__codelineno-0-463"></a>            <span class="n">visit_tree</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
-</span><span id="__span-0-464"><a id="__codelineno-0-464" name="__codelineno-0-464"></a>
-</span><span id="__span-0-465"><a id="__codelineno-0-465" name="__codelineno-0-465"></a>    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">trace_nodes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-</span><span id="__span-0-466"><a id="__codelineno-0-466" name="__codelineno-0-466"></a>        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-467"><a id="__codelineno-0-467" name="__codelineno-0-467"></a>            <span class="n">visit_tree</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+</span><span id="__span-0-437"><a id="__codelineno-0-437" name="__codelineno-0-437"></a>                    <span class="n">outputs</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+</span><span id="__span-0-438"><a id="__codelineno-0-438" name="__codelineno-0-438"></a>                    <span class="c1"># Add reasoning content if exists</span>
+</span><span id="__span-0-439"><a id="__codelineno-0-439" name="__codelineno-0-439"></a>                    <span class="k">if</span> <span class="n">provider_specific_fields</span> <span class="o">:=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span><span id="__span-0-440"><a id="__codelineno-0-440" name="__codelineno-0-440"></a>                        <span class="s2">&quot;provider_specific_fields&quot;</span><span class="p">,</span> <span class="kc">None</span>
+</span><span id="__span-0-441"><a id="__codelineno-0-441" name="__codelineno-0-441"></a>                    <span class="p">):</span>
+</span><span id="__span-0-442"><a id="__codelineno-0-442" name="__codelineno-0-442"></a>                        <span class="k">if</span> <span class="n">reasoning_content</span> <span class="o">:=</span> <span class="n">provider_specific_fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span><span id="__span-0-443"><a id="__codelineno-0-443" name="__codelineno-0-443"></a>                            <span class="s2">&quot;reasoning_content&quot;</span><span class="p">,</span> <span class="kc">None</span>
+</span><span id="__span-0-444"><a id="__codelineno-0-444" name="__codelineno-0-444"></a>                        <span class="p">):</span>
+</span><span id="__span-0-445"><a id="__codelineno-0-445" name="__codelineno-0-445"></a>                            <span class="n">outputs</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-446"><a id="__codelineno-0-446" name="__codelineno-0-446"></a>                                <span class="sa">f</span><span class="s2">&quot;```reasoning</span><span class="se">\n</span><span class="si">{</span><span class="n">reasoning_content</span><span class="si">}</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="__span-0-447"><a id="__codelineno-0-447" name="__codelineno-0-447"></a>                                <span class="o">+</span> <span class="n">outputs</span>
+</span><span id="__span-0-448"><a id="__codelineno-0-448" name="__codelineno-0-448"></a>                            <span class="p">)</span>
+</span><span id="__span-0-449"><a id="__codelineno-0-449" name="__codelineno-0-449"></a>                    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+</span><span id="__span-0-450"><a id="__codelineno-0-450" name="__codelineno-0-450"></a>                        <span class="c1"># replace the content with the tool calls</span>
+</span><span id="__span-0-451"><a id="__codelineno-0-451" name="__codelineno-0-451"></a>                        <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-452"><a id="__codelineno-0-452" name="__codelineno-0-452"></a>                            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+</span><span id="__span-0-453"><a id="__codelineno-0-453" name="__codelineno-0-453"></a>                            <span class="s2">&quot;tool_calls&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-0-454"><a id="__codelineno-0-454" name="__codelineno-0-454"></a>                                <span class="sa">f</span><span class="s2">&quot;ToolCall(id=</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, name=</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, args=</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span><span class="si">}</span><span class="s2">)&quot;</span>
+</span><span id="__span-0-455"><a id="__codelineno-0-455" name="__codelineno-0-455"></a>                                <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span>
+</span><span id="__span-0-456"><a id="__codelineno-0-456" name="__codelineno-0-456"></a>                            <span class="p">],</span>
+</span><span id="__span-0-457"><a id="__codelineno-0-457" name="__codelineno-0-457"></a>                        <span class="p">}</span>
+</span><span id="__span-0-458"><a id="__codelineno-0-458" name="__codelineno-0-458"></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-459"><a id="__codelineno-0-459" name="__codelineno-0-459"></a>                <span class="n">outputs</span> <span class="o">=</span> <span class="s2">&quot;Not Finished.&quot;</span>
+</span><span id="__span-0-460"><a id="__codelineno-0-460" name="__codelineno-0-460"></a>
+</span><span id="__span-0-461"><a id="__codelineno-0-461" name="__codelineno-0-461"></a>            <span class="n">client</span> <span class="o">=</span> <span class="n">trace_node</span><span class="o">.</span><span class="n">generation</span><span class="p">(</span>
+</span><span id="__span-0-462"><a id="__codelineno-0-462" name="__codelineno-0-462"></a>                <span class="n">name</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-0-463"><a id="__codelineno-0-463" name="__codelineno-0-463"></a>                <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span>
+</span><span id="__span-0-464"><a id="__codelineno-0-464" name="__codelineno-0-464"></a>                <span class="n">end_time</span><span class="o">=</span><span class="n">end_time</span><span class="p">,</span>
+</span><span id="__span-0-465"><a id="__codelineno-0-465" name="__codelineno-0-465"></a>                <span class="nb">input</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+</span><span id="__span-0-466"><a id="__codelineno-0-466" name="__codelineno-0-466"></a>                <span class="n">output</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
+</span><span id="__span-0-467"><a id="__codelineno-0-467" name="__codelineno-0-467"></a>                <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+</span><span id="__span-0-468"><a id="__codelineno-0-468" name="__codelineno-0-468"></a>                <span class="n">model_parameters</span><span class="o">=</span><span class="n">model_parameters</span><span class="p">,</span>
+</span><span id="__span-0-469"><a id="__codelineno-0-469" name="__codelineno-0-469"></a>                <span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span>
+</span><span id="__span-0-470"><a id="__codelineno-0-470" name="__codelineno-0-470"></a>                <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
+</span><span id="__span-0-471"><a id="__codelineno-0-471" name="__codelineno-0-471"></a>            <span class="p">)</span>
+</span><span id="__span-0-472"><a id="__codelineno-0-472" name="__codelineno-0-472"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-473"><a id="__codelineno-0-473" name="__codelineno-0-473"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown node type: </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-474"><a id="__codelineno-0-474" name="__codelineno-0-474"></a>        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+</span><span id="__span-0-475"><a id="__codelineno-0-475" name="__codelineno-0-475"></a>            <span class="n">visit_tree</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
+</span><span id="__span-0-476"><a id="__codelineno-0-476" name="__codelineno-0-476"></a>
+</span><span id="__span-0-477"><a id="__codelineno-0-477" name="__codelineno-0-477"></a>    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">trace_nodes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+</span><span id="__span-0-478"><a id="__codelineno-0-478" name="__codelineno-0-478"></a>        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-479"><a id="__codelineno-0-479" name="__codelineno-0-479"></a>            <span class="n">visit_tree</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3999,11 +4023,11 @@
 <span class="normal"><a href="#__codelineno-0-324">324</a></span>
 <span class="normal"><a href="#__codelineno-0-325">325</a></span>
 <span class="normal"><a href="#__codelineno-0-326">326</a></span>
-<span class="normal"><a href="#__codelineno-0-327">327</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="k">def</span> <span class="nf">print</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-327">327</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span>
 </span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">TraceEngineBase</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-207"><a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Log the trace to lunary.&quot;&quot;&quot;</span>
-</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a>    <span class="kn">import</span> <span class="nn">lunary</span>
+</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">lunary</span>
 </span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 </span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="n">project_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LUNARY_PUBLIC_KEY&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="k">if</span> <span class="n">project_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -4019,7 +4043,7 @@
 </span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a>    <span class="k">if</span> <span class="n">trace_metadata</span><span class="p">:</span>
 </span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a>        <span class="n">user_id</span> <span class="o">=</span> <span class="n">trace_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a>
-</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a>    <span class="k">def</span> <span class="nf">get_parent_run_id</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">TraceNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_parent_run_id</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">TraceNode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 </span><span id="__span-0-225"><a id="__codelineno-0-225" name="__codelineno-0-225"></a>        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a>            <span class="k">return</span> <span class="kc">None</span>
 </span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a>        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">suffix</span>
@@ -4174,19 +4198,19 @@
 
                   <details class="quote">
                     <summary>Source code in <code>src/appl/tracing/printer.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-484">484</a></span>
-<span class="normal"><a href="#__codelineno-0-485">485</a></span>
-<span class="normal"><a href="#__codelineno-0-486">486</a></span>
-<span class="normal"><a href="#__codelineno-0-487">487</a></span>
-<span class="normal"><a href="#__codelineno-0-488">488</a></span>
-<span class="normal"><a href="#__codelineno-0-489">489</a></span>
-<span class="normal"><a href="#__codelineno-0-490">490</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-484"><a id="__codelineno-0-484" name="__codelineno-0-484"></a><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_functions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-</span><span id="__span-0-485"><a id="__codelineno-0-485" name="__codelineno-0-485"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the printer.</span>
-</span><span id="__span-0-486"><a id="__codelineno-0-486" name="__codelineno-0-486"></a>
-</span><span id="__span-0-487"><a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="sd">    Args:</span>
-</span><span id="__span-0-488"><a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">        display_functions: Whether to display the function calls.</span>
-</span><span id="__span-0-489"><a id="__codelineno-0-489" name="__codelineno-0-489"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-490"><a id="__codelineno-0-490" name="__codelineno-0-490"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_display_functions</span> <span class="o">=</span> <span class="n">display_functions</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-496">496</a></span>
+<span class="normal"><a href="#__codelineno-0-497">497</a></span>
+<span class="normal"><a href="#__codelineno-0-498">498</a></span>
+<span class="normal"><a href="#__codelineno-0-499">499</a></span>
+<span class="normal"><a href="#__codelineno-0-500">500</a></span>
+<span class="normal"><a href="#__codelineno-0-501">501</a></span>
+<span class="normal"><a href="#__codelineno-0-502">502</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-496"><a id="__codelineno-0-496" name="__codelineno-0-496"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_functions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+</span><span id="__span-0-497"><a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the printer.</span>
+</span><span id="__span-0-498"><a id="__codelineno-0-498" name="__codelineno-0-498"></a>
+</span><span id="__span-0-499"><a id="__codelineno-0-499" name="__codelineno-0-499"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-500"><a id="__codelineno-0-500" name="__codelineno-0-500"></a><span class="sd">        display_functions: Whether to display the function calls.</span>
+</span><span id="__span-0-501"><a id="__codelineno-0-501" name="__codelineno-0-501"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-502"><a id="__codelineno-0-502" name="__codelineno-0-502"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_display_functions</span> <span class="o">=</span> <span class="n">display_functions</span>
 </span></code></pre></div></td></tr></table></div>
                   </details>
 
@@ -4221,19 +4245,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/appl/tracing/printer.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-492">492</a></span>
-<span class="normal"><a href="#__codelineno-0-493">493</a></span>
-<span class="normal"><a href="#__codelineno-0-494">494</a></span>
-<span class="normal"><a href="#__codelineno-0-495">495</a></span>
-<span class="normal"><a href="#__codelineno-0-496">496</a></span>
-<span class="normal"><a href="#__codelineno-0-497">497</a></span>
-<span class="normal"><a href="#__codelineno-0-498">498</a></span>
-<span class="normal"><a href="#__codelineno-0-499">499</a></span>
-<span class="normal"><a href="#__codelineno-0-500">500</a></span>
-<span class="normal"><a href="#__codelineno-0-501">501</a></span>
-<span class="normal"><a href="#__codelineno-0-502">502</a></span>
-<span class="normal"><a href="#__codelineno-0-503">503</a></span>
-<span class="normal"><a href="#__codelineno-0-504">504</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-504">504</a></span>
 <span class="normal"><a href="#__codelineno-0-505">505</a></span>
 <span class="normal"><a href="#__codelineno-0-506">506</a></span>
 <span class="normal"><a href="#__codelineno-0-507">507</a></span>
@@ -4245,31 +4257,43 @@
 <span class="normal"><a href="#__codelineno-0-513">513</a></span>
 <span class="normal"><a href="#__codelineno-0-514">514</a></span>
 <span class="normal"><a href="#__codelineno-0-515">515</a></span>
-<span class="normal"><a href="#__codelineno-0-516">516</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-492"><a id="__codelineno-0-492" name="__codelineno-0-492"></a><span class="k">def</span> <span class="nf">build_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TraceEventBase</span><span class="p">,</span> <span class="n">min_timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-</span><span id="__span-0-493"><a id="__codelineno-0-493" name="__codelineno-0-493"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the event for the trace.&quot;&quot;&quot;</span>
-</span><span id="__span-0-494"><a id="__codelineno-0-494" name="__codelineno-0-494"></a>    <span class="n">ts</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">event</span><span class="o">.</span><span class="n">time_stamp</span> <span class="o">-</span> <span class="n">min_timestamp</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
-</span><span id="__span-0-495"><a id="__codelineno-0-495" name="__codelineno-0-495"></a>    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;tid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">ts</span><span class="p">}</span>
-</span><span id="__span-0-496"><a id="__codelineno-0-496" name="__codelineno-0-496"></a>    <span class="c1"># TODO: add args to the trace</span>
-</span><span id="__span-0-497"><a id="__codelineno-0-497" name="__codelineno-0-497"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">CompletionRequestEvent</span><span class="p">):</span>
-</span><span id="__span-0-498"><a id="__codelineno-0-498" name="__codelineno-0-498"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gen&quot;</span>
-</span><span id="__span-0-499"><a id="__codelineno-0-499" name="__codelineno-0-499"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span>
-</span><span id="__span-0-500"><a id="__codelineno-0-500" name="__codelineno-0-500"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span>
-</span><span id="__span-0-501"><a id="__codelineno-0-501" name="__codelineno-0-501"></a>    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">CompletionResponseEvent</span><span class="p">):</span>
-</span><span id="__span-0-502"><a id="__codelineno-0-502" name="__codelineno-0-502"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gen&quot;</span>
-</span><span id="__span-0-503"><a id="__codelineno-0-503" name="__codelineno-0-503"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;e&quot;</span>
-</span><span id="__span-0-504"><a id="__codelineno-0-504" name="__codelineno-0-504"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span>
-</span><span id="__span-0-505"><a id="__codelineno-0-505" name="__codelineno-0-505"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">cost</span>
-</span><span id="__span-0-506"><a id="__codelineno-0-506" name="__codelineno-0-506"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">ret</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
-</span><span id="__span-0-507"><a id="__codelineno-0-507" name="__codelineno-0-507"></a>    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_functions</span><span class="p">:</span>
-</span><span id="__span-0-508"><a id="__codelineno-0-508" name="__codelineno-0-508"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">FunctionCallEvent</span><span class="p">):</span>
-</span><span id="__span-0-509"><a id="__codelineno-0-509" name="__codelineno-0-509"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;func&quot;</span>
-</span><span id="__span-0-510"><a id="__codelineno-0-510" name="__codelineno-0-510"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span>
-</span><span id="__span-0-511"><a id="__codelineno-0-511" name="__codelineno-0-511"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span>
-</span><span id="__span-0-512"><a id="__codelineno-0-512" name="__codelineno-0-512"></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">FunctionReturnEvent</span><span class="p">):</span>
-</span><span id="__span-0-513"><a id="__codelineno-0-513" name="__codelineno-0-513"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;func&quot;</span>
-</span><span id="__span-0-514"><a id="__codelineno-0-514" name="__codelineno-0-514"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;E&quot;</span>
-</span><span id="__span-0-515"><a id="__codelineno-0-515" name="__codelineno-0-515"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span>
-</span><span id="__span-0-516"><a id="__codelineno-0-516" name="__codelineno-0-516"></a>    <span class="k">return</span> <span class="n">data</span>
+<span class="normal"><a href="#__codelineno-0-516">516</a></span>
+<span class="normal"><a href="#__codelineno-0-517">517</a></span>
+<span class="normal"><a href="#__codelineno-0-518">518</a></span>
+<span class="normal"><a href="#__codelineno-0-519">519</a></span>
+<span class="normal"><a href="#__codelineno-0-520">520</a></span>
+<span class="normal"><a href="#__codelineno-0-521">521</a></span>
+<span class="normal"><a href="#__codelineno-0-522">522</a></span>
+<span class="normal"><a href="#__codelineno-0-523">523</a></span>
+<span class="normal"><a href="#__codelineno-0-524">524</a></span>
+<span class="normal"><a href="#__codelineno-0-525">525</a></span>
+<span class="normal"><a href="#__codelineno-0-526">526</a></span>
+<span class="normal"><a href="#__codelineno-0-527">527</a></span>
+<span class="normal"><a href="#__codelineno-0-528">528</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-504"><a id="__codelineno-0-504" name="__codelineno-0-504"></a><span class="k">def</span><span class="w"> </span><span class="nf">build_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TraceEventBase</span><span class="p">,</span> <span class="n">min_timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+</span><span id="__span-0-505"><a id="__codelineno-0-505" name="__codelineno-0-505"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the event for the trace.&quot;&quot;&quot;</span>
+</span><span id="__span-0-506"><a id="__codelineno-0-506" name="__codelineno-0-506"></a>    <span class="n">ts</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">event</span><span class="o">.</span><span class="n">time_stamp</span> <span class="o">-</span> <span class="n">min_timestamp</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
+</span><span id="__span-0-507"><a id="__codelineno-0-507" name="__codelineno-0-507"></a>    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;tid&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">ts</span><span class="p">}</span>
+</span><span id="__span-0-508"><a id="__codelineno-0-508" name="__codelineno-0-508"></a>    <span class="c1"># TODO: add args to the trace</span>
+</span><span id="__span-0-509"><a id="__codelineno-0-509" name="__codelineno-0-509"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">CompletionRequestEvent</span><span class="p">):</span>
+</span><span id="__span-0-510"><a id="__codelineno-0-510" name="__codelineno-0-510"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gen&quot;</span>
+</span><span id="__span-0-511"><a id="__codelineno-0-511" name="__codelineno-0-511"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span>
+</span><span id="__span-0-512"><a id="__codelineno-0-512" name="__codelineno-0-512"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span>
+</span><span id="__span-0-513"><a id="__codelineno-0-513" name="__codelineno-0-513"></a>    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">CompletionResponseEvent</span><span class="p">):</span>
+</span><span id="__span-0-514"><a id="__codelineno-0-514" name="__codelineno-0-514"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gen&quot;</span>
+</span><span id="__span-0-515"><a id="__codelineno-0-515" name="__codelineno-0-515"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;e&quot;</span>
+</span><span id="__span-0-516"><a id="__codelineno-0-516" name="__codelineno-0-516"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">name</span>
+</span><span id="__span-0-517"><a id="__codelineno-0-517" name="__codelineno-0-517"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">cost</span>
+</span><span id="__span-0-518"><a id="__codelineno-0-518" name="__codelineno-0-518"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">ret</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+</span><span id="__span-0-519"><a id="__codelineno-0-519" name="__codelineno-0-519"></a>    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_display_functions</span><span class="p">:</span>
+</span><span id="__span-0-520"><a id="__codelineno-0-520" name="__codelineno-0-520"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">FunctionCallEvent</span><span class="p">):</span>
+</span><span id="__span-0-521"><a id="__codelineno-0-521" name="__codelineno-0-521"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;func&quot;</span>
+</span><span id="__span-0-522"><a id="__codelineno-0-522" name="__codelineno-0-522"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span>
+</span><span id="__span-0-523"><a id="__codelineno-0-523" name="__codelineno-0-523"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span>
+</span><span id="__span-0-524"><a id="__codelineno-0-524" name="__codelineno-0-524"></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">FunctionReturnEvent</span><span class="p">):</span>
+</span><span id="__span-0-525"><a id="__codelineno-0-525" name="__codelineno-0-525"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;func&quot;</span>
+</span><span id="__span-0-526"><a id="__codelineno-0-526" name="__codelineno-0-526"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ph&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;E&quot;</span>
+</span><span id="__span-0-527"><a id="__codelineno-0-527" name="__codelineno-0-527"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span>
+</span><span id="__span-0-528"><a id="__codelineno-0-528" name="__codelineno-0-528"></a>    <span class="k">return</span> <span class="n">data</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4296,23 +4320,23 @@
 
             <details class="quote">
               <summary>Source code in <code>src/appl/tracing/printer.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-518">518</a></span>
-<span class="normal"><a href="#__codelineno-0-519">519</a></span>
-<span class="normal"><a href="#__codelineno-0-520">520</a></span>
-<span class="normal"><a href="#__codelineno-0-521">521</a></span>
-<span class="normal"><a href="#__codelineno-0-522">522</a></span>
-<span class="normal"><a href="#__codelineno-0-523">523</a></span>
-<span class="normal"><a href="#__codelineno-0-524">524</a></span>
-<span class="normal"><a href="#__codelineno-0-525">525</a></span>
-<span class="normal"><a href="#__codelineno-0-526">526</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-518"><a id="__codelineno-0-518" name="__codelineno-0-518"></a><span class="k">def</span> <span class="nf">print</span><span class="p">(</span>
-</span><span id="__span-0-519"><a id="__codelineno-0-519" name="__codelineno-0-519"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">TraceEngineBase</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-520"><a id="__codelineno-0-520" name="__codelineno-0-520"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-</span><span id="__span-0-521"><a id="__codelineno-0-521" name="__codelineno-0-521"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the trace in the format of Chrome tracing.&quot;&quot;&quot;</span>
-</span><span id="__span-0-522"><a id="__codelineno-0-522" name="__codelineno-0-522"></a>    <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-0-523"><a id="__codelineno-0-523" name="__codelineno-0-523"></a>    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-</span><span id="__span-0-524"><a id="__codelineno-0-524" name="__codelineno-0-524"></a>        <span class="k">if</span> <span class="n">data</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_event</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">trace</span><span class="o">.</span><span class="n">min_timestamp</span><span class="p">):</span>
-</span><span id="__span-0-525"><a id="__codelineno-0-525" name="__codelineno-0-525"></a>            <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="__span-0-526"><a id="__codelineno-0-526" name="__codelineno-0-526"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;traceEvents&quot;</span><span class="p">:</span> <span class="n">events</span><span class="p">}</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-530">530</a></span>
+<span class="normal"><a href="#__codelineno-0-531">531</a></span>
+<span class="normal"><a href="#__codelineno-0-532">532</a></span>
+<span class="normal"><a href="#__codelineno-0-533">533</a></span>
+<span class="normal"><a href="#__codelineno-0-534">534</a></span>
+<span class="normal"><a href="#__codelineno-0-535">535</a></span>
+<span class="normal"><a href="#__codelineno-0-536">536</a></span>
+<span class="normal"><a href="#__codelineno-0-537">537</a></span>
+<span class="normal"><a href="#__codelineno-0-538">538</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-530"><a id="__codelineno-0-530" name="__codelineno-0-530"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span>
+</span><span id="__span-0-531"><a id="__codelineno-0-531" name="__codelineno-0-531"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">TraceEngineBase</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-532"><a id="__codelineno-0-532" name="__codelineno-0-532"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+</span><span id="__span-0-533"><a id="__codelineno-0-533" name="__codelineno-0-533"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the trace in the format of Chrome tracing.&quot;&quot;&quot;</span>
+</span><span id="__span-0-534"><a id="__codelineno-0-534" name="__codelineno-0-534"></a>    <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-535"><a id="__codelineno-0-535" name="__codelineno-0-535"></a>    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+</span><span id="__span-0-536"><a id="__codelineno-0-536" name="__codelineno-0-536"></a>        <span class="k">if</span> <span class="n">data</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_event</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">trace</span><span class="o">.</span><span class="n">min_timestamp</span><span class="p">):</span>
+</span><span id="__span-0-537"><a id="__codelineno-0-537" name="__codelineno-0-537"></a>            <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-0-538"><a id="__codelineno-0-538" name="__codelineno-0-538"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;traceEvents&quot;</span><span class="p">:</span> <span class="n">events</span><span class="p">}</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4378,17 +4402,17 @@
 
             <details class="quote">
               <summary>Source code in <code>src/appl/tracing/printer.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-473">473</a></span>
-<span class="normal"><a href="#__codelineno-0-474">474</a></span>
-<span class="normal"><a href="#__codelineno-0-475">475</a></span>
-<span class="normal"><a href="#__codelineno-0-476">476</a></span>
-<span class="normal"><a href="#__codelineno-0-477">477</a></span>
-<span class="normal"><a href="#__codelineno-0-478">478</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-473"><a id="__codelineno-0-473" name="__codelineno-0-473"></a><span class="k">def</span> <span class="nf">print</span><span class="p">(</span>
-</span><span id="__span-0-474"><a id="__codelineno-0-474" name="__codelineno-0-474"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">TraceEngineBase</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-475"><a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-476"><a id="__codelineno-0-476" name="__codelineno-0-476"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the trace in the format of YAML.&quot;&quot;&quot;</span>
-</span><span id="__span-0-477"><a id="__codelineno-0-477" name="__codelineno-0-477"></a>    <span class="c1"># TODO: implement the YAML printer</span>
-</span><span id="__span-0-478"><a id="__codelineno-0-478" name="__codelineno-0-478"></a>    <span class="k">pass</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-485">485</a></span>
+<span class="normal"><a href="#__codelineno-0-486">486</a></span>
+<span class="normal"><a href="#__codelineno-0-487">487</a></span>
+<span class="normal"><a href="#__codelineno-0-488">488</a></span>
+<span class="normal"><a href="#__codelineno-0-489">489</a></span>
+<span class="normal"><a href="#__codelineno-0-490">490</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-485"><a id="__codelineno-0-485" name="__codelineno-0-485"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span>
+</span><span id="__span-0-486"><a id="__codelineno-0-486" name="__codelineno-0-486"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">TraceEngineBase</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-487"><a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-488"><a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the trace in the format of YAML.&quot;&quot;&quot;</span>
+</span><span id="__span-0-489"><a id="__codelineno-0-489" name="__codelineno-0-489"></a>    <span class="c1"># TODO: implement the YAML printer</span>
+</span><span id="__span-0-490"><a id="__codelineno-0-490" name="__codelineno-0-490"></a>    <span class="k">pass</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4426,19 +4450,7 @@ You can also configured to the local hosted version.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/appl/tracing/printer.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-529">529</a></span>
-<span class="normal"><a href="#__codelineno-0-530">530</a></span>
-<span class="normal"><a href="#__codelineno-0-531">531</a></span>
-<span class="normal"><a href="#__codelineno-0-532">532</a></span>
-<span class="normal"><a href="#__codelineno-0-533">533</a></span>
-<span class="normal"><a href="#__codelineno-0-534">534</a></span>
-<span class="normal"><a href="#__codelineno-0-535">535</a></span>
-<span class="normal"><a href="#__codelineno-0-536">536</a></span>
-<span class="normal"><a href="#__codelineno-0-537">537</a></span>
-<span class="normal"><a href="#__codelineno-0-538">538</a></span>
-<span class="normal"><a href="#__codelineno-0-539">539</a></span>
-<span class="normal"><a href="#__codelineno-0-540">540</a></span>
-<span class="normal"><a href="#__codelineno-0-541">541</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-541">541</a></span>
 <span class="normal"><a href="#__codelineno-0-542">542</a></span>
 <span class="normal"><a href="#__codelineno-0-543">543</a></span>
 <span class="normal"><a href="#__codelineno-0-544">544</a></span>
@@ -4450,31 +4462,43 @@ You can also configured to the local hosted version.</p>
 <span class="normal"><a href="#__codelineno-0-550">550</a></span>
 <span class="normal"><a href="#__codelineno-0-551">551</a></span>
 <span class="normal"><a href="#__codelineno-0-552">552</a></span>
-<span class="normal"><a href="#__codelineno-0-553">553</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-529"><a id="__codelineno-0-529" name="__codelineno-0-529"></a><span class="k">def</span> <span class="nf">print_trace</span><span class="p">(</span>
-</span><span id="__span-0-530"><a id="__codelineno-0-530" name="__codelineno-0-530"></a>    <span class="n">printer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TracePrinterBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-531"><a id="__codelineno-0-531" name="__codelineno-0-531"></a>    <span class="n">trace_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-532"><a id="__codelineno-0-532" name="__codelineno-0-532"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-533"><a id="__codelineno-0-533" name="__codelineno-0-533"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print to visualize the trace.</span>
-</span><span id="__span-0-534"><a id="__codelineno-0-534" name="__codelineno-0-534"></a>
-</span><span id="__span-0-535"><a id="__codelineno-0-535" name="__codelineno-0-535"></a><span class="sd">    Default printer is to the [langfuse](https://langfuse.com/) platform.</span>
-</span><span id="__span-0-536"><a id="__codelineno-0-536" name="__codelineno-0-536"></a><span class="sd">    You can also configured to the local hosted version.</span>
-</span><span id="__span-0-537"><a id="__codelineno-0-537" name="__codelineno-0-537"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-538"><a id="__codelineno-0-538" name="__codelineno-0-538"></a>    <span class="k">if</span> <span class="n">printer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-539"><a id="__codelineno-0-539" name="__codelineno-0-539"></a>        <span class="n">printer</span> <span class="o">=</span> <span class="n">TraceLangfusePrinter</span><span class="p">()</span>
-</span><span id="__span-0-540"><a id="__codelineno-0-540" name="__codelineno-0-540"></a>    <span class="k">if</span> <span class="n">trace_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-541"><a id="__codelineno-0-541" name="__codelineno-0-541"></a>        <span class="n">trace</span> <span class="o">=</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">trace_engine</span>
-</span><span id="__span-0-542"><a id="__codelineno-0-542" name="__codelineno-0-542"></a>        <span class="k">if</span> <span class="n">trace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-543"><a id="__codelineno-0-543" name="__codelineno-0-543"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No trace found&quot;</span><span class="p">)</span>
-</span><span id="__span-0-544"><a id="__codelineno-0-544" name="__codelineno-0-544"></a>        <span class="n">trace_file</span> <span class="o">=</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">trace_file</span>
-</span><span id="__span-0-545"><a id="__codelineno-0-545" name="__codelineno-0-545"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-546"><a id="__codelineno-0-546" name="__codelineno-0-546"></a>        <span class="n">trace</span> <span class="o">=</span> <span class="n">TraceEngine</span><span class="p">(</span><span class="n">trace_file</span><span class="p">)</span>
-</span><span id="__span-0-547"><a id="__codelineno-0-547" name="__codelineno-0-547"></a>
-</span><span id="__span-0-548"><a id="__codelineno-0-548" name="__codelineno-0-548"></a>    <span class="k">if</span> <span class="n">trace_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-549"><a id="__codelineno-0-549" name="__codelineno-0-549"></a>        <span class="n">meta_file</span> <span class="o">=</span> <span class="n">get_meta_file</span><span class="p">(</span><span class="n">trace_file</span><span class="p">)</span>
-</span><span id="__span-0-550"><a id="__codelineno-0-550" name="__codelineno-0-550"></a>        <span class="n">trace_metadata</span> <span class="o">=</span> <span class="n">load_file</span><span class="p">(</span><span class="n">meta_file</span><span class="p">)</span>
-</span><span id="__span-0-551"><a id="__codelineno-0-551" name="__codelineno-0-551"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-552"><a id="__codelineno-0-552" name="__codelineno-0-552"></a>        <span class="n">trace_metadata</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-553"><a id="__codelineno-0-553" name="__codelineno-0-553"></a>    <span class="n">printer</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-553">553</a></span>
+<span class="normal"><a href="#__codelineno-0-554">554</a></span>
+<span class="normal"><a href="#__codelineno-0-555">555</a></span>
+<span class="normal"><a href="#__codelineno-0-556">556</a></span>
+<span class="normal"><a href="#__codelineno-0-557">557</a></span>
+<span class="normal"><a href="#__codelineno-0-558">558</a></span>
+<span class="normal"><a href="#__codelineno-0-559">559</a></span>
+<span class="normal"><a href="#__codelineno-0-560">560</a></span>
+<span class="normal"><a href="#__codelineno-0-561">561</a></span>
+<span class="normal"><a href="#__codelineno-0-562">562</a></span>
+<span class="normal"><a href="#__codelineno-0-563">563</a></span>
+<span class="normal"><a href="#__codelineno-0-564">564</a></span>
+<span class="normal"><a href="#__codelineno-0-565">565</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-541"><a id="__codelineno-0-541" name="__codelineno-0-541"></a><span class="k">def</span><span class="w"> </span><span class="nf">print_trace</span><span class="p">(</span>
+</span><span id="__span-0-542"><a id="__codelineno-0-542" name="__codelineno-0-542"></a>    <span class="n">printer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TracePrinterBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-543"><a id="__codelineno-0-543" name="__codelineno-0-543"></a>    <span class="n">trace_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-544"><a id="__codelineno-0-544" name="__codelineno-0-544"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-545"><a id="__codelineno-0-545" name="__codelineno-0-545"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print to visualize the trace.</span>
+</span><span id="__span-0-546"><a id="__codelineno-0-546" name="__codelineno-0-546"></a>
+</span><span id="__span-0-547"><a id="__codelineno-0-547" name="__codelineno-0-547"></a><span class="sd">    Default printer is to the [langfuse](https://langfuse.com/) platform.</span>
+</span><span id="__span-0-548"><a id="__codelineno-0-548" name="__codelineno-0-548"></a><span class="sd">    You can also configured to the local hosted version.</span>
+</span><span id="__span-0-549"><a id="__codelineno-0-549" name="__codelineno-0-549"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-550"><a id="__codelineno-0-550" name="__codelineno-0-550"></a>    <span class="k">if</span> <span class="n">printer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-551"><a id="__codelineno-0-551" name="__codelineno-0-551"></a>        <span class="n">printer</span> <span class="o">=</span> <span class="n">TraceLangfusePrinter</span><span class="p">()</span>
+</span><span id="__span-0-552"><a id="__codelineno-0-552" name="__codelineno-0-552"></a>    <span class="k">if</span> <span class="n">trace_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-553"><a id="__codelineno-0-553" name="__codelineno-0-553"></a>        <span class="n">trace</span> <span class="o">=</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">trace_engine</span>
+</span><span id="__span-0-554"><a id="__codelineno-0-554" name="__codelineno-0-554"></a>        <span class="k">if</span> <span class="n">trace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-555"><a id="__codelineno-0-555" name="__codelineno-0-555"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No trace found&quot;</span><span class="p">)</span>
+</span><span id="__span-0-556"><a id="__codelineno-0-556" name="__codelineno-0-556"></a>        <span class="n">trace_file</span> <span class="o">=</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">trace_file</span>
+</span><span id="__span-0-557"><a id="__codelineno-0-557" name="__codelineno-0-557"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-558"><a id="__codelineno-0-558" name="__codelineno-0-558"></a>        <span class="n">trace</span> <span class="o">=</span> <span class="n">TraceEngine</span><span class="p">(</span><span class="n">trace_file</span><span class="p">)</span>
+</span><span id="__span-0-559"><a id="__codelineno-0-559" name="__codelineno-0-559"></a>
+</span><span id="__span-0-560"><a id="__codelineno-0-560" name="__codelineno-0-560"></a>    <span class="k">if</span> <span class="n">trace_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-561"><a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="n">meta_file</span> <span class="o">=</span> <span class="n">get_meta_file</span><span class="p">(</span><span class="n">trace_file</span><span class="p">)</span>
+</span><span id="__span-0-562"><a id="__codelineno-0-562" name="__codelineno-0-562"></a>        <span class="n">trace_metadata</span> <span class="o">=</span> <span class="n">load_file</span><span class="p">(</span><span class="n">meta_file</span><span class="p">)</span>
+</span><span id="__span-0-563"><a id="__codelineno-0-563" name="__codelineno-0-563"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-564"><a id="__codelineno-0-564" name="__codelineno-0-564"></a>        <span class="n">trace_metadata</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-565"><a id="__codelineno-0-565" name="__codelineno-0-565"></a>    <span class="n">printer</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">trace_metadata</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4500,7 +4524,7 @@ You can also configured to the local hosted version.</p>
               <summary>Source code in <code>src/appl/tracing/printer.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-39">39</a></span>
 <span class="normal"><a href="#__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="k">def</span> <span class="nf">timestamp_to_iso</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="k">def</span><span class="w"> </span><span class="nf">timestamp_to_iso</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the timestamp to the ISO format.&quot;&quot;&quot;</span>
 </span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">time_stamp</span><span class="p">,</span> <span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
 </span></code></pre></div></td></tr></table></div>

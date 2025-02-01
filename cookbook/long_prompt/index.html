@@ -3321,49 +3321,49 @@
 <span class="normal"><a href="#__codelineno-0-309">309</a></span>
 <span class="normal"><a href="#__codelineno-0-310">310</a></span>
 <span class="normal"><a href="#__codelineno-0-311">311</a></span>
-<span class="normal"><a href="#__codelineno-0-312">312</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">BracketedDefinition</span> <span class="k">as</span> <span class="n">Def</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">appl</span> <span class="kn">import</span> <span class="n">empty_line</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span><span class="p">,</span> <span class="n">records</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span> <span class="nn">appl.compositor</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-312">312</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">appl</span><span class="w"> </span><span class="kn">import</span> <span class="n">BracketedDefinition</span> <span class="k">as</span> <span class="n">Def</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">appl</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_line</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ppl</span><span class="p">,</span> <span class="n">records</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">appl.compositor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a>    <span class="n">INDENT</span><span class="p">,</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a>    <span class="n">DashList</span><span class="p">,</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a>    <span class="n">DoubleLineSeparated</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">LineSeparated</span><span class="p">,</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="n">NumberedList</span><span class="p">,</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="p">)</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="kn">from</span> <span class="nn">appl.utils</span> <span class="kn">import</span> <span class="n">get_num_tokens</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">appl.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_num_tokens</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="c1"># ===== shared =====</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="c1">## Declarations</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;User&quot;</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Agent&quot;</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="k">class</span> <span class="nc">Simulator</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="k">class</span><span class="w"> </span><span class="nc">Simulator</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Simulator&quot;</span>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a>
 </span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">class</span> <span class="nc">UserInfo</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">class</span><span class="w"> </span><span class="nc">UserInfo</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;User Information&quot;</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="k">class</span> <span class="nc">CurTime</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="k">class</span><span class="w"> </span><span class="nc">CurTime</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Current Time&quot;</span>
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a>
 </span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="k">class</span> <span class="nc">ToolArgument</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="k">class</span><span class="w"> </span><span class="nc">ToolArgument</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Arguments&quot;</span>
 </span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>
 </span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="k">class</span> <span class="nc">ToolReturn</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="k">class</span><span class="w"> </span><span class="nc">ToolReturn</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Returns&quot;</span>
 </span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>
 </span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>
-</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="k">class</span> <span class="nc">ToolException</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="k">class</span><span class="w"> </span><span class="nc">ToolException</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Exceptions&quot;</span>
 </span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>
 </span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>
@@ -3373,7 +3373,7 @@
 </span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>
 </span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="c1"># Global Definitions</span>
 </span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">compositor</span><span class="o">=</span><span class="n">NumberedList</span><span class="p">())</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="k">def</span> <span class="nf">global_defs</span><span class="p">():</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="k">def</span><span class="w"> </span><span class="nf">global_defs</span><span class="p">():</span>
 </span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">User</span><span class="p">(</span>
 </span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;The user who instructs the </span><span class="si">{</span><span class="n">Agent</span><span class="si">}</span><span class="s2"> to complete tasks or answer questions.&quot;</span>
 </span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="p">)</span>
@@ -3387,14 +3387,14 @@
 </span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>
 </span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>
 </span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">compositor</span><span class="o">=</span><span class="n">DashList</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="n">INDENT</span><span class="p">))</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="k">def</span> <span class="nf">user_info_details</span><span class="p">():</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="k">def</span><span class="w"> </span><span class="nf">user_info_details</span><span class="p">():</span>
 </span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="n">Def</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">)</span>
 </span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="n">Def</span><span class="p">(</span><span class="s2">&quot;Email&quot;</span><span class="p">,</span> <span class="s2">&quot;john.doe@gmail.com&quot;</span><span class="p">)</span>
 </span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="k">return</span> <span class="n">records</span><span class="p">()</span>
 </span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>
 </span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>
 </span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="k">def</span> <span class="nf">env_setup</span><span class="p">():</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="k">def</span><span class="w"> </span><span class="nf">env_setup</span><span class="p">():</span>
 </span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="s2">&quot;Environment Setup&quot;</span>
 </span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="k">with</span> <span class="n">DashList</span><span class="p">():</span>
 </span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="n">UserInfo</span><span class="p">(</span>
@@ -3408,7 +3408,7 @@
 </span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a>
 </span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86"></a>
 </span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">compositor</span><span class="o">=</span><span class="n">NumberedList</span><span class="p">())</span>
-</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="k">def</span> <span class="nf">tool_spec_components</span><span class="p">(</span><span class="n">include_exception</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="k">def</span><span class="w"> </span><span class="nf">tool_spec_components</span><span class="p">(</span><span class="n">include_exception</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 </span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="n">ToolArgument</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;The tool input argument specification&quot;</span><span class="p">)</span>
 </span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="n">ToolReturn</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;The tool output return specification&quot;</span><span class="p">)</span>
 </span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="k">if</span> <span class="n">include_exception</span><span class="p">:</span>
@@ -3417,7 +3417,7 @@
 </span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94"></a>
 </span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95"></a>
 </span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="k">def</span> <span class="nf">tool_specification</span><span class="p">(</span><span class="n">toolkit_descriptions</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">include_exception</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="k">def</span><span class="w"> </span><span class="nf">tool_specification</span><span class="p">(</span><span class="n">toolkit_descriptions</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">include_exception</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 </span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="s2">&quot;Tool Specifications&quot;</span>
 </span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">with</span> <span class="n">DoubleLineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="k">with</span> <span class="n">LineSeparated</span><span class="p">():</span>
@@ -3430,7 +3430,7 @@
 </span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107"></a>
 </span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="c1"># Simplified Tool Descriptions</span>
 </span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="k">def</span> <span class="nf">tool_description</span><span class="p">(</span><span class="n">toolkit_descriptions</span><span class="p">):</span>
+</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="k">def</span><span class="w"> </span><span class="nf">tool_description</span><span class="p">(</span><span class="n">toolkit_descriptions</span><span class="p">):</span>
 </span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="s2">&quot;Tool Descriptions&quot;</span>
 </span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112"></a>    <span class="k">with</span> <span class="n">DoubleLineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113"></a>        <span class="s2">&quot;Each toolkit is a collection of relevant tools for completing a specific task.&quot;</span>
@@ -3441,35 +3441,35 @@
 </span><span id="__span-0-118"><a id="__codelineno-0-118" name="__codelineno-0-118"></a>
 </span><span id="__span-0-119"><a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="c1"># ===== agent =====</span>
 </span><span id="__span-0-120"><a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="c1">## Declarations</span>
-</span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="k">class</span> <span class="nc">ToolSpecifications</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-121"><a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="k">class</span><span class="w"> </span><span class="nc">ToolSpecifications</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Tool Specifications&quot;</span>
 </span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 </span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124"></a>
-</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="k">class</span> <span class="nc">UserInput</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="k">class</span><span class="w"> </span><span class="nc">UserInput</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;User Input&quot;</span>
 </span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127"></a>
 </span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128"></a>
-</span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="k">class</span> <span class="nc">Scratchpad</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="k">class</span><span class="w"> </span><span class="nc">Scratchpad</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Scratchpad&quot;</span>
 </span><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131"></a>
 </span><span id="__span-0-132"><a id="__codelineno-0-132" name="__codelineno-0-132"></a>
-</span><span id="__span-0-133"><a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="k">class</span> <span class="nc">Thought</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-133"><a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="k">class</span><span class="w"> </span><span class="nc">Thought</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-134"><a id="__codelineno-0-134" name="__codelineno-0-134"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Thought&quot;</span>
 </span><span id="__span-0-135"><a id="__codelineno-0-135" name="__codelineno-0-135"></a>
 </span><span id="__span-0-136"><a id="__codelineno-0-136" name="__codelineno-0-136"></a>
-</span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="k">class</span> <span class="nc">Action</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="k">class</span><span class="w"> </span><span class="nc">Action</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-138"><a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Action&quot;</span>
 </span><span id="__span-0-139"><a id="__codelineno-0-139" name="__codelineno-0-139"></a>
 </span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140"></a>
-</span><span id="__span-0-141"><a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="k">class</span> <span class="nc">ActionInput</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-141"><a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="k">class</span><span class="w"> </span><span class="nc">ActionInput</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-142"><a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Action Input&quot;</span>
 </span><span id="__span-0-143"><a id="__codelineno-0-143" name="__codelineno-0-143"></a>
 </span><span id="__span-0-144"><a id="__codelineno-0-144" name="__codelineno-0-144"></a>
-</span><span id="__span-0-145"><a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="k">class</span> <span class="nc">Observation</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-145"><a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="k">class</span><span class="w"> </span><span class="nc">Observation</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-146"><a id="__codelineno-0-146" name="__codelineno-0-146"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Observation&quot;</span>
 </span><span id="__span-0-147"><a id="__codelineno-0-147" name="__codelineno-0-147"></a>
 </span><span id="__span-0-148"><a id="__codelineno-0-148" name="__codelineno-0-148"></a>
-</span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="k">class</span> <span class="nc">FinalAnswer</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
+</span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="k">class</span><span class="w"> </span><span class="nc">FinalAnswer</span><span class="p">(</span><span class="n">Def</span><span class="p">):</span>
 </span><span id="__span-0-150"><a id="__codelineno-0-150" name="__codelineno-0-150"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Final Answer&quot;</span>
 </span><span id="__span-0-151"><a id="__codelineno-0-151" name="__codelineno-0-151"></a>
 </span><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152"></a>
@@ -3477,7 +3477,7 @@
 </span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154"></a>
 </span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155"></a>
 </span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">compositor</span><span class="o">=</span><span class="n">NumberedList</span><span class="p">())</span>
-</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="k">def</span> <span class="nf">agent_provided_info</span><span class="p">():</span>
+</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_provided_info</span><span class="p">():</span>
 </span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="n">ToolSpecifications</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;the specifications of the tools that you can utilize.&quot;</span><span class="p">)</span>
 </span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="n">UserInput</span><span class="p">(</span>
 </span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;the instruction or question provided by the </span><span class="si">{</span><span class="n">User</span><span class="si">}</span><span class="s2"> that the you are trying to help with the provided tools.&quot;</span>
@@ -3489,7 +3489,7 @@
 </span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a>
 </span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a>
 </span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="k">def</span> <span class="nf">agent_scratchpad</span><span class="p">():</span>
+</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_scratchpad</span><span class="p">():</span>
 </span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="s2">&quot;Scratchpad&quot;</span>
 </span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="k">with</span> <span class="n">DoubleLineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a>        <span class="sa">f</span><span class="s2">&quot;The tool-use </span><span class="si">{</span><span class="n">Scratchpad</span><span class="si">}</span><span class="s2"> is formatted as follows and should be used to structure your response:&quot;</span>
@@ -3515,7 +3515,7 @@
 </span><span id="__span-0-192"><a id="__codelineno-0-192" name="__codelineno-0-192"></a>
 </span><span id="__span-0-193"><a id="__codelineno-0-193" name="__codelineno-0-193"></a>
 </span><span id="__span-0-194"><a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-195"><a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="k">def</span> <span class="nf">agent_task_desc</span><span class="p">(</span><span class="n">toolkit_descriptions</span><span class="p">):</span>
+</span><span id="__span-0-195"><a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_task_desc</span><span class="p">(</span><span class="n">toolkit_descriptions</span><span class="p">):</span>
 </span><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a>    <span class="s2">&quot;Task Description&quot;</span>
 </span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>    <span class="k">with</span> <span class="n">LineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a>        <span class="sa">f</span><span class="s2">&quot;Your task is to utilize the provided tools to answer </span><span class="si">{</span><span class="n">User</span><span class="si">}</span><span class="s2">&#39;s questions or help </span><span class="si">{</span><span class="n">User</span><span class="si">}</span><span class="s2"> accomplish tasks based on given instructions. You are provided with the following information:&quot;</span>
@@ -3531,7 +3531,7 @@
 </span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a>
 </span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 </span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="k">def</span> <span class="nf">agent_format_requirements</span><span class="p">():</span>
+</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_format_requirements</span><span class="p">():</span>
 </span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="s2">&quot;Format Requirements&quot;</span>
 </span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="k">with</span> <span class="n">LineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>        <span class="sa">f</span><span class="s2">&quot;Here are some requirements that you should strictly follow to format the </span><span class="si">{</span><span class="n">Action</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">ActionInput</span><span class="si">}</span><span class="s2">:&quot;</span>
@@ -3550,7 +3550,7 @@
 </span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a>
 </span><span id="__span-0-228"><a id="__codelineno-0-228" name="__codelineno-0-228"></a>
 </span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="k">def</span> <span class="nf">agent_format_example</span><span class="p">():</span>
+</span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_format_example</span><span class="p">():</span>
 </span><span id="__span-0-231"><a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="s2">&quot;Format Examples&quot;</span>
 </span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="k">with</span> <span class="n">LineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>        <span class="s2">&quot;Here is an example for how to format your response. In this example, a &lt;Gmail&gt; toolkit for managing Gmails (APIs contained: GmailSendEmail/GmailReadEmail/etc) is provided. Detailed tool specification is omitted here.&quot;</span>
@@ -3566,7 +3566,7 @@
 </span><span id="__span-0-243"><a id="__codelineno-0-243" name="__codelineno-0-243"></a>
 </span><span id="__span-0-244"><a id="__codelineno-0-244" name="__codelineno-0-244"></a>
 </span><span id="__span-0-245"><a id="__codelineno-0-245" name="__codelineno-0-245"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="k">def</span> <span class="nf">agent_format_instruction</span><span class="p">():</span>
+</span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_format_instruction</span><span class="p">():</span>
 </span><span id="__span-0-247"><a id="__codelineno-0-247" name="__codelineno-0-247"></a>    <span class="s2">&quot;Format Instructions&quot;</span>
 </span><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a>    <span class="k">with</span> <span class="n">LineSeparated</span><span class="p">(</span><span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;###&quot;</span><span class="p">):</span>
 </span><span id="__span-0-249"><a id="__codelineno-0-249" name="__codelineno-0-249"></a>        <span class="n">agent_format_requirements</span><span class="p">()</span>
@@ -3576,7 +3576,7 @@
 </span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a>
 </span><span id="__span-0-254"><a id="__codelineno-0-254" name="__codelineno-0-254"></a>
 </span><span id="__span-0-255"><a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-256"><a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="k">def</span> <span class="nf">agent_task_begin</span><span class="p">(</span><span class="n">tool_names</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">agent_scratchpad</span><span class="p">):</span>
+</span><span id="__span-0-256"><a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_task_begin</span><span class="p">(</span><span class="n">tool_names</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">agent_scratchpad</span><span class="p">):</span>
 </span><span id="__span-0-257"><a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="s2">&quot;Start the Execution&quot;</span>
 </span><span id="__span-0-258"><a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="k">with</span> <span class="n">LineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-259"><a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="sa">f</span><span class="s2">&quot;Now begin your task! Remember that the tools available to you are: [</span><span class="si">{</span><span class="n">tool_names</span><span class="si">}</span><span class="s2">] which may be different from the tools in the example above. Please output your **NEXT** </span><span class="si">{</span><span class="n">Action</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ActionInput</span><span class="si">}</span><span class="s2"> or </span><span class="si">{</span><span class="n">FinalAnswer</span><span class="si">}</span><span class="s2"> (when you have finished all your actions) following the provided </span><span class="si">{</span><span class="n">Scratchpad</span><span class="si">}</span><span class="s2">, directly start your response with your </span><span class="si">{</span><span class="n">Thought</span><span class="si">}</span><span class="s2"> for the current iteration.&quot;</span>
@@ -3587,7 +3587,7 @@
 </span><span id="__span-0-264"><a id="__codelineno-0-264" name="__codelineno-0-264"></a>
 </span><span id="__span-0-265"><a id="__codelineno-0-265" name="__codelineno-0-265"></a>
 </span><span id="__span-0-266"><a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="nd">@ppl</span>
-</span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="k">def</span> <span class="nf">agent_task_begin_for_claude</span><span class="p">(</span><span class="n">tool_names</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">agent_scratchpad</span><span class="p">):</span>
+</span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_task_begin_for_claude</span><span class="p">(</span><span class="n">tool_names</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">agent_scratchpad</span><span class="p">):</span>
 </span><span id="__span-0-268"><a id="__codelineno-0-268" name="__codelineno-0-268"></a>    <span class="s2">&quot;Start the Execution&quot;</span>
 </span><span id="__span-0-269"><a id="__codelineno-0-269" name="__codelineno-0-269"></a>    <span class="k">with</span> <span class="n">LineSeparated</span><span class="p">():</span>
 </span><span id="__span-0-270"><a id="__codelineno-0-270" name="__codelineno-0-270"></a>        <span class="sa">f</span><span class="s2">&quot;Now begin your task! Remember that the tools available to you are: [</span><span class="si">{</span><span class="n">tool_names</span><span class="si">}</span><span class="s2">] which may be different from the tools in the example above. Here is the </span><span class="si">{</span><span class="n">UserInput</span><span class="si">}</span><span class="s2"> and previous </span><span class="si">{</span><span class="n">Scratchpad</span><span class="si">}</span><span class="s2">:&quot;</span>
@@ -3600,7 +3600,7 @@
 </span><span id="__span-0-277"><a id="__codelineno-0-277" name="__codelineno-0-277"></a>
 </span><span id="__span-0-278"><a id="__codelineno-0-278" name="__codelineno-0-278"></a>
 </span><span id="__span-0-279"><a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="nd">@ppl</span><span class="p">(</span><span class="n">compositor</span><span class="o">=</span><span class="n">LineSeparated</span><span class="p">(</span><span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;##&quot;</span><span class="p">))</span>
-</span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="k">def</span> <span class="nf">agent_naive_prompt</span><span class="p">(</span>
+</span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="k">def</span><span class="w"> </span><span class="nf">agent_naive_prompt</span><span class="p">(</span>
 </span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>    <span class="n">toolkit_descriptions</span><span class="p">,</span> <span class="n">tool_names</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">agent_scratchpad</span><span class="p">,</span> <span class="n">is_claude</span><span class="o">=</span><span class="kc">False</span>
 </span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="p">):</span>
 </span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a>    <span class="n">env_setup</span><span class="p">()</span>
