@@ -399,7 +399,7 @@ def grow(content: Any, *, _ctx: Optional[PromptContext] = None) -> None:
             "PromptContext is required for appending. "
             "Normally, it should be automatically filled."
         )
-    appl_execute(content, _ctx=_ctx)
+    _ctx.grow(content)
 
 
 @need_ctx

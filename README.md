@@ -194,7 +194,7 @@ print(answer_questions(quotation, questions))
 - [x] Default to exclude """docstring""" from the prompt formation.
 - [x] Add supports for LLM logging and tracing platforms to inspect the traces.
   - [x] Supported Lunary and Langfuse (open-source)
-- [ ] Allow directly working with prompts without `ppl` decorator.
+- [x] Allow directly working with prompts without `ppl` decorator.
 - [ ] Add more ... (contributions are welcome!)
   - [ ] Examples and tutorials to demonstrate the usage
   - [ ] Test cases to increase the coverage
@@ -216,7 +216,8 @@ For a more comprehensive tutorial, please refer to the [tutorial](https://appl-t
 For more detailed usage and examples, please refer to the [cookbook](https://appl-team.github.io/appl/cookbook).
 
 We use APPL to reimplement popular LLM and prompting algorithms in [Reppl](https://github.com/appl-team/reppl), such as:
-* [Tree of Thoughts](https://github.com/princeton-nlp/tree-of-thought-llm) [[Re-implementation](https://github.com/appl-team/reppl/tree/main/tree-of-thoughts/)] [[APPL Example](examples/advanced/tree_of_thoughts/)]: deliberate problem solving with Large Language Models.
+* [Tree of Thoughts](https://github.com/princeton-nlp/tree-of-thought-llm/) [[Re-implementation](https://github.com/appl-team/reppl/tree/main/tree_of_thoughts/)]: deliberate problem solving with Large Language Models.
+* [Reflexion](https://github.com/noahshinn024/reflexion/) [[Re-implementation](https://github.com/appl-team/reppl/tree/main/reflexion/)]: a framework that enables language models to self-reflect on their mistakes and gradually improve their performance through an iterative refinement process.
 
 We use APPL to build popular LM-based applications, such as:
 * [Wordware's TwitterPersonality](https://twitter.wordware.ai/)[[APPL implementation](https://github.com/appl-team/TwitterPersonality)]: analyzes your tweets to determine your Twitter personality.

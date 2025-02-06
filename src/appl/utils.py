@@ -218,9 +218,14 @@ class LoguruFormatter:
 
     def loguru_format(self, record: Dict) -> str:
         """Format the log message with the record."""
-        msg = record["message"]
+        msg = record.get("message", "")
+        level = getattr(record.get("level", None), "name", "INFO")
         fmt = self.fmt
-        if self.max_length is not None and len(msg) > self.max_length:
+        if (
+            self.max_length is not None
+            and len(msg) > self.max_length
+            and level not in ["ERROR", "DEBUG", "CRITICAL"]
+        ):
             suffix_len = min(self.max_length, self.suffix_length)
             truncated = msg[: self.max_length - suffix_len]
             truncated += f"...(snipped {len(msg) - self.max_length} chars)"

@@ -14,8 +14,10 @@ class BaseAPPLConfigs(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def warn_extra_fields(cls, values):
+    def warn_extra_fields(cls, values: Any) -> Any:
         """Warn if extra fields are provided."""
+        if not isinstance(values, dict):
+            return values
         extra_fields = set(values.keys()) - cls.model_fields.keys()
         if extra_fields:
             logger.warning(

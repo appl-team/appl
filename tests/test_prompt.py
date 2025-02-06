@@ -375,3 +375,8 @@ def test_generation_message2():
         return convo()
 
     assert str(func()) == "Q: 1 + 2 = ?\nA: 3\nQ: 15 + 9 = ?\nA: 24"
+
+
+def test_manual_grow_ctx():
+    p = PromptContext().grow("Hello").grow("World")
+    assert str(p.messages) == "Hello\nWorld"

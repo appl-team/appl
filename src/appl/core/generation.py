@@ -64,7 +64,7 @@ def get_gen_name_prefix() -> Optional[str]:
     return gen_name_prefix
 
 
-class Generation(Generic[M]):
+class Generation(Generic[M], Promptable):
     """Represents a generation call to the model."""
 
     def __init__(
@@ -441,6 +441,9 @@ class Generation(Generic[M]):
                 return AIMessage(tool_calls=self.tool_calls)
         # return a future object of value: str(self._call()), without blocking
         return StringFuture(CallFuture(self._call))
+
+    def __prompt__(self) -> Union[AIMessage, StringFuture]:
+        return self.as_prompt()
 
     def __add__(self, other: Union[String, "Generation"]) -> StringFuture:
         # Assume generation is a string

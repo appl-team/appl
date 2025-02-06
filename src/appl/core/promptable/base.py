@@ -20,5 +20,7 @@ def promptify(obj: Any) -> Any:
         if isinstance(s, str):
             s = StringFuture(s)
         return s
+    elif hasattr(obj, "__prompt__"):
+        return obj.__prompt__()
 
     return StringFuture(str(obj))

@@ -119,7 +119,9 @@ class ServerManager:
         if name is None:
             raise ValueError(
                 "Default server is not configured. Please set the default server in your config file. "
-                "See https://appl-team.github.io/appl/setup/#setup-appl-configuration for more details."
+                "See https://appl-team.github.io/appl/setup/#setup-appl-configuration for more details. "
+                'Alternatively, you can specify the model name directly, for example: `gen("gpt-4o")`. '
+                "See https://docs.litellm.ai/docs/providers for supported models."
             )
         with self._lock:
             if name not in self._servers:
