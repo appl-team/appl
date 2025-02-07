@@ -40,8 +40,16 @@ More installation options can be found in the [installation guide](https://appl-
 ### Setup
 You need to set up API keys or your own LLM backends to interact with LLMs.
 
-In this guide, we use OpenAI API as the default backend.
-You can set your OpenAI API key in the `.env` file in the root directory of your project:
+In this guide, we use OpenAI API as the default backend by setting the following in the `appl.yaml` file:
+
+```yaml
+default_servers:
+  default: gpt-4o-mini # change to the LLM you want to use
+```
+
+> **Note:** You can use other LLMs supported by [`litellm`](https://docs.litellm.ai/docs/providers).
+
+You can set your OpenAI API key in the `.env` file in the root directory of your project (see `.env.example` for an example):
 ```
 OPENAI_API_KEY=<your openai api key>
 ```
@@ -52,7 +60,9 @@ or export it as an environment variable:
 export OPENAI_API_KEY=<your openai api key>
 ```
 
-For setting up other backends, enabling tracing and recovering from traces, please refer to the [setup guide](https://appl-team.github.io/appl/setup).
+For setting up other backends, enabling tracing, caching, and recovering from traces, please refer to the [setup guide](https://appl-team.github.io/appl/setup).
+
+> **Note:** If you want to disable the initialization log when `import appl`, you can set the `APPL_SHOW_INIT_LOG` environment variable to `false`.
 
 ### Hello World
 
@@ -65,6 +75,7 @@ from appl import gen, ppl
 def greeting(name: str):
     f"Hello World! My name is {name}."  # Add text to the prompt
     return gen()  # call the default LLM with the current prompt
+    # or specify the LLM name, for example: gen("gpt-4o-mini")
 
 print(greeting("APPL"))  # call `greeting` as a normal Python function
 ```

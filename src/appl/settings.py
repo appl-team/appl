@@ -44,6 +44,11 @@ from .version import __version__
 APPL_CONFIG_FILES = ["appl.yaml", "appl.yml", "appl.json", "appl.toml"]
 
 
+def _show_init_log() -> bool:
+    """Whether to show the init log."""
+    return os.environ.get("APPL_SHOW_INIT_LOG", "true").lower() == "true"
+
+
 def _setup_logging(configs: LoggingSettings, remove_existing: bool = True) -> None:
     """Set up the logging."""
     log_file = (
@@ -59,9 +64,10 @@ def _setup_logging(configs: LoggingSettings, remove_existing: bool = True) -> No
         if global_vars.metadata.log_file and (
             not configs.enable_file or global_vars.metadata.log_file != log_file
         ):
-            logger.warning(
-                f"Configs are updated, disabling log file {global_vars.metadata.log_file}"
-            )
+            if _show_init_log():
+                logger.warning(
+                    f"Configs are updated, disabling log file {global_vars.metadata.log_file}"
+                )
         logger.remove()  # Remove default handler
         if configs.enable_stderr:
             logger.add(sys.stderr, level=configs.log_level, format=_get_loguru_format())
@@ -71,7 +77,7 @@ def _setup_logging(configs: LoggingSettings, remove_existing: bool = True) -> No
         # no need to overwrite the default format when writing to file
         logger.add(log_file, level=file_log_level, format=configs.format)
 
-        if global_vars.metadata.log_file != log_file:
+        if global_vars.metadata.log_file != log_file and _show_init_log():
             logger.info(f"Logging to file: {log_file} with level {file_log_level}")
         global_vars.metadata.log_file = log_file
 
@@ -112,7 +118,8 @@ def _setup_caching(
     if configs.enabled:
         if old_configs is None or configs.folder != old_configs.folder:
             db_file = os.path.expanduser(os.path.join(configs.folder, "cache.db"))
-            logger.info(f"Using cache folder: {configs.folder}")
+            if _show_init_log():
+                logger.info(f"Using cache folder: {configs.folder}")
             global_vars.llm_cache = DBCache(db_file)
     else:
         global_vars.llm_cache = None
@@ -139,7 +146,8 @@ def _setup_tracing(configs: TracingSettings) -> None:
             patch_threading()
         trace_file = f"{_get_trace_file_prefix()}.pkl"
         if trace_file != global_vars.metadata.trace_file:
-            logger.info(f"Tracing file set to: {trace_file}")
+            if _show_init_log():
+                logger.info(f"Tracing file set to: {trace_file}")
             global_vars.metadata.trace_file = trace_file
             global_vars.trace_engine = TraceEngine(
                 trace_file, mode="write", strict=configs.strict_match
@@ -151,7 +159,8 @@ def _setup_tracing(configs: TracingSettings) -> None:
 
     resume_trace = configs.trace_to_resume or os.environ.get("APPL_RESUME_TRACE", None)
     if resume_trace:
-        logger.info(f"Using resume cache: {resume_trace}")
+        if _show_init_log():
+            logger.info(f"Using resume cache: {resume_trace}")
         global_vars.resume_trace = TraceEngine(
             resume_trace, mode="read", strict=configs.strict_match
         )
@@ -182,6 +191,8 @@ def _log_servers_info(
     old_default_servers: Optional[DefaultServersConfigs] = None,
 ) -> None:
     """Log the servers info."""
+    if not _show_init_log():
+        return
     default_server = global_vars.configs.default_servers.default
     if default_server:
         if old_default_servers is None or default_server != old_default_servers.default:
@@ -211,7 +222,7 @@ def _log_servers_info(
 
 
 def _log_configs():
-    if global_vars.configs.settings.logging.display.configs:
+    if _show_init_log() and global_vars.configs.settings.logging.display.configs:
         logger.info(f"Using configs:\n{yaml.dump(global_vars.configs.model_dump())}")
 
 
@@ -237,13 +248,6 @@ def _appl_init():
 
     cwd = os.path.expanduser(os.path.abspath(os.getcwd()))
     exec_file_path = os.path.expanduser(os.path.abspath(sys.argv[0]))
-
-    try:
-        git_info = get_git_info()
-    except Exception as e:
-        logger.warning(f"git info not found: {e}")
-        git_info = GitInfo()
-
     # ===== Load and Update Configs ======
     # find and load dotenvs and appl configs (from outer to inner)
     start_path = cwd
@@ -261,11 +265,20 @@ def _appl_init():
 
     for dotenv in dotenvs:
         load_dotenv(dotenv, override=True)
-        logger.info("Loaded dotenv from {}".format(dotenv))
+
+    if _show_init_log():
+        logger.info("Loaded dotenvs: {}".format(", ".join(dotenvs)))
 
     all_configs_from_files = [
         (config_file, load_config(config_file)) for config_file in appl_config_files
     ]
+
+    try:
+        git_info = get_git_info()
+    except Exception as e:
+        if _show_init_log():
+            logger.info(f"git info not found: {e}, using empty git info")
+        git_info = GitInfo()
 
     global_vars.metadata = MetaData(
         appl_version=__version__,
@@ -292,10 +305,11 @@ def _appl_init():
         )
 
     for config_file, override_configs in all_configs_from_files:
-        logger.info("Loaded configs from {}".format(config_file))
+        if _show_init_log():
+            logger.info("Loaded configs from {}".format(config_file))
         new_configs = merge_configs(global_vars.configs, **override_configs.to_dict())
         global_vars.configs = new_configs
-        if display_configs_update:
+        if _show_init_log() and display_configs_update:
             logger.info(f"Update configs:\n{yaml.dump(override_configs.to_dict())}")
 
     # ===== Setup Logging ======
